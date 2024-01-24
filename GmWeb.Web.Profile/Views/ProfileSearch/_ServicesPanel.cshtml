@@ -1,0 +1,165 @@
+﻿@using GmWeb.Web.Profile.Models
+@using GmWeb.Web.Profile.Models.ProfileSearch
+@model ProfileSearchViewModel
+@{
+    ViewBag.Panel = Panel.MatchedServices;
+}
+
+@using (Html.DelayedHandlers())
+{
+    <script type="text/javascript">
+        var ServiceLinkDialogResults = {};
+        function onServiceMatchesBound(e) {
+            if (ProfileSearchData.SearchType == '@SearchType.Qualifying') {
+                ShowQualifiedServiceOptions();
+            }
+            else {
+                ShowMatchedServiceOptions();
+            }
+        }
+        function getGridServiceMatchesParameters() {
+            return ProfileSearchData;
+        }
+        function onMatchChecked(sender) {
+            var checkbox = $(sender);
+            var tr = checkbox.closest('tr');
+            var grid = tr.closest('.k-grid').kwidget();
+            var item = grid.dataItem(tr);
+            item.set('IsChecked', checkbox.is(':checked'));
+        }
+        function onFullSearchClicked() {
+            console.log('match full search clicked');
+            var grid = $('#GridServiceMatches').kwidget();
+            var data = grid.dataSource.data().toJSON();
+            ProfileSearchData.SelectedServices = data;
+            ProfileSearchData.SearchType = '@SearchType.Qualifying';
+            console.log('ProfileSearchData.SelectedServices:', ProfileSearchData.SelectedServices);
+            console.log('ProfileSearchData.SearchType:', ProfileSearchData.SearchType);
+            grid.dataSource.read();
+            ShowQualifiedServiceOptions();
+        }
+        function onButtonResetServiceSearchClicked(sender) {
+
+        }
+        function ShowMatchedServiceOptions() {
+            $('#ButtonFullSearch').show();
+            $('#ButtonResetServiceSearch').show();
+
+            var grid = $('#GridServiceMatches').kwidget();
+            grid.showColumn(GridServiceMatches_ColumnIndexes.Select);
+            grid.hideColumn(GridServiceMatches_ColumnIndexes.Connect);
+
+            var type = getSearchType();
+            $('#LabelMatchTitle').text("These services match the " + type + "(s) you've selected.");
+        }
+        function ShowQualifiedServiceOptions() {
+            $('#ButtonFullSearch').hide();
+            $('#ButtonResetServiceSearch').hide();
+
+            var grid = $('#GridServiceMatches').kwidget();
+            grid.hideColumn(GridServiceMatches_ColumnIndexes.Select);
+            grid.showColumn(GridServiceMatches_ColumnIndexes.Connect);
+
+            $('#LabelMatchTitle').text('These are the services that match your search.');
+        }
+        function onServiceDetailClicked(e) {
+            var grid = $('#GridServiceMatches').kwidget();
+            var row = $(e).closest('tr');
+            var data = grid.dataItem(row);
+            var dialog = $('#Modal_DialogServiceDetails').kwidget();
+            dialog.refresh({
+                url: '@(Url.Action("_ServiceDetailEditor", "ProfileSearch"))',
+                data: { CategoryID: data.CategoryID }
+            }).center().open();
+        }
+        function onConnectClicked(e) {
+            var grid = $('#GridServiceMatches').kwidget();
+            var row = $(e).closest('tr');
+            var data = grid.dataItem(row);
+            var dialog = $('#Modal_DialogServiceLink').kwidget();
+            console.log('on connect clicked, e:', e);
+            ServiceLinkDialogResults[data.CategoryID] = {
+                Element: $(e),
+                Model: null
+            };
+            dialog.refresh({
+                url: '@(Url.Action("AttemptClientServiceLink", "ProfileSearch"))',
+                data: { CategoryID: data.CategoryID }
+            }).center().open();
+        }
+        function onModalDialogServiceLinkClose(e) {
+            console.log('this is the close thing, heres e:', e);
+            var model = e.sender.view_model;
+            console.log('the returned model:', model);
+            console.log('the results obj:', ServiceLinkDialogResults);
+            var element = ServiceLinkDialogResults[model.CategoryID].Element;
+            console.log('the returned element:', element);
+            if (model.Success) {
+                element.attr('onclick', null);
+                element.text('Connected!');
+            }
+        }
+    </script>
+}
+<table class="table" id='@(ViewBag.Panel)-panel'>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            <label id="LabelMatchTitle" style="font-style: italic; font-size: 11pt; color: #006699">These services match the @(Model.SearchType)(s) you've selected.</label>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            <script type="text/javascript">
+                var GridServiceMatches_ColumnIndexes = {
+                    Select: 0,
+                    Connect: 2
+                };
+            </script>
+            @(Html.Razor().Grid<ServiceRow>()
+                .Name("GridServiceMatches") @* originally GridSelectedServices *@
+                .Columns(columns =>
+                {
+                    columns.Bound(row => row.IsChecked).Title("Select").ClientTemplate(@"<input type='checkbox' onclick='onMatchChecked(this);' #=IsChecked ? 'checked=checked' : '' #></input>");
+                    columns.Bound(cmd => cmd).Title("Detail").ClientTemplate(@"<a onclick='onServiceDetailClicked(this);'>Detail</a>");
+                    columns.Bound(cmd => cmd).Title("Connect").ClientTemplate(@"<a onclick='onConnectClicked(this);'>Connect</a>");
+                    columns.Bound(row => row).ClientTemplate(@"
+                        <label>#:data.Description# - #:data.BriefDescription#</label>
+                        <br/>
+                        <label>#:data.AgencyName#</label><br/>
+                        <label>#:data.Venue#</label><br/>
+                        <label>#:data.VenueAddressNo# >#:data.VenueAddressStreet# >#:data.VenueAddressStreetType#</label><br/>
+                        <label>#:data.City#, #:data.State# #:data.VenueZip#</label><br/>
+                    ").Title("Profile Information").Encoded(false);
+                    foreach (var c in columns.ColumnsContainer.Columns)
+                    {
+                        c.HeaderTemplate.Html = "<label style='font-weight:bold'>" + c.Title + "</label>";
+                    }
+                })
+                .Events(events =>
+                {
+                    events.DataBound("onServiceMatchesBound");
+                })
+                .DataSource(src =>
+                {
+                    src.Ajax().Read(r => r.Action("QueryServices", "ProfileSearch").Data("getGridServiceMatchesParameters"));
+                })
+                .AutoBind(false)
+            )
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            @(Html.GmRazor().Defaults.Button().Name("ButtonFullSearch").Content("Full Search").OnClick("onFullSearchClicked"))
+            @(Html.GmRazor().Defaults.Button().Name("ButtonResetServiceSearch").Content("Reset All").OnClick("onButtonResetServiceSearchClicked"))
+        </td>
+    </tr>
+</table>
+@(Html.Razor().Defaults.ModalWindow()
+        .Name("Modal_DialogServiceDetails")
+        .Title("Profile Information")
+)
+@(Html.Razor().Window()
+        .Name("Modal_DialogServiceLink")
+        .Title("Connect to Service")
+        .Events(e => e.Close("onModalDialogServiceLinkClose"))
+)

@@ -1,0 +1,151 @@
+﻿@using GmWeb.Web.Profile.Models.Waitlist
+@using GmWeb.Web.Profile.Models
+@model  WaitlistViewModel
+
+@* Flow Initialization *@
+<script>
+    var FlowContext = {
+        Initializers: {},
+        ModelMap: {},
+        ShapeMap: {},
+        ConnectionMap: {},
+        Flow: null,
+        save: function () {
+            var url = '@Url.Action("SaveFlow","Waitlist")';
+            var payload = this.Flow.toJSON();
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: { Model: payload },
+                success: function (data) {
+                    alert('Success!');
+                },
+                error: function (e) {
+                    alert('Error saving flow.');
+                    console.error('err:', e);
+                }
+            });
+        },
+        create: function (options) {
+            var self = this;
+            self.instantiate(options, function (instance, editor) {
+                instance = options.Instance = kendo.observable(instance);
+                instance.Editor = editor;
+                self.ModelMap[instance.Guid] = instance;
+                var initializer;
+                if (options.TypeName in self.Initializers) {
+                    initializer = self.Initializers[options.TypeName];
+                } else {
+                    initializer = self.Initializers.Default;
+                }
+                initializer.call(null, options);
+                InspiniaInitializer(); // TODO: Don't re-initialize the same elements
+                bindRecursively(instance);
+            });
+        },
+        instantiate: function (options, callback) {
+            var url = '@Url.Action("CreateInstanceWithEditor","Api")';
+            var data = {
+                TypeName: options.TypeName,
+                IsCollectionItem: options.Collection != null,
+                CollectionName: options.CollectionName,
+                StartCollapsed: true
+            };
+            console.log('called _FlowEditorScripts.instantiate; request url:', url);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (data) {
+                    if (callback != null)
+                        callback(data.Instance, data.Editor);
+                },
+                error: function (e) {
+                    console.error('err:', e);
+                }
+            });
+        },
+        initialize: function () {
+            console.log('called _FlowEditorScripts.initialize');
+            var self = this;
+            self.refreshModel();
+            self.ModelMap = self.buildMap();
+            self.Initializers.FlowLink = function (options) {
+                var
+                    link = options.Instance,
+                    source = options.SourceShape,
+                    target = options.TargetShape
+                ;
+                link.SourceStepGuid = source.Guid;
+                link.TargetStepGuid = target.Guid;
+                link.Name = 'New Link';
+                source.Links.push(link);
+            };
+            self.Initializers.FlowStep = function (options) {
+                var step = options.Instance;
+                step.Name = 'New Step';
+                step.WaitlistFlowID = self.Flow.WaitlistFlowID;
+                self.Flow.Steps.push(step);
+            };
+            self.Initializers.Default = function (options) {
+                options.Collection.push(options.Instance);
+            };
+        },
+        buildMap: function (node) {
+            if (node == null) {
+                node = this.Flow;
+                console.log(`called _FlowEditorScripts:buildMap on parent flow[id=${this.Flow.Guid}`)
+            }
+            var map = {};
+            if (node.Guid != null) {
+                map[node.Guid] = node;
+            }
+            var keys = Object.keys(node);
+            $.each(keys, (idx, key) => {
+                var child = node[key];
+                if ($.isPlainObject(child) || $.isArray(child) || child instanceof kendo.Observable) {
+                    var childMap = this.buildMap(child);
+                    $.extend(map, childMap);
+                }
+            });
+            return map;
+        },
+        refreshModel: function () {
+            var model = @(Html.ConvertInstanceToJs(Model.Flow));
+            var observable = kendo.observable(model);
+            this.Flow = observable;
+        }
+    };
+</script>
+
+@* Collection Editing *@
+<script>
+    $.extend(FlowContext, {
+        addCollectionItem: function (parentGuid, collectionPropertyName, collectionTypeName) {
+            var parent = this.ModelMap[parentGuid];
+            var parentCollection = parent[collectionPropertyName];
+            this.create({ TypeName: collectionTypeName, Collection: parentCollection, CollectionName: collectionPropertyName, Parent: parent });
+        },
+        removeCollectionItem: function (parentGuid, collectionPropertyName, itemGuid) {
+            var parent = this.ModelMap[parentGuid];
+            var parentCollection = parent[collectionPropertyName];
+            var child = this.ModelMap[itemGuid];
+            parentCollection.remove(child);
+        },
+        clearCollection: function (parentGuid, collectionPropertyName) {
+            var parent = this.ModelMap[parentGuid];
+            var parentCollection = parent[collectionPropertyName];
+            parentCollection.clear();
+        },
+        bindToCollection: function (parentGuid, collectionPropertyName, handler) {
+            var parent = this.ModelMap[parentGuid];
+            var parentCollection = parent[collectionPropertyName];
+            parentCollection.bind('change', handler);
+        }
+    });
+</script>
+<script>
+    $(function () {
+        FlowContext.initialize();
+    });
+</script>

@@ -1,0 +1,112 @@
+[
+    {
+        "TableName": "lkpTelecomServiceType",
+        "PrimaryKeyColumn": "TelecomServiceTypeID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpHeadOfHousehold",
+        "PrimaryKeyColumn": "HeadOfHouseholdID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpIndustryCategory",
+        "PrimaryKeyColumn": "EEOIndustryCode",
+        "DescriptionColumn": "IndustryCategory"
+    },
+    {
+        "TableName": "lkpLanguageProficiencyLevel",
+        "PrimaryKeyColumn": "LanguageProficiencyLevelID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpLearningImpairment",
+        "PrimaryKeyColumn": "LearningImpairmentID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpBusinessStage",
+        "PrimaryKeyColumn": "BusinessStageID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpBusinessStructureType",
+        "PrimaryKeyColumn": "BusinessStructureTypeID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpTargetPopulation",
+        "PrimaryKeyColumn": "TargetPopulationID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpDependencies",
+        "PrimaryKeyColumn": "DependenciesID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpOffenseType",
+        "PrimaryKeyColumn": "OffenseTypeID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpProbationaryJurisdiction",
+        "PrimaryKeyColumn": "ProbationaryJurisdictionID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpBusinessSizeCategory",
+        "PrimaryKeyColumn": "BusinessSizeCategoryID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpHealthPlanType",
+        "PrimaryKeyColumn": "HealthPlanTypeID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpCitizenshipType",
+        "PrimaryKeyColumn": "CitizenshipTypeID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpCountry",
+        "PrimaryKeyColumn": "CountryID",
+        "DescriptionColumn": "Country"
+    },
+    {
+        "TableName": "lkpSelfEmploymentAssistance",
+        "PrimaryKeyColumn": "SelfEmploymentAssistanceID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpSentencingType",
+        "PrimaryKeyColumn": "SentencingTypeID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpIncorporation",
+        "PrimaryKeyColumn": "IncorporationID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpDriverClassification",
+        "PrimaryKeyColumn": "DriverClassificationID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpLanguage",
+        "PrimaryKeyColumn": "LanguageID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpEducationLevel",
+        "PrimaryKeyColumn": "EducationLevelID",
+        "DescriptionColumn": "Description"
+    },
+    {
+        "TableName": "lkpStatus",
+        "PrimaryKeyColumn": "StatusID",
+        "DescriptionColumn": "Description"
+    }
+]

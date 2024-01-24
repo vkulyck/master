@@ -1,0 +1,122 @@
+﻿@using GmWeb.Common
+@using GmWeb.IdentityAPI
+@using GmWeb.Web.Identity.Models
+@model IndexViewModel
+@{
+    Layout = this.SimplifiedLayout();
+    ViewBag.Title = $"Index";
+    var types = new List<AppIdentityType> { AppIdentityType.User, AppIdentityType.Client, AppIdentityType.Agency };
+    var actionData = new Dictionary<string, RouteValueDictionary>
+{
+        { "Login", null },
+        { "ManagePasswordUpdate", null },
+        { "ManagePasswordReset", null },
+        { "ManagePhoneUpdate", null },
+        { "RequestRegistration", null },
+        { "RequestPasswordReset", null }
+    };
+}
+
+<div class="well well-sm container" style="width: 600px">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="profile-image">
+                    <img src="@(Url.ImagePath("avatar.png"))" alt="@(Model.FirstName)'s Profile Photo" />
+                    <div class="file btn btn-lg btn-primary">
+                        Change Photo
+                        <input type="file" name="file" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <small><cite title="San Francisco, USA"> <i class="fa fa-map-marker"></i> San Francisco, USA</cite></small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <i class="fa fa-globe"></i><a href="http://www.goodmojo.us">http://www.goodmojo.us</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <i class="fa fa-gift"></i>June 02, 1988
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <i class="fa fa-phone"></i>@Model.Phone (@Html.ActionLink("edit", "UpdatePhoneNumber"))
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!Html.IsDebugBuild())
+{
+    return;
+}
+
+<div style="width: 1500px">
+    <div class="row text-right">
+        <div class="row">
+            @Html.LabelFor(m => m.IsLoggedIn, new { @class = "control-label" })
+        </div>
+        <div class="row">
+            @if (Model.IsLoggedIn)
+            {
+                <text>
+                    User: <a href="mailto:@Model.Email">@Model.Email</a>
+                </text>
+            }
+            else
+            {
+                <text>
+                    Not logged in
+                </text>
+            }
+        </div>
+        <div class="row">
+            @if (Model.IsLoggedIn)
+            {
+                <text>
+                    @this.LogoutLink()
+                </text>
+            }
+            else
+            {
+                <text>
+                    @this.LoginLink()
+                </text>
+            }
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var type in types)
+        {
+            <div class="col-md-4">
+                <h2>@type.ToString() Accounts</h2>
+            </div>
+        }
+    </div>
+    <div class="row">
+        @foreach (var type in types)
+        {
+            <div class="col-md-4">
+                @foreach (var ad in actionData)
+                {
+                    <div class="row">
+                        @{
+                            var action = ad.Key;
+                            RouteValueDictionary actionParams = ad.Value;
+                            var actionUri = this.Url.Action(action, this.Controller(), actionParams, AccountAPI.ExternalScheme);
+                            var actionPath = new Uri(actionUri).LocalPath;
+                        }
+                        @Html.ActionLink(actionPath, action)
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

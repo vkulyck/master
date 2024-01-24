@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>Latest</LangVersion>
+    <UserSecretsId>FF1875C4-0FC1-4FFA-ADDC-BDFD8800DA98</UserSecretsId>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <RootNamespace>$(MSBuildProjectName)</RootNamespace>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+    <Version>1.4.0.02-beta</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HostFiltering" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Composite" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GmWeb.Common\GmWeb.Common.Standard.csproj" />
+    <ProjectReference Include="..\GmWeb.Web.Common\GmWeb.Web.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\SolutionData\Assets\wwwroot\**\*">
+      <Link>wwwroot\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </EmbeddedResource>   
+  </ItemGroup>
+  <ItemGroup>
+    <_WebToolingArtifacts Remove="Properties\PublishProfiles\identity.local.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Pages\Account\LoginWith2fa.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+    <Folder Include="Settings\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Settings\appsettings.json" />
+    <Content Remove="Settings\**\appsettings.*.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Settings\appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+    <None Include="Settings\**\appsettings.*.json" DependentUpon="Settings\appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="pwsh.exe &quot;$(SolutionDir)Scripts\Build\on-post-build.ps1&quot; -SolutionDirectory &quot;$(SolutionDir)\&quot; -TargetDirectory &quot;$(TargetDir)\&quot; -ProjectDirectory &quot;$(ProjectDir)\&quot; -ProjectPath &quot;$(ProjectPath)&quot; -ProjectName &quot;$(ProjectName)&quot;" />
+  </Target>
+</Project>

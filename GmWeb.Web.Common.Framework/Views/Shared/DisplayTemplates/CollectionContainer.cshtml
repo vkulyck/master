@@ -1,0 +1,30 @@
+﻿@using System.Collections.Generic
+@using GmWeb.Logic.Interfaces
+@model IEnumerable<IViewModel>
+@{
+    ViewBag.CollectionDisplayGuid = Html.GenerateGuid();
+}
+
+<script defer="defer">
+    $(function () {
+        console.log('binding collection "@(ViewBag.CollectionName)" to display with guid "@ViewBag.CollectionDisplayGuid"');
+        var binder = function (parentGuid, collectionName, handler) {
+            FlowContext.bindToCollection(parentGuid, collectionName, handler);
+        };
+        BindCollectionEditor('@ViewBag.CollectionDisplayGuid', '@ViewBag.ParentGuid', '@ViewBag.CollectionName', binder);
+    });
+</script>
+<div id="@ViewBag.CollectionDisplayGuid" class="ibox float-e-margins">
+    <div class="ibox-content view-model-collection-viewer" parent-guid="@ViewBag.ParentGuid" parent-collection-name="@ViewBag.CollectionName">
+        <table style="min-width: 400px;" class="table">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @(Html.CollectionItemDisplayFor(item))
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

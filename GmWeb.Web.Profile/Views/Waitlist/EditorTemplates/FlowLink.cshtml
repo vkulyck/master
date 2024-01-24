@@ -1,0 +1,32 @@
+﻿@model GmWeb.Web.Profile.Models.Waitlist.FlowLink
+
+@{ 
+    ViewBag.TableGuid = Html.GenerateGuid();
+}
+
+<table class="table" guid="@ViewBag.TableGuid">
+    <tr>
+        <td style="width: 20%;">
+            Filter:
+        </td>
+        <td style="width: 80%">
+            @Html.EditorContainerFor(m => m.Predicate, new { placeholder = "Enter a predicate..." })
+        </td>
+    </tr>
+</table>
+<script defer>
+    $(function () {
+        var hoverIn = function () {
+            var model = FlowContext.ModelMap['@(Model.Guid)'];
+            var connection = FlowContext.ConnectionMap[model.ConnectionGuid];
+            connection.redraw({ stroke: { color: "#1cff15", width: 4 } });
+        };
+        var hoverOut = function () {
+            var model = FlowContext.ModelMap['@(Model.Guid)'];
+            var connection = FlowContext.ConnectionMap[model.ConnectionGuid];
+            connection.redraw({ stroke: { color: "#282828", width: 2 } });
+        };
+        var editorTable = $('table[guid="@(ViewBag.TableGuid)"]');
+        editorTable.hover(hoverIn, hoverOut);
+    });
+</script>

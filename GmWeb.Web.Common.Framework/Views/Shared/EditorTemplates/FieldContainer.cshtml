@@ -1,0 +1,41 @@
+﻿@using GmWeb.Web.Common.Models.Shared
+@using GmWeb.Web.Common.RazorControls
+
+@model IEditableViewModel
+@{
+    ViewBag.ContentStyle = "";
+    if (ViewBag.TitleSize == null)
+    {
+        ViewBag.TitleSize = 24;
+    }
+    if (ViewBag.IsCollapsible == null)
+    {
+        ViewBag.IsCollapsible = false;
+    }
+}
+
+<div model-guid="@Model.Guid" class="ibox float-e-margins">
+    @if (ViewBag.IsCollapsible)
+    {
+        var toggleIconDirection = "up";
+        if (ViewBag.StartCollapsed == false)
+        {
+            ViewBag.ContentStyle = "display: none;";
+            toggleIconDirection = "down";
+        }
+        <div class="ibox-title">
+            <div style="display: inline-block; vertical-align: middle; font-size: @(ViewBag.TitleSize)px;">@Model.EditorTitle</div>
+            <div class="ibox-tools" style="display: inline-block; vertical-align: middle; float: right;">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-@(toggleIconDirection)"></i>
+                </a>
+            </div>
+            <div style="display: inline-block; vertical-align: middle; margin-top: 3px; float: right;">
+                @(this.Html.GmControls().Defaults.AutosizeTextarea().DataBind(Model.EditorNameField).Align(HorizontalAlignment.Right))
+            </div>
+        </div>
+    }
+    <div class="ibox-content" style="@(ViewBag.ContentStyle)">
+        @Html.EditorForModel()
+    </div>
+</div>

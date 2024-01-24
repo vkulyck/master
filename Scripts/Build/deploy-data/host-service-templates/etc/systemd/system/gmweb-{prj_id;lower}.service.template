@@ -1,0 +1,21 @@
+[Unit]
+  Description=The {prj_name:dotnet} Service
+[Service]
+  WorkingDirectory=/srv/gmweb/{prj_id:lower}
+  ExecStart=/usr/bin/dotnet /srv/gmweb/{prj_id:lower}/{prj_name:dotnet}.dll
+  Restart=no
+  # Restart service after 10 seconds if the dotnet service crashes:
+  RestartSec=10
+  KillSignal=SIGINT
+  SyslogIdentifier=gmweb-{prj_id:lower}
+  User=www-data
+  Group=webdev
+  Environment=ASPNETCORE_ENVIRONMENT=Staging
+  Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+  Environment=DOTNET_hostBuilder__reloadConfigOnChange=false
+  StandardOutput=append:/var/log/gmweb/{prj_id:lower}.log
+  StandardError=append:/var/log/gmweb/{prj_id:lower}-error.log
+# Environment=GMWEB_ENABLE_CONFIG_SAVE=true
+# ExecStartPre=touch /srv/gmweb/{prj_id:lower}/Settings/appsettings._BUILD_.json
+[Install]
+  WantedBy=multi-user.target

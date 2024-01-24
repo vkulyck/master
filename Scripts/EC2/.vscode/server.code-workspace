@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../Submodules/GM-Command",
+			"name": "GM-Command"
+		}
+	],
+	"settings": {
+		"powershell.scriptAnalysis.settingsPath": ".vscode/PSScriptAnalyzerSettings.psd1"
+	}
+}

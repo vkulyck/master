@@ -1,0 +1,145 @@
+﻿@using GmWeb.Web.Profile.Models
+@using GmWeb.Web.Profile.Models.ProfileSearch
+@model ProfileSearchViewModel
+@{
+    ViewBag.Panel = Panel.Profiles;
+}
+
+@using (Html.DelayedHandlers())
+{
+    <script type="text/javascript">
+        function onClientDataTypeChanged(e) {
+            updateClientDataType(e.sender);
+        }
+        function updateClientDataType(ddl) {
+            var selectedValue = ddl.value();
+            if ($.isNumeric(selectedValue)) {
+                ProfileSearchData.ClientDataTypeID = selectedValue;
+                $('#GridProfiles').kwidget().dataSource.read();
+            }
+        }
+        function onProfilesBound(e) {
+            var grid = e.sender;
+            var wrappedData = grid.dataSource.data();
+            $.each(wrappedData, function (i, v) {
+                console.log('v:', v);
+                var id = v.UniqueID;
+                console.log('id:', id);
+                LocalProcessData.WrappedProfiles[id] = v;
+                console.log('yay gj');
+            });
+            console.log('we bound');
+        }
+        function onClientDataTypeBound(e) {
+            updateClientDataType(e.sender);
+        }
+        function getDropDownListDataTypeParameters(e) {
+            return ProfileSearchData;
+        }
+        function getGridProfilesParameters() {
+            return ProfileSearchData;
+        }
+        function onSearchProfilesClicked() {
+            console.log('profile search clicked');
+            ProfileSearchData.Threshold = $('#DropDownListThreshold').kvalue();
+            ProfileSearchData.Profiles = [];
+            console.log('LocalProcessData.WrappedProfiles:', LocalProcessData.WrappedProfiles);
+            $.each(LocalProcessData.WrappedProfiles, function(i, v) {
+                var id = v.ClientServiceProfileID;
+                var js = v.toJSON();
+                ProfileSearchData.Profiles.push(js);
+            });
+            console.log('ProfileSearchData.Profiles:', ProfileSearchData);
+            ShowMatches();
+        }
+        function onProfileChecked(sender) {
+            var checkbox = $(sender);
+            var tr = checkbox.closest('tr');
+            var grid = tr.closest('.k-grid').kwidget();
+            var item = grid.dataItem(tr);
+            item.set('IsChecked', checkbox.is(':checked'));
+        }
+        $(function () {
+            $('#ButtonPrevious').hide();
+            $('#ButtonNext').hide();
+        })
+
+/**/</script>
+}
+
+<table class="table" id='@(ViewBag.Panel)-panel'>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            <h3><label>Profiles</label></h3>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            <label style="margin: 5px">Manage profiles:</label>
+            @(Html.Razor().DropDownList()
+                .Name("DropDownListDataType")
+                .DataTextField("Category")
+                .DataValueField("ClientDataTypeID")
+                .HtmlAttributes(new { style = "width: 98%; max-width: 200px" })
+                .OptionLabel("Select a data type...")
+                .DataSource(source =>
+                {
+                    source.Read(read =>
+                    {
+                        read.Action("GetClientDataTypes", "ProfileSearch").Data("getDropDownListDataTypeParameters");
+                    });
+                })
+                .Value(Model.ClientDataTypeID.ToString())
+                .Events(events =>
+                {
+                    events.Change("onClientDataTypeChanged");
+                    events.DataBound("onClientDataTypeBound");
+                })
+            )
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            @(Html.Razor().Grid<ProfileRow>()
+                .Name("GridProfiles")
+                .Columns(columns =>
+                {
+                    columns.Bound(row => row.IsChecked).ClientTemplate(@"<input type='checkbox' onclick='onProfileChecked(this);' #=IsChecked ? 'checked=checked' : '' #></input>");
+                    columns.Bound(row => row.ProfileName).Title("Profile Name");
+                    columns.Bound(row => row.Value).Title("Current Client Value");
+                    foreach (var c in columns.ColumnsContainer.Columns)
+                    {
+                        // TODO: Generalize bold headers
+                        c.HeaderTemplate.Html = "<label style='font-weight:bold'>" + c.Title + "</label>";
+                    }
+                })
+                .Events(events =>
+                {
+                    events.DataBound("onProfilesBound");
+                })
+                .DataSource(src =>
+                {
+                    src.Ajax().Read(r => r.Action("GetProfiles", "ProfileSearch").Data("getGridProfilesParameters"));
+                })
+            )
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%; height: 34px;" align="left" valign="top">
+            @(Html.Razor().Defaults.Button().Name("ButtonPrevious").Content("<< Previous").Enable(Model.EnablePrevButton))
+            @(Html.Razor().Defaults.Button().Name("ButtonNext").Content("Next >>").Enable(Model.EnableNextButton))
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            @(Html.Razor().Defaults.Button().Name("ButtonSearchProfiles").Content("Search").Events(e => e.Click("onSearchProfilesClicked")))
+            <label>Search threshold:</label>
+            @(Html.Razor().DropDownList()
+                .Name("DropDownListThreshold")
+                .HtmlAttributes(new { style = "width: 98%; max-width: 200px" })
+                .BindTo(new float[] { 0.25f, 0.5f, 0.75f, 1.0f }.Select(x => new SelectListItem { Text = $"{x:p0}", Value = $"{x}" }))
+            )
+            @(Html.GmRazor().Defaults.Button().Name("ButtonResetProfiles").Content("Reset all"))
+        </td>
+    </tr>
+</table>

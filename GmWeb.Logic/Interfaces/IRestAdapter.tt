@@ -1,0 +1,9 @@
+﻿<#@ template language="C#" debug="false" hostspecific="true"#>
+<#@ include file="$(SolutionDir)GmWeb.Common\TextTransforms\Web\IRestAdapter.t4" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+namespace GmWeb.Logic.Interfaces;
+<#
+ImplementRestAdapter();
+#>

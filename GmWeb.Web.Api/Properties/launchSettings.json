@@ -1,0 +1,22 @@
+{
+    "iisSettings": {
+        "windowsAuthentication": false,
+        "anonymousAuthentication": true,
+        "iisExpress": {
+            "applicationUrl": "https://api.goodmojo.test",
+            "sslPort": 443
+        }
+    },
+    "profiles": {
+        "Debug": {
+            "launchBrowser": false,
+            "dotnetRunMessages": true,
+            "applicationUrl": "https://api.goodmojo.test",
+            "launchUrl": "https://api.goodmojo.test",
+            "commandName": "Project",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        }
+    }
+}

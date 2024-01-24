@@ -1,0 +1,284 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>Latest</LangVersion>
+    <MSBuildProjectExtensionsPath>$(ProjectDir)obj\Standard</MSBuildProjectExtensionsPath>
+    <BaseIntermediateOutputPath>$(ProjectDir)obj\Standard</BaseIntermediateOutputPath>
+    <UserSecretsId>bb4bc002-00a0-4261-9ba8-a255b1c5819f</UserSecretsId>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>  
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Standard\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\Standard\Release</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**" />
+    <Compile Remove="Services\Importing\Languages\**" />
+    <Compile Remove="Utility\Bootstrap\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <EmbeddedResource Remove="Services\Importing\Languages\**" />
+    <EmbeddedResource Remove="Utility\Bootstrap\**" />
+    <None Remove="obj\**" />
+    <None Remove="Services\Importing\Languages\**" />
+    <None Remove="Utility\Bootstrap\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Data\Configuration\LookupOptionTables.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Configuration\LookupOptionTables.json" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.107.20" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.101.192" />
+    <PackageReference Include="BinaryKits.Zpl.Viewer" Version="1.0.5" />
+    <PackageReference Include="Bogus" Version="33.0.2" />
+    <PackageReference Include="CaseExtensions" Version="1.1.0" />
+    <PackageReference Include="Countries.Net.DependencyInjection" Version="1.1.0" />
+    <PackageReference Include="CsvHelper" Version="12.1.2" />
+    <PackageReference Include="DbfDataReader" Version="0.5.4" />
+    <PackageReference Include="EFCore.BulkExtensions" Version="6.2.6" />
+    <PackageReference Include="ExtendedIsoCountries" Version="1.0.2" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
+    <PackageReference Include="HtmlAgilityPack.CssSelectors.NetCore" Version="1.2.1" />
+    <PackageReference Include="Ical.Net" Version="4.2.0" />
+    <PackageReference Include="LanguageTags.NET" Version="8.0.30703" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="8.4.0" />
+    <PackageReference Include="MathNet.Numerics" Version="4.8.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="6.0.0" />
+    <PackageReference Include="NCalc.SAT" Version="1.3.9" />
+    <PackageReference Include="NetTopologySuite.Core" Version="1.15.3" />
+    <PackageReference Include="NetTopologySuite.IO.ShapeFile" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
+    <PackageReference Include="QRCoder" Version="1.4.3" />
+    <PackageReference Include="RandomDataGenerator.Net" Version="1.0.12" />
+    <PackageReference Include="ShellProgressBar" Version="5.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
+    <PackageReference Include="SmartFormat.NET" Version="2.5.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.5.43" />
+    <PackageReference Include="StackExchange.Redis.Extensions.Core" Version="7.2.1" />
+    <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="7.2.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GmWeb.Common\GmWeb.Common.Standard.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="**\*.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Data\Context\Lookup\LookupContext.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Data\Context\Lookup\*.generated.cs">
+      <DependentUpon>LookupContext.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Data\Context\Contracts\IDemographicsContext.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IDemographicsContext.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Data\Context\Contracts\IWaitlistContext.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IWaitlistContext.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Data\Context\Account\AccountContext.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Data\Context\Account\*.generated.cs">
+      <DependentUpon>AccountContext.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Data\Context\Lookup\LookupContext.generated.cs">
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Update="Data\Context\CacheQueryAsync.generated.cs">
+      <DependentUpon>CacheQueryAsync.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Data\Models\Carma\Logical\Address.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Address.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Data\Models\Carma\Physical\Status\ThreadStatus.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ThreadStatus.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Data\Models\Carma\Physical\Status\UserConfigStatus.generated.cs">
+      <DependentUpon>UserConfigStatus.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Data\Models\Carma\Physical\Status\NoteStatus.generated.cs">
+      <DependentUpon>NoteStatus.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Data\Models\Shared\Address.generated.cs">
+      <DependentUpon>Address.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Interfaces\IRestAdapter.generated.cs">
+      <DependentUpon>IRestAdapter.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Utility\Extensions\Generated\PrimitiveStringParsing.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PrimitiveStringParsing.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Data\Context\Carma\CarmaContext.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Data\Context\Carma\*.generated.cs">
+      <DependentUpon>CarmaContext.tt</DependentUpon>
+    </Compile>
+    <None Update="Data\Context\Carma\CarmaContext.tt">
+      <LastGenOutput>CarmaContext.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Data\Context\Carma\CarmaContext.generated.cs">
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Update="Data\Context\Identity\IdentityCache.generated.cs">
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Update="Data\Context\Profile\ProfileContext.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Utility\Extensions\Generated\NumericEnumExtensions.generated.cs">
+      <DependentUpon>NumericEnumExtensions.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Utility\Web\ErrorResponse.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ErrorResponse.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Data\Context\Profile\*.generated.cs">
+      <DependentUpon>ProfileContext.tt</DependentUpon>
+    </Compile>
+    <None Update="Data\Context\CacheQueryAsync.tt">
+      <LastGenOutput>CacheQueryAsync.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Data\Context\Profile\ProfileContext.tt">
+      <LastGenOutput>ProfileContext.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="Data\Context\Contracts\IDemographicsContext.tt">
+      <LastGenOutput>IDemographicsContext.cs</LastGenOutput>
+    </None>
+    <None Update="Data\Context\Contracts\IWaitlistContext.tt">
+      <LastGenOutput>IWaitlistContext.cs</LastGenOutput>
+    </None>
+    <None Update="Data\Context\Account\AccountContext.tt">
+      <LastGenOutput>AccountContext.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Data\Context\Lookup\LookupContext.tt">
+      <LastGenOutput>LookupContext.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Data\Models\Carma\Logical\Address.tt">
+      <LastGenOutput>Address.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Data\Models\Carma\Physical\Status\ThreadStatus.tt">
+      <LastGenOutput>ThreadStatus.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Data\Models\Carma\Physical\Status\UserConfigStatus.tt">
+      <LastGenOutput>UserConfigStatus.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Data\Models\Carma\Physical\Status\NoteStatus.tt">
+      <LastGenOutput>NoteStatus.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Data\Models\Shared\Address.tt">
+      <LastGenOutput>Address.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Interfaces\IRestAdapter.tt">
+      <LastGenOutput>IRestAdapter.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Utility\Extensions\Generated\PrimitiveStringParsing.tt">
+      <LastGenOutput>PrimitiveStringParsing.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Utility\Extensions\Generated\NumericEnumExtensions.tt">
+      <LastGenOutput>NumericEnumExtensions.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Utility\Web\ErrorResponse.tt">
+      <LastGenOutput>ErrorResponse.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+</Project>

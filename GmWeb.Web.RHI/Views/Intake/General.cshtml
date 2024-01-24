@@ -1,0 +1,78 @@
+﻿@page
+@using GmWeb.Logic.Enums
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake
+@using GmWeb.Web.RHI.Utility
+@using Kendo.Mvc.UI.Fluent;
+@model GeneralData
+@{
+    Layout = null;
+}
+<div class="gray-bg">
+        <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is your preferred name?</h4>
+        @(Html.Kendo().TextBoxFor(g => g.PreferredName)
+            .Placeholder("")
+             .HtmlAttributes(new { required = "required" })
+        )
+        <div class="validator-msg"><span data-for="PreferredName" class="k-invalid-msg"></span></div>
+        <br />
+
+            <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is your gender?</h4>
+ 	             @(Html.Kendo().DropDownListFor(g => g.Gender)
+                    .HtmlAttributes(new { required = "required" })
+                    .OptionLabel("...")
+                    .Height(310)
+                    .AutoWidth(true)
+                    .BindToEnum<Gender>()
+                 )
+                <div class="validator-msg"><span data-for="Gender" class="k-invalid-msg"></span></div>
+        <br />
+
+            <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is your gender pronouns?</h4>
+ 	             @(Html.Kendo().DropDownListFor(g => g.GenderPronouns)
+                    .HtmlAttributes(new { required = "required" })
+                    .OptionLabel("...")
+                    .Height(310)
+                    .AutoWidth(true)
+                    .BindToEnum<GenderPronouns>()
+                 )
+                 <div class="validator-msg"><span data-for="GenderPronouns" class="k-invalid-msg"></span></div>
+        <br />
+
+        <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is your current home address?</h4>
+            @(Html.Kendo().TextBoxFor(g => g.Street)
+            .Placeholder("Street")
+            .HtmlAttributes(new { required = "required"})
+        )
+        <div class="validator-msg"><span data-for="Street" class="k-invalid-msg"></span></div>
+
+        @(Html.Kendo().TextBoxFor(g => g.AddressLine2)
+            .Placeholder("Address line 2")
+            @*.HtmlAttributes(new { required = "required"})*@
+        )
+        <div class="validator-msg"><span data-for="AddressLine2" class="k-invalid-msg"></span></div>
+
+        @(Html.Kendo().TextBoxFor(g => g.City)
+            .Placeholder("City")
+             .HtmlAttributes(new { required = "required"})
+        )
+        <div class="validator-msg"><span data-for="City" class="k-invalid-msg"></span></div>
+        <br />
+
+        <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">State:</h4>
+ 	             @(Html.Kendo().DropDownListFor(g => g.State)
+                    .HtmlAttributes(new { required = "required" })
+                    .OptionLabel("...")
+                    .Height(310)
+                    .AutoWidth(true)
+                    .BindToEnum<StateFipsCode>()
+                 )
+                 <div class="validator-msg"><span data-for="State" class="k-invalid-msg"></span></div>
+
+         <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">Zip code:</h4>
+         @(Html.Kendo().MaskedTextBoxFor(g => g.ZipCode)
+                .Mask("00000")
+                .HtmlAttributes(new {  required = "required"})
+         )
+         <div class="validator-msg"><span data-for="ZipCode" class="k-invalid-msg"></span></div>
+         <br />
+ </div>

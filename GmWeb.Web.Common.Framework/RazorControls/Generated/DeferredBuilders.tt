@@ -1,0 +1,111 @@
+﻿<#@ template language="C#" hostspecific="true" #>
+<#@ assembly name="Microsoft.VisualStudio.Shell.Interop.8.0" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="$(SolutionDir)\packages\Kendo.MVC\Kendo.Mvc.dll" #>
+<#@ assembly name="$(SolutionDir)\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll" #>
+
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="Kendo.Mvc.UI.Fluent" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Kendo.Mvc.UI.Fluent;
+
+namespace GmWeb.Web.Common.RazorControls
+{
+    public partial class GmKendoFactory
+    {
+<#
+                GenerateReplacements(GetControlBuilderMethods().ToArray());
+                GenerateGenericReplacements(GetGenericControlBuilderMethods().ToArray());
+			#>
+    }
+
+}
+<#+
+
+	public void ReplaceMethod(string control)
+    {
+        #>        public override <#= control #>Builder <#= control #>() => base.<#= control #>().Deferred();
+<#+
+    }
+
+    public void GenerateReplacements(params string[] controls)
+    {
+        foreach(var control in controls)
+        {
+            ReplaceMethod(control);
+        }
+    }
+
+	public void ReplaceGenericMethod(string control)
+    {
+        #>        public new <#= control #>Builder<T> <#= control #><T>() where T : class => base.<#= control #><T>().Deferred();
+<#+
+    }
+
+    public void GenerateGenericReplacements(params string[] controls)
+    {
+        foreach(var control in controls)
+        {
+            ReplaceGenericMethod(control);
+        }
+    }
+
+    protected List<string> GetControlBuilderMethods()
+    {
+        var methodNames = typeof(WidgetFactory)
+            .GetMethods()
+            .Where(x => x.ReturnType.Name.EndsWith("Builder"))
+            .OrderBy(x => x.Name)
+            .Select(x => x.Name)
+            .Distinct()
+            .ToList()
+        ;
+        return methodNames;
+    }
+
+    protected List<string> GetGenericControlBuilderMethods()
+    {
+        var methods = typeof(WidgetFactory)
+            .GetMethods()
+            .Where(x => x.IsGenericMethod)
+            .Where(x => x.GetGenericArguments().Length == 1)
+            .Where(x => x.ReturnType.IsGenericType)
+            // Don't handle extra constraints for now
+            .Where(x => x.ReturnType.GetGenericArguments()[0].GetGenericParameterConstraints().Length == 0)
+            .ToList()
+        ;
+
+        var genericNamePattern = @"^\w+";
+
+        var builders = methods
+            .Where(x => x.GetParameters().Length == 0)
+            .Where(x =>
+            {
+                var friendlyReturnTypeName = Regex.Match(x.ReturnType.Name, genericNamePattern).Value;
+                var baseName = friendlyReturnTypeName.Substring(0, friendlyReturnTypeName.Length - "Builder".Length);
+                if(x.Name != baseName)
+                    return false;
+                return friendlyReturnTypeName.EndsWith("Builder");
+            })
+            .ToList()
+        ;
+
+        var methodNames = builders
+            .Select(x => x.Name)
+            .Distinct()
+            .ToList();
+        return methodNames;
+    }
+
+#>

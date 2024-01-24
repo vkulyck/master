@@ -1,0 +1,65 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#+
+public void ImplementRestAdapter() {
+    ImplementRestAdapter(AdapterDeclaration: "public partial interface IRestAdapter");
+}
+public void ImplementRestAdapter(string AdapterDeclaration)
+{
+    #>using ErrorResponse = GmWeb.Logic.Utility.Web.ErrorResponse;
+<#+ ImplementRestAdapter(AdapterDeclaration, "ErrorResponse");
+}
+public void ImplementRestAdapter(string AdapterDeclaration, string ErrorType)
+{
+    if(!AdapterDeclaration.EndsWith("IRestAdapter"))
+        AdapterDeclaration += " : IRestAdapter";
+#>
+<#+#>using HttpMethod = System.Net.Http.HttpMethod;
+<#+#>using System.Threading.Tasks;
+
+<#= AdapterDeclaration #>
+{
+    public async Task<TSuccess> RestRequestAsync<TSuccess>(string subpath, object data, HttpMethod method, bool refresh)
+        where TSuccess : class
+        => await ((IRestAdapter)this).RequestAsync<TSuccess>(subpath, data, method, refresh);
+
+    public async Task<(TSuccess Success, <#= ErrorType #> Error)> RestRequestWithErrorAsync<TSuccess>(string subpath, object data, HttpMethod method, bool refresh)
+        where TSuccess : class
+        => await ((IRestAdapter)this).RequestAsync<TSuccess, <#= ErrorType #>>(subpath, data, method, refresh);
+
+    public async Task<(TSuccess Success, TError Error)> RestRequestAsync<TSuccess, TError>(string subpath, object data, HttpMethod method, bool refresh)
+        where TSuccess : class
+        where TError : class
+        => await ((IRestAdapter)this).RequestAsync<TSuccess, TError>(subpath, data, method, refresh);
+
+<#+
+    var methods = new List<string>{ "Get", "Post", "Put", "Delete" };
+    foreach(var method in methods)
+    {
+#>
+
+<#+     #>   public async Task<<#= ErrorType #>> <#= method #>Async(string subpath, object data = null, bool refresh = false)
+<#+     #>       => (await ((IRestAdapter)this).RequestAsync<string, <#= ErrorType #>>(subpath, data, HttpMethod.<#= method #>, refresh)).Error;
+
+<#+     #>   public async Task<TSuccess> <#= method #>Async<TSuccess>(string subpath, object data = null, bool refresh = false)
+<#+     #>       where TSuccess : class
+<#+     #>       => await ((IRestAdapter)this).RequestAsync<TSuccess>(subpath, data, HttpMethod.<#= method #>, refresh);
+
+<#+     #>   public async Task<(TSuccess Success, <#= ErrorType #> Error)> <#= method #>WithErrorAsync<TSuccess>(string subpath, object data = null, bool refresh = false)
+<#+     #>       where TSuccess : class
+<#+     #>       => await this.RestRequestWithErrorAsync<TSuccess>(subpath, data: data, method: HttpMethod.<#= method #>, refresh: refresh);
+
+<#+     #>   public async Task<(TSuccess Success, TError Error)> <#= method #>Async<TSuccess,TError>(string subpath, object data = null, bool refresh = false)
+<#+     #>       where TSuccess : class
+<#+     #>       where TError : class
+<#+     #>       => await ((IRestAdapter)this).RequestAsync<TSuccess, TError>(subpath, data, HttpMethod.<#= method #>, refresh);
+
+<#+
+    }
+#>
+
+}
+<#+
+}
+#>

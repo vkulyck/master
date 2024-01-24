@@ -1,0 +1,4 @@
+[redis-cli]
+client = yes
+accept = 127.0.0.1:6379
+connect = master.gmweb-team.aphdvl.usw1.cache.amazonaws.com:35833

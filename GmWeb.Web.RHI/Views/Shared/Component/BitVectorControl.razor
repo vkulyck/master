@@ -1,0 +1,115 @@
+﻿@using GmWeb.Logic.Utility.Extensions.Enums
+@using System.Collections
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@using Kendo.Mvc.UI
+
+@typeparam TEnum where TEnum : struct, Enum
+@namespace GmWeb.Web.RHI.Views.Shared.Component
+@implements IReadOnlyList<EnumCheckBox<TEnum>>
+@inject IWebHostEnvironment Env
+
+<div id="@InputID-Container">
+    <ul class="k-checkbox-list @this.LayoutClass">
+    @foreach (var checkbox in this)
+    {
+        var guid = Guid.NewGuid();
+        <li class="k-checkbox-item">
+            <input id="@guid" type="checkbox" class="k-checkbox" @bind="checkbox.IsSelected" />
+            <label class="k-checkbox-label" for="@guid">@checkbox.Flag.GetDisplayName()</label>
+        </li>
+    }
+    </ul>
+
+    <input id="@InputID" name="@InputID" type="hidden" class="form-control" required="required" @bind="@this.SelectedBits" />
+    @if (Env.IsDevelopment())
+    {
+        <div class="grid">
+            <div class="row">
+                <label class="col-md-2">Selected Values</label>
+                <label class="col-md-10">@this.SelectedValues</label>
+            </div>
+            <div class="row">
+                <label class="col-md-2">Selected Bits</label>
+                <label class="col-md-10">@this.SelectedBits</label>
+            </div>
+        </div>
+    }
+</div>
+@code {
+    [Parameter]
+    public TEnum InputSelection { get; set; }
+    [Parameter]
+    public string ID { get; set; }
+    [Parameter]
+    public CheckBoxGroupLayout? Layout { get; set; }
+    [Inject]
+    IJSRuntime JsRuntime { get; set; }
+
+    public string LayoutClass => this.Layout switch
+    {
+        CheckBoxGroupLayout.Vertical => "k-list-vertical",
+        CheckBoxGroupLayout.Horizontal => "k-list-horizontal",
+        _ => ""
+    };
+
+    public string InputID => this.ID;
+    public List<EnumCheckBox<TEnum>> Children { get; } = new List<EnumCheckBox<TEnum>>();
+    public int SelectedBits
+    {
+        get => this.SelectedFlags.ToN();
+        set
+        {
+            var oldValue = this.SelectedBits;
+            if(value != oldValue)
+            {
+                var newEnumValue =  value.ToEnumValue<TEnum>();
+                this.SelectedFlags = newEnumValue;
+                StateHasChanged();
+            }
+        }
+    }
+    public TEnum SelectedFlags
+    {
+        get
+        {
+            return this.Children
+                .Where(cb => cb.IsSelected)
+                .Select(cb => cb.Flag.ToN())
+                .Aggregate(0, (result, val) => result | val)
+                .ToEnumValue<TEnum>()
+            ;
+        }
+        set
+        {
+            foreach (var cbx in this.Children)
+                cbx.IsSelected = value.HasFlag(cbx.Flag);
+        }
+    }
+    public string SelectedValues => this.SelectedFlags.GetDisplayName();
+
+    int IReadOnlyCollection<EnumCheckBox<TEnum>>.Count => this.Children.Count;
+
+    EnumCheckBox<TEnum> IReadOnlyList<EnumCheckBox<TEnum>>.this[int index] => this.Children[index];
+
+    IEnumerator<EnumCheckBox<TEnum>> IEnumerable<EnumCheckBox<TEnum>>.GetEnumerator() => this.Children.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => this.Children.GetEnumerator();
+
+    protected override void OnInitialized()
+    {
+        foreach (var enumValue in Enum.GetValues<TEnum>())
+            this.Children.Add(new EnumCheckBox<TEnum>(enumValue));
+        this.SelectedFlags = this.InputSelection;
+    }
+
+    public async Task<int> OnSelectedBitsChanged(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        if (int.TryParse(args.Value?.ToString(), out int result))
+        {
+            this.SelectedBits = result;
+            StateHasChanged();
+        }
+        return await Task.FromResult(this.SelectedBits);
+    }
+}

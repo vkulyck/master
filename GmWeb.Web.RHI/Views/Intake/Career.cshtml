@@ -1,0 +1,113 @@
+﻿@page
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake
+@using GmWeb.Logic.Enums
+@using GmWeb.Web.RHI.Utility
+@model CareerData
+@{
+    Layout = null;
+}
+
+<script>
+    function onChangeOccupation(e) {
+        var radiogroup = $("#CurrentOccupation").data("kendoRadioGroup");
+        var currentValue = radiogroup.value();
+        radiogroup.wrapper.removeClass("invalidradiogroup");
+        $('#occupationTextCtrl').kExcludeAndHide();
+        if (currentValue == @((int)Occupation.Other)){
+            $('#occupationTextCtrl').kIncludeAndShowInBlock();
+        };
+     };
+    function onChangeJob(e) {
+        var radiogroup = $("#Job").data("kendoRadioGroup");
+        radiogroup.wrapper.removeClass("invalidradiogroup");
+     };
+
+     function onChangeWorkSt(e) {
+          var radiogroup = $("#WorkStatus").data("kendoRadioGroup");
+          var currentValue = radiogroup.value();
+          radiogroup.wrapper.removeClass("invalidradiogroup");
+         $('#workTextCtrl').kExcludeAndHide();
+            if (currentValue == @((int)WorkStatus.Other)) {
+                $('#workTextCtrl').kIncludeAndShowInBlock('padding-left: 20px;padding-top: 20px;');
+            };
+     };
+
+
+</script>
+
+<div class="gray-bg">
+    <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;padding-bottom: 20px;">What is your current occupation?</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().RadioGroupFor(m => m.CurrentOccupation)
+            .HandleUpdates("onChangeOccupation")
+            .HtmlAttributes(new { required = "required", style = "display:inline-block"})
+            .Layout("horizontal")
+            .BindToEnum<Occupation>()
+        )
+      </span>
+      <div class="validator-msg"><span data-for="CurrentOccupation" class="k-invalid-msg"></span></div>
+      <div id="occupationTextCtrl" style="display:none">
+                @(Html.Kendo().TextBoxFor(m => m.OtherOccupation)
+                .Placeholder("")
+                .HtmlAttributes(new { required = "required" })
+                )
+                <div class="validator-msg"><span data-for="OtherOccupation" class="k-invalid-msg"></span></div>
+          </div>
+      <br />
+      <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">How many years of education have you completed? Or What is your highest level of education completed?</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.Education)
+                .HtmlAttributes(new { required = "required", style = "width:auto" })
+                .AutoWidth(true)
+                .OptionLabel("...")
+                .Height(310)
+                .BindToEnum<Education>()
+             )
+      </span>
+      <div class="validator-msg"><span data-for="Education" class="k-invalid-msg"></span></div>
+      <br />
+      <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;padding-bottom: 20px;">Does your job responsibility include one of these categories?</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().RadioGroupFor(m => m.Job)
+            .HandleUpdates("onChangeJob")
+            .HtmlAttributes(new { required = "required"})
+            .Layout("vertial")
+            .BindToEnum<Job>()
+        )
+      </span>
+      <div class="validator-msg"><span data-for="Job" class="k-invalid-msg"></span></div>
+      <br />
+      <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What was your total household income from last year?</h4>
+      <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.Income)
+                .HtmlAttributes(new { required = "required", style = "width:auto" })
+                .AutoWidth(true)
+                .OptionLabel("...")
+                .DataTextField("Value")
+                .DataValueField("Key")
+                .Height(310)
+                .DataSource(source => source.ReadAction("GetIncomeList", "Intake"))
+             )
+      </span>
+      <div class="validator-msg"><span data-for="Income" class="k-invalid-msg"></span></div>
+      <br />
+      <div class="wrap">
+          <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;padding-bottom: 20px;">What is your current work status? Are you:</h4>
+            <span class="k-form-field-wrap" style="padding-top: 20px">
+                @(Html.Kendo().RadioGroupFor(m => m.WorkStatus)
+                .HandleUpdates("onChangeWorkSt")
+                .HtmlAttributes(new { required = "required"})
+                .Layout("vertical")
+                .BindToEnum<WorkStatus>()
+            )
+          </span>
+          <div class="validator-msg"><span data-for="WorkStatus" class="k-invalid-msg"></span></div>
+          <div id="workTextCtrl" style="display:none">
+                @(Html.Kendo().TextBoxFor(m => m.OtherWork)
+                .Placeholder("Please specify")
+                .HtmlAttributes(new { required = "required" })
+                )
+                <div class="validator-msg"><span data-for="OtherWork" class="k-invalid-msg"></span></div>
+          </div>
+      </div>
+</div>

@@ -1,0 +1,24 @@
+﻿@using GmWeb.Logic.Enums
+@using GmWeb.Logic.Data.Models.Shared
+
+@model DynamicFieldValue
+<div style="float:right">
+@switch (Model.DataType)
+{
+    case DataType.B:
+            @(Html.GmRazor().Checkbox().DataBind("RawValue"))
+        break;
+    case DataType.D:
+            @(Html.GmRazor().Datepicker().DataBind("RawValue"))
+        break;
+    case DataType.L:
+            @(Html.GmRazor().Dropdown<LookupOption>().Values(Model.Options).DataBind("RawValue"))
+        break;
+    case DataType.N:
+            @(Html.GmRazor().Textbox().DataBind("RawValue"))
+        break;
+    case DataType.S:
+            @(Html.GmRazor().Textarea().DataBind("RawValue"))
+        break;
+}
+</div>

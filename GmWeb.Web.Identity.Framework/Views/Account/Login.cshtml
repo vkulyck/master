@@ -1,0 +1,26 @@
+﻿@using GmWeb.Common
+@using GmWeb.Web.Identity.Models
+@model LoginViewModel
+@{
+    Layout = this.SimplifiedLayout();
+    ViewBag.Title = $"Login";
+    string acctType = Model.IdentityType.ToString().ToLower();
+}
+
+@using (var form = Html.GmRazor().BeginForm(opts =>
+{
+    opts.Action = "Login";
+    opts.SubmitLabel = $"Login";
+    opts.GenerateItemLabels = false;
+    opts.GenerateValidationSummary = false;
+    opts.RouteQuery();
+}))
+{
+    @Html.GmRazor().BrandedLogo()
+    <h4 class="logo-name" style="font-size:25px; text-transform:uppercase; letter-spacing:0; margin-bottom:10px;">Login Portal</h4>
+    @Html.ValidationSummary(true)
+    @Html.GmRazor().FormItem(m => m.UserName)
+    @Html.GmRazor().PasswordFormItem(m => m.Password).Autofill();
+}
+<small>@Html.ActionLink("Forgot password?", "RequestPasswordResetToken")</small>
+@Html.GmRazor().BrandedFooter()

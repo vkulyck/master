@@ -1,0 +1,110 @@
+﻿@using Kendo.Mvc
+@using Kendo.Mvc.UI
+@using System.Collections
+
+@using System.Collections.Generic
+@using System.Linq
+@model GmWeb.Web.Demographics.ViewModels.ProgramViewModel
+
+@{
+    ViewBag.Title = "Program Overview";
+    int sTab = ViewBag.SelectedTab ?? 1;
+}
+
+<script>
+    function showTabstripProgress(e) {
+        var tabstrip = e.sender;
+ 
+        window.setTimeout(function(){
+            kendo.ui.progress(tabstrip.element, true);
+        });
+    }
+ 
+    function hideTabstripProgress(e) {
+        var tabstrip = e.sender;
+ 
+        window.setTimeout(function(){
+            kendo.ui.progress(tabstrip.element, false);
+        });
+    }
+</script>
+
+<script>
+    function handleActivityFilter() {
+        var filter = $('#txtActivityFilter');
+        var tabstrip = $("#tabstrip").data("kendoTabStrip");
+        var qparams = {
+            SelectedTab: tabstrip.select().index() + 1,
+            ActivityFilter: filter.val()
+        };
+        LoadParams(qparams);
+    }
+</script>
+<div style="display: inline">
+    <label>Activity Filter:</label>
+    @*@(Html.Razor().TextBox().Name("txtActivityFilter").HtmlAttributes(new { style = "width: 150px" }).Value(ViewBag.ActivityFilter))*@
+    @(Html.Kendo().AutoComplete().Deferred()
+          .Name("txtActivityFilter")
+          .Filter("startswith")
+          .Value(ViewBag.ActivityFilter)
+          .BindTo(Model.ActivityIDs)
+    )
+    @(Html.Razor().Defaults.Button().Name("btnActivityFilter").Content("Filter Activities").Events(events => events.Click("handleActivityFilter")))
+</div>
+
+<div class="demo-section k-content" style="overflow: auto">
+    @(Html.Razor().TabStrip()
+        .Name("tabstrip")
+        .HtmlAttributes(new { style = "height: 800px;" })
+        .Events(events =>
+        {
+            events.Select("showTabstripProgress");
+            events.Activate("hideTabstripProgress");
+            events.ContentLoad("hideTabstripProgress");
+        })
+        .Animation(ani => ani.Open(effect => effect.Fade(FadeDirection.In)))
+        .Items(tabstrip =>
+        {
+            tabstrip.Add()
+                .Text("Participant by Category-Month")
+                .Selected(sTab == 1)
+                .LoadContentFrom("_PCMChart", "Program", new { ActivityFilter = ViewBag.ActivityFilter })
+            ;
+            tabstrip.Add()
+                .Text("Participant Ethnicity Distribution")
+                .Selected(sTab == 2)
+                .LoadContentFrom("_ClientEthnicityChart", "Program", new { ActivityFilter = ViewBag.ActivityFilter })
+            ;
+            tabstrip.Add()
+                .Text("Participant Income Levels")
+                .Selected(sTab == 3)
+                .LoadContentFrom("_ClientIncomeChart", "Program", new { ActivityFilter = ViewBag.ActivityFilter })
+            ;
+            tabstrip.Add()
+                .Text("Participant Age Snapshot")
+                .Selected(sTab == 4)
+                .LoadContentFrom("_ClientAgeChart", "Program", new { ActivityFilter = ViewBag.ActivityFilter })
+            ;
+            tabstrip.Add()
+                .Text("Participant Gender and Household Makeup")
+                .Selected(sTab == 5)
+                .LoadContentFrom("_ParticipantHoHGenderChart", "Program", new { ActivityFilter = ViewBag.ActivityFilter })
+            ;
+            tabstrip.Add()
+                .Text("Participant Ethnicity Breakdown")
+                .Selected(sTab == 6)
+                .LoadContentFrom("_ParticipantEthnicityBreakdownChart", "Program", new { ActivityFilter = ViewBag.ActivityFilter })
+            ;
+            tabstrip.Add()
+                .Text("Participant Income Breakdown")
+                .Selected(sTab == 7)
+                .LoadContentFrom("_ParticipantIncomeBreakdownChart", "Program", new { ActivityFilter = ViewBag.ActivityFilter })
+            ;
+            tabstrip.Add()
+                .Text("Living Wage Gap")
+                .Selected(sTab == 8)
+                .LoadContentFrom("_LivingWageIncomeGapChart", "Program", new { ActivityFilter = ViewBag.ActivityFilter })
+            ;
+        })
+    )
+</div>

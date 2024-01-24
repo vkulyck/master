@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../Submodules/GM-Command",
+			"name": "GM-Command"
+		}
+	],
+	"settings": {}
+}

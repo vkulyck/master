@@ -1,0 +1,89 @@
+﻿@using GmWeb.Web.Profile.Models
+@using GmWeb.Web.Profile.Models.ProfileSearch
+@model ProfileSearchViewModel
+@{
+    ViewBag.Panel = Panel.Keywords;
+}
+
+@using (Html.DelayedHandlers())
+{
+    <script type="text/javascript">
+        var CurrentKeywords = [];
+        function onKeywordBound(e) {
+            var data = e.sender.dataSource.data();
+            e.sender.enable(data.length > 0);
+        }
+        function onKeywordChanged(e) {
+            var elem = $('#DropDownListSelectKeyword');
+            var widget = elem.kwidget();
+            var keyword = $('#DropDownListSelectKeyword').kvalue();
+            CurrentKeywords.push(keyword);
+            var joined = CurrentKeywords.join(', ');
+            $('#LabelKeywordList').text(joined);
+            ProfileSearchData.Keywords = CurrentKeywords;
+        }
+        function onSearchKeywordsClicked() {
+            var grid = $('#GridMatchServices').kwidget();
+            grid.dataSource.read();
+        }
+        function getDropDownListSelectKeywordParameters() {
+            var qparams = {};
+            return qparams;
+        }
+    </script>
+}
+
+<table class="table" id='@(ViewBag.Panel)-panel'>
+    <tr>
+        <td style="width: 100%" colspan="2" align="left" valign="top">
+            <h3><label>Keywords</label></h3>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%" align="left" valign="top">
+            <label>Select keyword:</label>
+        </td>
+        <td style="width: 85%" align="left" valign="top">
+            @(Html.Razor().DropDownList()
+                    .Name("DropDownListSelectKeyword")
+                    .HtmlAttributes(new { style = "width: 25%; " })
+                    .OptionLabel("Select a keyword...")
+                    .DataSource(source =>
+                    {
+                        source.Read(read =>
+                        {
+                            read.Action("GetKeywords", "ProfileSearch").Data("getDropDownListSelectKeywordParameters");
+                        });
+                    })
+                    .Events(events =>
+                    {
+                        events.DataBound("onKeywordBound");
+                        events.Change("onKeywordChanged");
+                    })
+            )
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%" align="left" valign="top">
+            <label style="font-weight: bold">Keyword list:</label>
+        </td>
+        <td style="width: 85%" align="left" valign="top">
+            <div id="LabelKeywordList"></div>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" colspan="2" align="left" valign="top">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" colspan="2" align="left" valign="top">
+            @(Html.Razor().Defaults.Button().Name("ButtonSearchKeywords").Content("Search").Events(events =>
+            {
+                events.Click("onSearchKeywordsClicked");
+            }))
+            @(Html.Razor().Defaults.Button().Name("ButtonResetKeywords").Content("Reset all"))
+            @(Html.Razor().Defaults.Button().Name("ButtonResetLastKeyword").Content("Reset last"))
+        </td>
+    </tr>
+</table>

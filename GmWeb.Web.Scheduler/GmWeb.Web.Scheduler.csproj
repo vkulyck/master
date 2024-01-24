@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<LangVersion>Latest</LangVersion>
+		<RootNamespace>GmWeb.Web.Scheduler</RootNamespace>
+		<AssemblyName>GmWeb.Web.Scheduler</AssemblyName>
+		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+		<ApplicationIcon />
+		<OutputType>Library</OutputType>
+		<StartupObject />
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Ical.Net" Version="4.2.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Composite" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="6.0.0" />
+		<PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.2.616" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Extensions\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\GmWeb.Logic\GmWeb.Logic.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="..\SolutionData\wwwroot\**\*">
+		<Link>embedded\%(RecursiveDir)%(FileName)%(Extension)</Link>
+	</EmbeddedResource>   
+  </ItemGroup>
+</Project>

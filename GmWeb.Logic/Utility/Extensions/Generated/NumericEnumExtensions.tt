@@ -1,0 +1,66 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Collections" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ output extension=".generated.cs" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+namespace GmWeb.Logic.Utility.Extensions.Enums;
+
+<#
+var SignedNumericTypes = new List<(string,string)> { 
+    ("Byte", "Byte"), 
+    ("SByte", "SByte"), 
+    ("Int16", "Short"), 
+    ("UInt16", "UShort"), 
+    ("Int32", "N"),
+    ("UInt32", "UN"),
+    ("Int64", "L") ,
+    ("UInt64", "UL") 
+};
+
+#>
+public static partial class EnumExtensions
+{
+    <#
+    foreach(var (typeID, typeName) in SignedNumericTypes)
+    {
+#>    <#GenerateSignedNumericConversions(typeID, typeName);
+    }
+    #>
+}
+<#+
+void GenerateSignedNumericConversions(string typeID, string typeName)
+{
+  #>public static bool TryGetEnumValue<T>(this <#= typeID #> number, out T v) where T : struct, Enum
+    {
+        v = default(T);
+        if (!typeof(T).IsFlags())
+        {
+            var intValues = Enum.GetValues(typeof(T)).OfType<T>().Select(x => x.To<#= typeName #>()).ToHashSet();
+            if (!intValues.Contains(number))
+                return false;
+        }
+        v = (T)(object)number;
+        return true;
+    }
+    public static T ToEnumValue<T>(this <#= typeID #> number) where T : struct, Enum
+    {
+        if (typeof(T).IsFlags())
+            return (T)(object)number;
+        if (number.TryGetEnumValue(out T result))
+            return result;
+        throw new ArgumentException($"{nameof(T)} does not have an assignment to the integer {number}.");
+    }
+
+    public static <#= typeID #> To<#= typeName #><T>(this T e) where T : struct, Enum
+    {
+        <#= typeID #> converted = Convert.To<#= typeID #>(e);
+        return converted;
+    }
+<#+
+}
+#>

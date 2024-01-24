@@ -1,0 +1,40 @@
+﻿@page
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake
+@using GmWeb.Logic.Enums
+@using GmWeb.Web.RHI.Utility
+@model OrientationData
+@{
+    Layout = null;
+}
+
+<script>
+    function onChangeSexOrient(e) {
+        var radiogroup = $("#SexOrientation").data("kendoRadioGroup");
+        var currentValue = radiogroup.value();
+        radiogroup.wrapper.removeClass("invalidradiogroup");
+        $('#editTextCtrl').kExcludeAndHide();
+        if (currentValue == @((int)SexualOrientation.NotListed)) {
+            $('#editTextCtrl').kIncludeAndShowInBlock('padding-left: 20px;padding-top: 20px;');
+        };
+};
+</script>
+
+<div class="gray-bg wrap">
+    <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">How would you describe your sexual orientation? Choose all that apply:</h4>
+        <span class="k-form-field-wrap" style="padding-top: 20px">
+            @(Html.Kendo().RadioGroupFor(m => m.SexOrientation)
+            .HandleUpdates("onChangeSexOrient")
+            .HtmlAttributes(new { required = "required"})
+            .Layout("vertical")
+            .BindToEnum<SexualOrientation>()
+        )
+      </span>
+      <div class="validator-msg"><span data-for="SexOrientation" class="k-invalid-msg"></span></div>
+      <div id="editTextCtrl" style="display:none">
+            @(Html.Kendo().TextBoxFor(m => m.OtherSexOrientation)
+            .Placeholder("Please specify")
+            .HtmlAttributes(new { required = "required" })
+            )
+            <div class="validator-msg"><span data-for="OtherSexOrientation" class="k-invalid-msg"></span></div>
+      </div>
+</div>

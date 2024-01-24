@@ -1,0 +1,66 @@
+﻿@using GmWeb.Web.Identity.Models
+@using GmWeb.Logic.Enums
+@using GmWeb.Logic.Utility.Extensions
+@model TwoFactorDetailsViewModel
+@{
+    Layout = this.SimplifiedLayout();
+}
+
+<div style="width: 400px">
+    <div class="row">
+        <div class="row text-left">
+            <div class="col-md-6">
+                Password (@Html.ActionLink("Edit", "ManagePasswordUpdate"))
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+        <div class="row text-left">
+            <div class="col-md-6">
+                @Html.LabelFor(m => m.Email) (@Html.ActionLink("Edit", "ManageEmailUpdate"))
+            </div>
+            <div class="col-md-6">
+                @Html.ValueFor(m => m.Email)
+            </div>
+        </div>
+        <div class="row text-left">
+            <div class="col-md-6">
+                @Html.LabelFor(m => m.PhoneNumber) (@Html.ActionLink("Edit", "ManagePhoneUpdate"))
+            </div>
+            <div class="col-md-6">
+                @Html.ValueFor(m => m.PhoneNumber)
+            </div>
+        </div>
+        <div class="container" style="width: 350px; border-radius: 9px; background-color: #DDDDDD">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Two-Factor Authentication</h2>
+                </div>
+            </div>
+            @foreach (var infoType in Model.ProviderConfiguration.Keys)
+            {
+                bool isEnabled = Model.ProviderConfiguration[infoType];
+                <div class="row text-left" style="padding: 7px">
+                    <div class="col-md-7">
+                        <div style="font-weight: bold;font-size: 14px;">@infoType.GetDisplayName():</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label>@(isEnabled ? "Enabled" : "Disabled")</label>
+                    </div>
+                    <div class="col-md-2" style="font-size: 11px;">
+                        (@Html.ActionLink(
+                           linkText: isEnabled ? "Disable" : "Enable", 
+                           actionName: "TwoFactorConfiguration",
+                           routeValues: new 
+                           { 
+                               InformationType = infoType, 
+                               ManagementTask = isEnabled ? ManagementTask.Disable : ManagementTask.Update 
+                           }
+                        ))
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+*
+**/
+!.gitignore
+!Config
+!Config/*
+!Assets/
+Backups
+UserSecrets

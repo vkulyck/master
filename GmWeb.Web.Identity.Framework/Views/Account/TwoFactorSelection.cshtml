@@ -1,0 +1,21 @@
+﻿@using GmWeb.Common
+@using GmWeb.Web.Identity.Models
+@model TwoFactorSelectionViewModel
+@{
+    Layout = this.SimplifiedLayout();
+    ViewBag.Title = $"Select 2FA Provider";
+    ViewBag.Description = $"Select a configured 2FA provider for login verification";
+}
+
+@using (var form = Html.GmRazor().BeginForm(opts =>
+{
+    opts.SubmitLabel = $"Continue";
+    opts.GenerateItemLabels = false;
+    opts.GenerateValidationSummary = false;
+    opts.RouteQuery();
+}))
+{
+    @Html.GmRazor().BrandedLogo()
+    @Html.DropDownListFor(model => model.SelectedProvider, Model.Providers)
+}
+@Html.GmRazor().BrandedFooter()

@@ -1,0 +1,36 @@
+﻿@using GmWeb.Web.Common.Controllers
+@using GmWeb.Web.Profile.Models.Waitlist
+@model CategoryData
+
+@{ 
+    BaseController controller = (BaseController)this.ViewContext.Controller;
+    AutoMapper.IMapper mapper = controller.Mapper;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th style="width: 20%"></th>
+            <th style="width: 80%"></th>
+        </tr>
+    </thead>
+    @if (Model.CategoryID.HasValue)
+    {
+        <tr>
+            <td>
+                @Model.VariableName
+            </td>
+            <td style="text-align: right">
+                @Html.DisplayFor(m => m.FormattedValue)
+            </td>
+        </tr>
+    }
+    <tr>
+        <td>
+            Data Source
+        </td>
+        <td>
+            @(Html.GmRazor().Dropdown<DataSource>().Values(DataSource.Options(mapper)).DataBind("DataSourceID").Style("float: right"))
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,32 @@
+﻿@model GmWeb.Web.Profile.Models.Waitlist.FilterResultData
+
+<table class="table">
+    <tr>
+        <td>
+            @Model.MatchCount @(Model.MatchCount == 1 ? "client" : "clients") found (@($"{Model.MatchPercentage:P2} of total"))
+        </td>
+    </tr>
+    @if (Model.MatchCount > 0)
+    {
+        <tr>
+
+            <td>
+                @(Html.Razor().Grid(Model.Clients)
+                    .Name("GridClients")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(row => row.FullName).Title("Client Name");
+                        columns.Bound(row => row.Age);
+                        columns.Bound(row => row.FamilySize).Title("Family Size");
+                        columns.Bound(row => row.City);
+                        columns.Bound(row => row.Zip).Title("Zip Code");
+                        foreach (var c in columns.ColumnsContainer.Columns)
+                        {
+                            c.HeaderTemplate.Html = "<label style='font-weight:bold'>" + c.Title + "</label>";
+                        }
+                    })
+                )
+            </td>
+        </tr>
+    }
+</table>

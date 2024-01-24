@@ -1,0 +1,121 @@
+﻿<#+
+
+public void GenerateCacheClass(string ns, string baseName, IEnumerable<string> includes, IEnumerable<string> dbSets, IEnumerable<string> dbQueries)
+{
+    string cacheName = baseName + "Cache";
+    string contextName = baseName + "Context";
+    ScriptContext.FileMgr.StartNewFile(cacheName + ".generated.cs");
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+<#+
+    foreach(var include in includes)
+    {
+        #>using <#= include #>;
+<#+
+    }
+#>
+
+namespace <#= ns #>;
+
+public partial class <#= cacheName #> : BaseDataCache<<#= cacheName #>, <#= contextName #>>
+{
+    public <#= cacheName #>()
+    {
+        this.Initialize();
+    }
+
+    public <#= cacheName #>(<#= contextName #> context) : base(context)
+    {
+        this.Initialize();
+    }
+
+    protected override void InitializeCollectionMap()
+    {
+<#+
+        WriteCollectionLookups(dbSets);
+#>
+    }
+
+<#+
+    WriteCacheCollectionReferences(dbSets);
+    WriteCacheQueryReferences(dbQueries);
+#>
+}
+<#+
+}
+
+public void WriteCollectionReference(string entity)
+{
+	var collection = ScriptContext.Pluralizer.Pluralize(entity);
+#>
+<#+   #>    private <#= collection #> _<#= collection #>;
+<#+   #>    public <#= collection #> <#= collection #> => _<#= collection #> ?? (_<#= collection #> = new <#= collection #>(this));
+
+<#+
+}
+
+public void WriteCacheCollectionReferences(IEnumerable<string> entities)
+{
+        foreach (var entity in entities)
+        {
+            WriteCollectionReference(entity);
+        }
+}
+
+public void WriteCollectionLookup(string entity)
+{
+	var collection = ScriptContext.Pluralizer.Pluralize(entity);
+#>
+        this.CollectionMap[typeof(<#= entity #>)] = () => this.<#= collection #>;
+        this.CollectionMap[typeof(<#= collection #>)] = () => this.<#= collection #>;
+
+<#+
+}
+
+public void WriteCollectionLookups(IEnumerable<string> entities)
+{
+        foreach (var entity in entities)
+        {
+            WriteCollectionLookup(entity);
+        }
+}
+
+public void WriteQueryLookup(string entity)
+{
+	var query = ScriptContext.Pluralizer.Pluralize(entity);
+#>
+		    this.QueryMap[typeof(<#= entity #>)] = () => this.<#= query #>;
+		    this.QueryMap[typeof(<#= query #>)] = () => this.<#= query #>;
+
+<#+
+}
+
+public void WriteQueryLookups(IEnumerable<string> entities)
+{
+        foreach (var entity in entities)
+        {
+            WriteQueryLookup(entity);
+        }
+}
+
+public void WriteQueryReference(string entity)
+{
+	var collection = ScriptContext.Pluralizer.Pluralize(entity);
+#>
+		public DbSet<<#= entity #>> <#= collection #> => this.DataContext.<#= collection #>;
+
+<#+
+}
+
+public void WriteCacheQueryReferences(IEnumerable<string> entities)
+{
+        foreach (var entity in entities)
+        {
+            WriteQueryReference(entity);
+        }
+}
+#>

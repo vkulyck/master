@@ -1,0 +1,82 @@
+﻿@using GmWeb.Web.Profile.Models
+@using GmWeb.Web.Profile.Models.ProfileSearch
+@model ServiceLinkProcessData
+
+@{ 
+    string ButtonConsentID = $"ButtonConsent_{Model.CategoryID}";
+    string ButtonDeclineID = $"ButtonDecline_{Model.CategoryID}";
+}
+
+<script type="text/javascript">
+    var ConsentDialog = null;
+    $(function () {
+        var model = @Html.Raw(Json.Encode(Model));
+        ConsentDialog.view_model = model;
+        if (model.Success) {
+            ConsentDialog.close();
+        }
+    });
+    function on@(ButtonConsentID)_Clicked() {
+        ConsentDialog.view_model.Status = '@(ServiceLinkStatus.ConsentAffirmed)';
+        model.Success = true;
+        ConsentDialog.close();
+    }
+    function on@(ButtonDeclineID)_Clicked() {
+        ConsentDialog.view_model.Status = '@(ServiceLinkStatus.ConsentDenied)';
+        ConsentDialog.close();
+    }
+</script>
+<table class="table" id='MainTableServiceLinkProcess'>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            <label Text="You have been assigned to one or more services. Please read the following agreement(s) and consent or decline." style="font-style: italic; font-size: 10pt; color: #006699" />
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            @(Html.Razor().Grid<AgreementItem>(Model.PendingAgreements)
+                .Name("GridConsent")
+                .Columns(columns =>
+                {
+                    columns.Bound(row => row.Description);
+                    columns.Bound(row => row.LegalVerbiage);
+                })
+                .ClientRowTemplate(
+                    @"<table style='border: 0px; width: 100%;' cellspacing='0' cellpadding='0'>
+                        <tr>
+                            <td style='width: 100%' align='left' valign='top'>
+                                <label>#: Description #</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 100%' align='left' valign='top'>
+                                <label>#: LegalVerbiage #</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 100%' align='left' valign='top'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>"
+                )
+            )
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="right" valign="top">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="right" valign="top">
+            @Html.GmRazor().Defaults.Button().Name(ButtonConsentID).Content("Consent").OnClick($"on{ButtonConsentID}_Clicked")
+            @Html.GmRazor().Defaults.Button().Name(ButtonDeclineID).Content("Decline").OnClick($"on{ButtonDeclineID}_Clicked")
+        </td>
+    </tr>
+</table>

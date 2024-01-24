@@ -1,0 +1,56 @@
+﻿@using System.Drawing
+@using GMaps.Mvc
+@using GmWeb.Web.Demographics.Helpers
+@using GmWeb.Web.Demographics.Logic.DataModels
+@using Kendo.Mvc.UI
+@using GmWeb.Web.Demographics.ViewModels
+@model MultiSeriesViewModel
+
+@{
+    var chartId = $"grouped-bar-chart_{Model.Guid}";
+}
+
+<div class="demo-section k-content wide">
+    @(Html.Kendo().Chart().Deferred()
+        .Name(chartId)
+        .Title(Model.Title)
+        .Legend(legend => legend
+            .Position(ChartLegendPosition.Bottom)
+        )
+        .SeriesDefaults(seriesDefaults =>
+            seriesDefaults.Column()
+        )
+        .Series(series =>
+        {
+            series.Column(Model.Series[0].Data).Name(Model.Series[0].SeriesName).Color("#FF0000");
+            series.Column(Model.Series[1].Data).Name(Model.Series[1].SeriesName).Color("#0000FF");
+        })
+        .CategoryAxis(axis => axis
+            .Categories(Model.Categories)
+            .MajorGridLines(lines => lines.Visible(false))
+            .Title(Model.CategoryAxisTitle)
+            .AxisCrossingValue(0, 10)
+        )
+        .ValueAxis(axis =>
+        {
+            axis
+                .Numeric().Labels(labels => labels.Format("{0:N0}"))
+                .Line(line => line.Visible(false))
+                .Title("Household Counts")
+                .Color("#FF0000")
+                .AxisCrossingValue(-4)
+            ;
+            axis
+                .Numeric().Labels(labels => labels.Format("{0:N0}"))
+                .Title("Wage Gaps")
+                .Line(line => line.Visible(false))
+                .Color("#0000FF")
+            ;
+        })
+        .Tooltip(tooltip => tooltip
+            .Visible(true)
+            .Template("#= series.name #: #= kendo.toString(value, 'n0') #")
+        )
+    )
+</div>
+@Html.Razor().DeferredScripts()

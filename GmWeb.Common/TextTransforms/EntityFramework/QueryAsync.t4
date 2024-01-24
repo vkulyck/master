@@ -1,0 +1,88 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Collections" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+
+<#+
+
+public void ImplementAsyncQueryableMethods(string ClassName, string QueryableProperty, string QueryableTypeVariable, bool EnableNullableEntityTypes = false)
+{
+    string nullable = EnableNullableEntityTypes ? "?" : "";
+    string NullableReturnType = EnableNullableEntityTypes ? QueryableTypeVariable + "?" : QueryableTypeVariable;
+#>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+public partial class <#= ClassName #>
+{
+    public Task<bool> AnyAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AnyAsync(cancellationToken);
+    public Task<bool> AnyAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AnyAsync(predicate, cancellationToken);
+    public Task<bool> AllAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AllAsync(predicate, cancellationToken);
+    public Task<int> CountAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.CountAsync(cancellationToken);
+    public Task<int> CountAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.CountAsync(predicate, cancellationToken);
+    public Task<long> LongCountAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.LongCountAsync(cancellationToken);
+    public Task<long> LongCountAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.LongCountAsync(predicate, cancellationToken);
+    public Task<<#= QueryableTypeVariable #>> FirstAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.FirstAsync(cancellationToken);
+    public Task<<#= QueryableTypeVariable #>> FirstAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.FirstAsync(predicate, cancellationToken);
+    public Task<<#= NullableReturnType #>> FirstOrDefaultAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.FirstOrDefaultAsync(cancellationToken);
+    public Task<<#= NullableReturnType #>> FirstOrDefaultAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.FirstOrDefaultAsync(predicate, cancellationToken);
+    public Task<<#= QueryableTypeVariable #>> LastAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.LastAsync(cancellationToken);
+    public Task<<#= QueryableTypeVariable #>> LastAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.LastAsync(predicate, cancellationToken);
+    public Task<<#= NullableReturnType #>> LastOrDefaultAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.LastOrDefaultAsync(cancellationToken);
+    public Task<<#= NullableReturnType #>> LastOrDefaultAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.LastOrDefaultAsync(predicate, cancellationToken);
+    public Task<<#= QueryableTypeVariable #>> SingleAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SingleAsync(cancellationToken);
+    public Task<<#= QueryableTypeVariable #>> SingleAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SingleAsync(predicate, cancellationToken);
+    public Task<<#= NullableReturnType #>> SingleOrDefaultAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SingleOrDefaultAsync(cancellationToken);
+    public Task<<#= NullableReturnType #>> SingleOrDefaultAsync(Expression<Func<<#= QueryableTypeVariable #>, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SingleOrDefaultAsync(predicate, cancellationToken);
+    public Task<<#= QueryableTypeVariable #>> MinAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.MinAsync(cancellationToken);
+    public Task<TResult> MinAsync<TResult>(Expression<Func<<#= QueryableTypeVariable #>, TResult>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.MinAsync(selector, cancellationToken);
+    public Task<<#= QueryableTypeVariable #>> MaxAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.MaxAsync(cancellationToken);
+    public Task<TResult> MaxAsync<TResult>(Expression<Func<<#= QueryableTypeVariable #>, TResult>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.MaxAsync(selector, cancellationToken);
+    public Task<decimal> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, decimal>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<decimal?> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, decimal?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<int> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, int>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<int?> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, int?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<long> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, long>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<long?> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, long?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<double> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, double>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<double?> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, double?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<float> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, float>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<float?> SumAsync(Expression<Func<<#= QueryableTypeVariable #>, float?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.SumAsync(selector, cancellationToken);
+    public Task<decimal> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, decimal>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<decimal?> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, decimal?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<double> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, int>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<double?> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, int?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<double> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, long>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<double?> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, long?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<double> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, double>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<double?> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, double?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<float> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, float>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<float?> AverageAsync(Expression<Func<<#= QueryableTypeVariable #>, float?>> selector, CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.AverageAsync(selector, cancellationToken);
+    public Task<bool> ContainsAsync(<#= QueryableTypeVariable #> item, CancellationToken cancellationToken = default(CancellationToken)) 
+        => <#= QueryableProperty #>.ContainsAsync(item, cancellationToken);
+    public Task<List<<#= QueryableTypeVariable #>>> ToListAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.ToListAsync(cancellationToken);
+    public Task<<#= QueryableTypeVariable #>[]> ToArrayAsync(CancellationToken cancellationToken = default(CancellationToken)) => <#= QueryableProperty #>.ToArrayAsync(cancellationToken);
+    public Task<Dictionary<TKey, <#= QueryableTypeVariable #>>> ToDictionaryAsync<TKey>(Func<<#= QueryableTypeVariable #>, TKey> keySelector, CancellationToken cancellationToken = default(CancellationToken)) 
+    where TKey : notnull
+        => <#= QueryableProperty #>.ToDictionaryAsync(keySelector, cancellationToken);
+    public Task<Dictionary<TKey, <#= QueryableTypeVariable #>>> ToDictionaryAsync<TKey>(Func<<#= QueryableTypeVariable #>, TKey> keySelector, IEqualityComparer<TKey> comparer, CancellationToken cancellationToken = default(CancellationToken)) 
+    where TKey : notnull
+        => <#= QueryableProperty #>.ToDictionaryAsync(keySelector, comparer, cancellationToken);
+    public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey, TElement>(Func<<#= QueryableTypeVariable #>, TKey> keySelector, Func<<#= QueryableTypeVariable #>, TElement> elementSelector, CancellationToken cancellationToken = default(CancellationToken)) 
+    where TKey : notnull 
+        => <#= QueryableProperty #>.ToDictionaryAsync(keySelector, elementSelector, cancellationToken);
+    public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey, TElement>(Func<<#= QueryableTypeVariable #>, TKey> keySelector, Func<<#= QueryableTypeVariable #>, TElement> elementSelector, IEqualityComparer<TKey><#= nullable #> comparer, CancellationToken cancellationToken = default(CancellationToken)) 
+    where TKey : notnull 
+        => <#= QueryableProperty #>.ToDictionaryAsync(keySelector, elementSelector, comparer, cancellationToken);
+}
+
+<#+
+}
+#>

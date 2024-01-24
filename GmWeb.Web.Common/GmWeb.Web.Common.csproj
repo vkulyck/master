@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>Latest</LangVersion>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+    <RootNamespace>GmWeb.Web.Common</RootNamespace>
+    <AssemblyName>GmWeb.Web.Common</AssemblyName>
+    <UserSecretsId>f1780c2b-89d8-4964-887d-9bb0f0901e63</UserSecretsId>
+    <Configurations>Debug;Release;DevDeploy</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GmWeb.Logic\GmWeb.Logic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Auth\Services\Passport\PassportService.Rest.tt">
+      <LastGenOutput>PassportService.Rest.generated.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Auth\Services\Passport\PassportService.Rest.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PassportService.Rest.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

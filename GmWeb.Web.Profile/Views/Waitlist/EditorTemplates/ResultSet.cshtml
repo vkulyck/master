@@ -1,0 +1,28 @@
+﻿@model GmWeb.Web.Profile.Models.Waitlist.ResultSet
+<table class="table">
+    <thead>
+        <tr>
+            <th style="width: 20%"></th>
+            <th style="width: 80%"></th>
+        </tr>
+    </thead>
+    <tr>
+        <td>
+            Predicates
+        </td>
+        <td>
+            @Html.CollectionEditorFor(m => m.Predicates, "Predicates")
+        </td>
+    </tr>
+    @if (Model.Data != null)
+    {
+        <tr>
+            <td>
+                Filtered Clients
+            </td>
+            <td>
+                @Html.DisplayContainerFor(m => m.Data)
+            </td>
+        </tr>
+    }
+</table>

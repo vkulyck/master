@@ -1,0 +1,21 @@
+﻿@using GmWeb.Web.Identity.Models
+@model MigrateViewModel
+@{
+    Layout = this.SimplifiedLayout();
+    ViewBag.Title = $"Migrate Legacy User";
+    string acctType = Model.IdentityType.ToString().ToLower();
+}
+<div style="width: 440px">
+    @using (var form = Html.GmRazor().BeginForm(opts =>
+    {
+
+        opts.Action = "MigrateLegacyUser";
+        opts.Description = $"Migrate an existing {acctType} account.";
+        opts.SubmitLabel = $"Submit";
+        opts.GenerateItemLabels = true;
+    }))
+    {
+        @Html.GmRazor().FormItem(m => m.Email)
+    }
+    @Html.GmRazor().BrandedFooter()
+</div>

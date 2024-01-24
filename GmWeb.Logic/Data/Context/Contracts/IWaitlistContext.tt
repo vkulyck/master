@@ -1,0 +1,28 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ include file="$(SolutionDir)GmWeb.Common\TextTransforms\Include.t4" #>
+<#@ output extension=".cs"#>
+
+<#
+string baseName = "Waitlist";
+string ns = "GmWeb.Logic.Data.Context";
+var includes = new List<string> {
+    "System.Text",
+    "System.Threading.Tasks",
+    "System.Data.Common",
+    "GmWeb.Logic.Data.Models.Profile",
+    "GmWeb.Logic.Data.Models.Lookups",
+    "GmWeb.Logic.Data.Models.Geography",
+    "GmWeb.Logic.Data.Models.Demographics",
+    "GmWeb.Logic.Data.Models.Waitlists",
+};
+
+var dbSets = GetModelsFromDirectories(
+        @"Data\Models\Profile\Physical",
+        @"Data\Models\Waitlists\Physical"
+);
+var dbQueries = new List<string>{ "ExtendedClient" };
+
+GenerateContextInterface(ns, baseName, includes, dbSets, dbQueries);
+ScriptContext.FileMgr.Process();
+
+#>

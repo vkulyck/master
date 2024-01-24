@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "GmCmd",
+			"path": ".."
+		}
+	],
+	"settings": {
+    "files.exclude": {
+      ,"**/.git": true
+      ,"**/.gitignore": true
+      ,"**/key": true
+		},
+		"search.useIgnoreFiles": false,
+		"search.useGlobalIgnoreFiles": true
+	}
+}

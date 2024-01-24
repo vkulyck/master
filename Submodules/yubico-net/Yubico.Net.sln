@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30225.117
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YubicoClient", "YubicoClient\YubicoClient.csproj", "{9C101D57-26C1-41C3-B6AC-8328E46D6286}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevConsole", "DevConsole\DevConsole.csproj", "{0D2CCE3C-B5C3-4804-92FF-863105030EBC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C101D57-26C1-41C3-B6AC-8328E46D6286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C101D57-26C1-41C3-B6AC-8328E46D6286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C101D57-26C1-41C3-B6AC-8328E46D6286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C101D57-26C1-41C3-B6AC-8328E46D6286}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D2CCE3C-B5C3-4804-92FF-863105030EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D2CCE3C-B5C3-4804-92FF-863105030EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D2CCE3C-B5C3-4804-92FF-863105030EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D2CCE3C-B5C3-4804-92FF-863105030EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA349262-28EE-48EF-B209-2ECD7D2A2C07}
+	EndGlobalSection
+EndGlobal

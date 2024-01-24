@@ -1,0 +1,25 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ include file="$(SolutionDir)GmWeb.Common\TextTransforms\Include.t4" #>
+<#@ output extension=".generated.cs" #>
+
+<#
+string baseName = "Carma";
+string ns = "GmWeb.Logic.Data.Context.Carma";
+var includes = new List<string> {
+    "GmWeb.Logic.Data.Models",
+    "GmWeb.Logic.Data.Models.Carma"
+};
+
+var dbSets = GetModelsFromDirectories(
+    @"Data\Models\Carma\Physical" 
+);
+
+var dbQueries = new List<string>{ };
+
+GenerateContextClass(ns, baseName, includes, dbSets, dbQueries);
+GenerateContextInterface(ns, baseName, includes, dbSets, dbQueries);
+GenerateCollectionClasses(ns, baseName, includes, dbSets);
+GenerateCacheClass(ns, baseName, includes, dbSets, dbQueries);
+ScriptContext.FileMgr.Process();
+
+#>

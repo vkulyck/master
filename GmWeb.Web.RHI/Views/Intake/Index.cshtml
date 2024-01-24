@@ -1,0 +1,65 @@
+﻿@using System.Linq;
+@using System.Linq.Expressions;
+@using Kendo.Mvc.UI;
+@using Microsoft.AspNetCore.Html;
+@using GmWeb.Web.RHI.Utility;
+@using GmWeb.Logic.Utility.Extensions.Reflection;
+@using GmWeb.Logic.Utility.Extensions.Enums;
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake;
+
+@model IntakeData
+@{
+    ViewBag.Title = "Responder Health Intake Questionnaire";
+    IntakePage CurrentPage = this.ViewBag.CurrentPage;
+}
+@section Scripts {
+    <script>
+        var pageList = [];
+        @foreach(var pg in IntakePage.GetPages())
+        {
+            <text>pageList.push(@Html.Raw(pg.NewJsInstance));</text>
+        }
+        let Navigator = new IntakeNavigator(pageList);
+        $(document).ready(function () {
+            Navigator.goto(@CurrentPage.ID);
+        });
+    </script>
+}
+@{
+    async Task createTab(IntakePage pg)
+    {
+        var path = $"/Views/Intake/{pg.Name}.cshtml";
+        var partialModel = Model.GetPropertyValue(pg.Name);
+        <div id='@pg.TabID' style="display:none;">
+            <form id='@pg.FormID' name='@pg.Name'>
+                @await Html.PartialAsync(path, partialModel)
+            </form>
+        </div>
+    }
+}
+<div id="MainView" class="gray-bg">
+    <div id="pageData">
+        <div class="status" id="validation-summary"></div>
+        @foreach(var pg in IntakePage.GetPages())
+        {
+            await createTab(pg);
+        }
+        <div class="k-form-buttons">
+            <button 
+                type="button" 
+                class="k-button k-button-solid-primary k-button-solid k-button-rectangle k-button-md k-rounded-md"
+                onclick="Navigator.save()">
+                Save Progress
+            </button>
+            <button 
+                type="button"
+                class="k-button k-button-solid-primary k-button-solid k-button-rectangle k-button-md k-rounded-md" 
+                onclick="Navigator.submit()">
+                Submit
+            </button>
+        </div>
+    </div>
+</div>     
+<div style="padding-top: 10%; padding-bottom: 10%;">
+    @await Html.PartialAsync("_Paging")
+</div>

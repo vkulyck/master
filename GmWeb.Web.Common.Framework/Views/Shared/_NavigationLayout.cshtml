@@ -1,0 +1,59 @@
+﻿@using GmWeb.Web.Common
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GoodMojo | @ViewBag.Title (Core Layout)</title>
+    @Styles.Render("~/Content/Bundles/kendo")
+    @Styles.Render("~/Content/Bundles/css")
+    @Scripts.Render("~/Scripts/Bundles/gm-preload")
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <!-- Wrapper-->
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        @Html.Partial("_Navigation")
+
+        <!-- Page wraper -->
+        <div id="page-wrapper" class="gray-bg">
+
+            <!-- Top Navbar -->
+            @Html.Partial("_TopNavbar")
+
+            <!-- Main view  -->
+            @RenderBody()
+
+            <!-- Footer -->
+            @Html.Partial("_Footer")
+
+        </div>
+        <!-- End page wrapper-->
+
+    </div>
+    <!-- End wrapper-->
+    @Scripts.Render("~/Scripts/Bundles/jquery")
+    @Scripts.Render("~/Scripts/Bundles/jquery.validate")
+    @Scripts.Render("~/Scripts/Bundles/bootstrap")
+    @Scripts.Render("~/Scripts/Bundles/metisMenu")
+    @Scripts.Render("~/Scripts/Bundles/pace")
+    @Scripts.Render("~/Scripts/Bundles/slimScroll")
+    @Scripts.Render("~/Scripts/Bundles/modernizr")
+    @Scripts.Render("~/Scripts/Bundles/jSignature")
+    @Scripts.Render("~/Scripts/Bundles/sparkline")
+    @Scripts.Render("~/Scripts/Bundles/moment")
+    @Scripts.Render("~/Scripts/Bundles/pwstrength")
+    @Scripts.Render("~/Scripts/Bundles/kendo")
+    @Scripts.Render("~/Scripts/Bundles/inspinia")
+    @Scripts.Render("~/Scripts/Bundles/gm-postload")
+    @Html.Partial("_Scripts")
+    @RenderSection("scripts", required: false)
+    @Html.RenderDelayed()
+    @Html.Razor().DeferredScripts()
+</body>
+</html>

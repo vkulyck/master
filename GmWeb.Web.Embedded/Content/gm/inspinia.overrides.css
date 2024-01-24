@@ -1,0 +1,61 @@
+﻿.k-button[disabled],
+.k-state-disabled .k-button,
+.k-button.k-state-disabled,
+.k-button[disabled]:hover,
+.k-state-disabled .k-button:hover,
+.k-button.k-state-disabled:hover,
+.k-button[disabled]:focus,
+.k-state-disabled .k-button:focus,
+.k-button.k-state-disabled:focus,
+.k-button[disabled]:active,
+.k-state-disabled .k-button:active,
+.k-button.k-state-disabled:active {
+    color: white;
+}
+
+.ibox-content {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.ibox-title {
+    padding-bottom: 5px;
+}
+
+.ibox {
+    margin-bottom: 10px;
+}
+
+.info-tooltip {
+    background-color: #2f4050;
+    color: white;
+    border-radius: 7px;
+    padding: 7px;
+}
+
+.alert > h2.alert-heading {
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.alert > h3.alert-heading {
+    font-size: 36px;
+    font-weight: 600;
+}
+.alert > h4.alert-heading {
+    font-size: 24px;
+    font-weight: 500;
+}
+.alert > h2 {
+    font-size: 32px;
+    font-weight: 400;
+}
+.alert > h3 {
+    font-size: 24px;
+    font-weight: 300;
+}
+.alert > h4 {
+    font-size: 18px;
+    font-weight: 200;
+}

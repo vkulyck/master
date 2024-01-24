@@ -1,0 +1,145 @@
+﻿<#+
+
+public void GenerateContextClass(string ns, string baseName, IEnumerable<string> includes, IEnumerable<string> dbSets, IEnumerable<string> dbQueries)
+{
+    string contextName = baseName + "Context";
+#>
+using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Configuration;
+<#+
+    foreach(var include in includes)
+    {
+        #>using <#= include #>;
+<#+
+    }
+#>
+namespace <#= ns #>;
+
+
+public abstract class Base<#= contextName #> : BaseDataContext<<#= contextName #>>
+{
+
+<#+
+    foreach (var dbSet in dbSets)
+    {
+	    var collection = ScriptContext.Pluralizer.Pluralize(dbSet);
+#>
+<#+   #>    public DbSet<<#= dbSet #>> <#= collection #> { get; set; }
+<#+
+    }
+
+    foreach (var dbQuery in dbQueries)
+    {
+	    var collection = ScriptContext.Pluralizer.Pluralize(dbQuery);
+#>
+<#+   #>    public DbSet<<#= dbQuery #>> <#= collection #> { get; set; }
+<#+
+    }
+#>
+
+    public Base<#= contextName #>() { }
+    public Base<#= contextName #>(DbContextOptions<<#= contextName #>> options) : base(options) { }
+
+    #region Before Creating
+
+    protected virtual void BeforeModelCreating(ModelBuilder modelBuilder)
+    {
+<#+
+
+        foreach (var dbSet in dbSets)
+        {
+            var collection = ScriptContext.Pluralizer.Pluralize(dbSet);
+#>
+<#+   #>        this.Before<#= collection #>Creating(modelBuilder, this._configuration);
+<#+
+        }
+#>  <#+    
+#>  }
+
+<#+
+    foreach (var dbSet in dbSets)
+    {
+	    var collection = ScriptContext.Pluralizer.Pluralize(dbSet);
+#>
+<#+   #>    protected virtual EntityTypeBuilder<<#= dbSet #>> Before<#= collection #>Creating(ModelBuilder modelBuilder, IConfiguration config)
+<#+   #>        => modelBuilder.Entity<<#= dbSet #>>();
+<#+
+    }
+#>
+    #endregion
+
+    #region On Creating
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        this.BeforeModelCreating(modelBuilder);
+
+        base.OnModelCreating(modelBuilder);
+<#+
+
+        foreach (var dbSet in dbSets)
+        {
+            var collection = ScriptContext.Pluralizer.Pluralize(dbSet);
+#>
+<#+   #>        this.On<#= collection #>Creating(modelBuilder, this._configuration);
+<#+
+        }
+#>
+
+        this.AfterModelCreating(modelBuilder);
+  <#+   
+#>  }
+
+<#+
+    foreach (var dbSet in dbSets)
+    {
+	    var collection = ScriptContext.Pluralizer.Pluralize(dbSet);
+#>
+<#+   #>    protected virtual EntityTypeBuilder<<#= dbSet #>> On<#= collection #>Creating(ModelBuilder modelBuilder, IConfiguration config)
+<#+   #>        => modelBuilder.ConfigureGeneratedEntity<<#= dbSet #>>(config);
+<#+
+    }
+#>
+    #endregion
+
+    #region After Creating
+
+    protected virtual void AfterModelCreating(ModelBuilder modelBuilder)
+    {
+<#+
+
+        foreach (var dbSet in dbSets)
+        {
+            var collection = ScriptContext.Pluralizer.Pluralize(dbSet);
+#>
+<#+   #>        this.After<#= collection #>Creating(modelBuilder, this._configuration);
+<#+
+        }
+#>  <#+    
+#>  }
+
+<#+
+    foreach (var dbSet in dbSets)
+    {
+	    var collection = ScriptContext.Pluralizer.Pluralize(dbSet);
+#>
+<#+   #>    protected virtual EntityTypeBuilder<<#= dbSet #>> After<#= collection #>Creating(ModelBuilder modelBuilder, IConfiguration config)
+<#+   #>        => modelBuilder.Entity<<#= dbSet #>>();
+<#+
+    }
+#>
+
+    #endregion
+
+}
+<#+
+}
+#>

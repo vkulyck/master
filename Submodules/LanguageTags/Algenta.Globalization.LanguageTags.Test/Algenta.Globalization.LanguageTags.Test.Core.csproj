@@ -1,0 +1,35 @@
+﻿<Project>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>Algenta.Globalization.LanguageTags.Test</AssemblyName>
+    <RootNamespace>Algenta.Globalization.LanguageTags.Test</RootNamespace>
+
+    <!-- Compatibility for adjacent Standard/Framework builds. -->
+    <MSBuildProjectExtensionsPath>$(ProjectDir)obj\Core</MSBuildProjectExtensionsPath>
+    <BaseIntermediateOutputPath>$(ProjectDir)obj\Core</BaseIntermediateOutputPath>
+    <OutputPath>bin\Core\$(Configuration)</OutputPath>
+    <Configurations>Debug;Release</Configurations>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+    <!-- Dependencies -->
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.5" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.5" />
+    <ProjectReference Include="..\Algenta.Globalization.LanguageTags\Algenta.Globalization.LanguageTags.Standard.csproj" />
+  </ItemGroup>
+
+  <!-- Incompatible .NET Framework components. -->
+  <ItemGroup>
+    <Folder Remove="Properties\" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Compile Remove="obj\**" />
+    <None Remove="obj\**" />
+  </ItemGroup>
+</Project>

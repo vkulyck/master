@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+# Simplified ubuntu version variable
+export UBUNTU_VERSION=$(lsb_release -r | tr -dc '0-9')
+
+# Set up the bash prompt with Git support
+export PATH="$HOME/code/configs/scripts/git:$HOME/code/configs/scripts/utils:$PATH"
+export HISTCONTROL=ignoredups
+source ~/.bash_prompt
+export GIT_PS1_SHOWDIRTYSTATE=1
+
+alias clear='echo -en "\ec"'
+alias fdate='echo `date +%Y.%m.%d\ %H:%M:%S.%N`'
+alias lsdrv="df -h | grep '^/dev/sd[a-z]\d\?'"
+alias show-fingerprint='for pkey in `ls /etc/ssh/ssh_host_*_key.pub`; do ssh-keygen -lf $pkey; done'
+alias portcheck='sudo lsof -i -P -n | grep LISTEN'
+
+# Modified grep/sed search and replace
+alias grap='~/code/configs/scripts/grepl.py'
+repl() {
+  ~/code/configs/scripts/grepl.py --sed "$@"
+}
+
+# A bunch of basic utilities
+countdown(){
+   date1=$((`date +%s` + $1)); 
+   while [ "$date1" -ne `date +%s` ]; do 
+     echo -ne "$(date -u --date @$(($date1 - `date +%s`)) +%H:%M:%S)\r";
+     sleep 0.1
+   done
+}
+
+stopwatch(){
+  date1=`date +%s`; 
+   while true; do 
+    echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r"; 
+    sleep 0.1
+   done
+}
+
+nfiles(){
+  if [ -z "$1" ]; then
+    ls -1 | wc -l
+  else
+    ls -1 $1 | wc -l
+  fi
+}
+
+nlines(){
+  if [ -z "$1" ]; then
+    find . | xargs wc -l
+  else
+    # usage: nlines "path/to/file_prefix"
+    #find . -name "$1*" | xargs wc -l
+    ls $1 | xargs wc -l
+  fi
+}
+
+show_colors(){
+  color=16
+  while [ $color -lt 245 ]; do
+    echo -e "$color: \\033[38;5;${color}mhello\\033[48;5;${color}mworld\\033[0m"
+    ((color++));
+  done
+}
+
+lsz(){
+  if [[ -n "$1" ]]; then
+    dir=$1
+  else
+    dir=.
+  fi
+  du -ah $dir | grep -v "/$" | sort -h
+}
+
+lsabslink(){
+  find . -type l -lname '/*' -exec ls -lha {} \;
+}
+
+set_timezone(){
+  sudo timedatectl set-timezone America/Los_Angeles
+}
+
+pyscript(){
+  python -m $(echo "$1" | sed 's/\//./g' | sed 's/\.py$//g') ${@:2}
+}
+
+chr() {
+  [ "$1" -lt 256 ] || return 1
+  printf "\\$(printf '%03o' "$1")"
+}
+
+ord() {
+  LC_CTYPE=C printf '%d' "'$1"
+}
+
+permit_web() {
+  if [ -z "$1" ]; then
+    path=.
+  else
+    path=$1
+  fi
+  find $path -type d -print0 | xargs -0 chmod 0755
+  find $path -type f -print0 | xargs -0 chmod 0644
+}
+
+permit_gweb() {
+  if [ -z "$1" ]; then
+    path=.
+  else
+    path=$1
+  fi
+  find $path -type d -print0 | xargs -0 chmod 0775
+  find $path -type f -print0 | xargs -0 chmod 0664
+}

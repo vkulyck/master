@@ -1,0 +1,10 @@
+﻿global using GmWeb.Logic.Services.Importing.Activities;
+global using GmWeb.Logic.Services.Importing.Clients;
+global using GmWeb.Logic.Services.Importing;
+global using GmWeb.Logic.Services.Sanitizing;
+global using GmWeb.Logic.Services.Datasets.Languages;
+global using GmWeb.Logic.Services.Printing;
+global using GmWeb.Logic.Services.QRCode;
+global using GmWeb.Logic.Services;
+global using GmWeb.Logic.Data.Context.Carma;
+global using GmWeb.Logic.Data.Models.Carma;

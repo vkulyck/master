@@ -1,0 +1,18 @@
+﻿<# // Assemblies #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity.Design" #>
+
+<# // Namespaces #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.Entity.Design.PluralizationServices" #>
+
+
+<# // Includes #>
+<#@ include file="EntityCollectionGenerator.t4" #>
+<#@ include file="EntityContextGenerator.t4" #>
+<#@ include file="EntityContextConstructorGenerator.t4" #>
+<#@ include file="EntityContextInterfaceGenerator.t4" #>
+<#@ include file="EntityCacheGenerator.t4" #>
+<#@ include file="EF6.Utility.CS.ttinclude" #>

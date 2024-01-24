@@ -1,0 +1,38 @@
+<Project>
+
+  <PropertyGroup>
+    <PackageId>NCalc.SAT</PackageId>
+    <Version>1.3.9</Version>
+    <Authors>Alexey Yakovlev (Primary), Jake Menashe</Authors>
+    <Company>Open Source Community</Company>
+    
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>Latest</LangVersion>
+    <MSBuildProjectExtensionsPath>$(ProjectDir)obj\NET6</MSBuildProjectExtensionsPath>
+    <BaseIntermediateOutputPath>$(ProjectDir)obj\NET6</BaseIntermediateOutputPath>
+    <OutputPath>bin\NET6\$(Configuration)</OutputPath>
+    <AssemblyName>NCalc</AssemblyName>
+    <RootNamespace>NCalc</RootNamespace>
+  </PropertyGroup>  
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Core\Debug</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\Core\Release</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**" />
+    <Compile Remove="Properties\**" />
+    <None Remove="obj\**" />
+    <None Remove="Properties\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr3.Runtime" Version="3.5.1" />
+  </ItemGroup>
+</Project>

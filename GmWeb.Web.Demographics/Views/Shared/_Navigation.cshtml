@@ -1,0 +1,20 @@
+﻿@helper CreateCommunityLinkItem(string controller, string icon)
+{
+    <li class="@Html.IsSelected(controller)">
+        <a href="@Url.Action("Index", @controller)"><i class="fas fa-@icon"></i> <span class="nav-label">@controller</span></a>
+    </li>
+}
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                Client Demographics
+            </li>
+            @CreateCommunityLinkItem("Home", "home")
+            @CreateCommunityLinkItem("Community", "users")
+            @CreateCommunityLinkItem("Program", "clipboard-list")
+            @CreateCommunityLinkItem("Outcomes", "clipboard-check")
+        </ul>
+    </div>
+</nav>

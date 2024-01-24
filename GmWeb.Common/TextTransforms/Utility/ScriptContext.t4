@@ -1,0 +1,18 @@
+﻿<#@ import namespace="System.Data.Entity.Design.PluralizationServices" #>
+
+<#
+    ScriptContext.Initialize(this);
+#>
+
+<#+
+public class ScriptContext {
+    public static PluralizationService Pluralizer;
+    public static EntityFrameworkTemplateFileManager FileMgr;
+
+    public static void Initialize(object tt)
+    {
+        FileMgr = EntityFrameworkTemplateFileManager.Create(tt);
+        Pluralizer = PluralizationService.CreateService(System.Globalization.CultureInfo.CurrentCulture);
+    }
+}
+#>

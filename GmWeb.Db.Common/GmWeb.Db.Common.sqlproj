@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>GmWeb.Db.Common</Name>
+    <LangVersion>Latest</LangVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{e4014088-7041-4df9-a190-624a75864534}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Db.Common</RootNamespace>
+    <AssemblyName>Db.Common</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <TargetFrameworkProfile />
+    <DefaultSchema>clr</DefaultSchema>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\GmWeb.SigningKey.pfx</AssemblyOriginatorKeyFile>
+    <PermissionSet>UNSAFE</PermissionSet>
+    <AssemblyOwner>dbo</AssemblyOwner>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Security\" />
+    <Folder Include="crypto\" />
+    <Folder Include="crypto\Functions\" />
+    <Folder Include="crypto\Stored Procedures\" />
+    <Folder Include="carma" />
+    <Folder Include="carma\Tables" />
+    <Folder Include="carma\FileTables" />
+    <Folder Include="Storage\" />
+    <Folder Include="clr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Security\IIS APPPOOL_.NET v4.5-User.sql" />
+    <Build Include="Security\IIS APPPOOL_.NET v4.5-Login.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="crypto\Functions\fn_Cipher.sql" />
+    <Build Include="crypto\Functions\fn_DecryptObjectDefinition.sql">
+      <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
+    </Build>
+    <Build Include="crypto\Functions\fn_InitializeRC4.sql" />
+    <Build Include="crypto\Stored Procedures\spExportEncryptedObjectDefinitions.sql">
+      <SuppressTSqlWarnings>
+      </SuppressTSqlWarnings>
+    </Build>
+    <Build Include="Security\clr.sql" />
+    <Build Include="Security\crypto.sql" />
+    <Build Include="Security\dmg.sql" />
+    <Build Include="Security\dmo.sql" />
+    <Build Include="Security\wtl.sql" />
+    <Build Include="Security\Permissions.sql" />
+    <Build Include="Security\carma.sql" />
+    <Build Include="Security\IIS APPPOOL_API-User.sql" />
+    <Build Include="Security\IIS APPPOOL_API-Login.sql" />
+    <Build Include="carma\Tables\Agencies.sql" />
+    <Build Include="carma\FileTables\ActivityCalendars.sql" />
+    <Build Include="Storage\GMCOM-FG.sql" />
+    <Build Include="carma\Tables\UserActivities.sql" />
+    <Build Include="carma\Tables\Users.sql" />
+    <Build Include="carma\Tables\Notes.sql" />
+    <Build Include="Security\clr_executor.sql" />
+    <Build Include="carma\Tables\UserConfigs.sql" />
+    <Build Include="carma\Tables\Threads.sql" />
+    <Build Include="carma\Tables\Comments.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="schema-compare.scmp" />
+    <None Include="..\GmWeb.SigningKey.pfx">
+      <Link>GmWeb.SigningKey.pfx</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\140\SqlSchemas\master.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\140\SqlSchemas\master.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>True</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
+    </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="clr\CryptoExports.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GmWeb.Common\GmWeb.Common.Framework.csproj">
+      <Name>GmWeb.Common.Framework</Name>
+      <Project>{7582cd9b-2f42-46de-8e5e-a4219e677f0d}</Project>
+      <Private>True</Private>
+      <IsModelAware>True</IsModelAware>
+      <GenerateSqlClrDdl>True</GenerateSqlClrDdl>
+      <SqlAssemblyName>GmWeb.Common</SqlAssemblyName>
+      <SqlPermissionSet>UNSAFE</SqlPermissionSet>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="GmWeb.Db.Common.refactorlog" />
+  </ItemGroup>
+</Project>

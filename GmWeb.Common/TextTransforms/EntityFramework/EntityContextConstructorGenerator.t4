@@ -1,0 +1,34 @@
+﻿<#+
+
+public void GenerateContextConstructors(string ns, string baseName, IEnumerable<string> includes, IEnumerable<string> dbSets, IEnumerable<string> dbQueries)
+{
+    string contextName = baseName + "Context";
+    ScriptContext.FileMgr.StartNewFile(contextName + ".ctor.generated.cs");
+#>
+using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Configuration;
+<#+
+    foreach(var include in includes)
+    {
+        #>using <#= include #>;
+<#+
+    }
+#>
+namespace <#= ns #>;
+
+public partial class <#= contextName #> : Base<#= contextName #>
+{
+    public <#= contextName #>() { }
+    public <#= contextName #>(DbContextOptions<<#= contextName #>> options) : base(options) { }
+}
+<#+
+}
+#>

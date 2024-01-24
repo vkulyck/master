@@ -1,0 +1,311 @@
+﻿@using GmWeb.Web.Profile.Models.Waitlist;
+@using (@Html.DelayedHandlers())
+{
+
+    @* Diagram Event Handlers *@
+    <script>
+        var OrderedSelections = new OrderedSet([], function (item) { return item.id; });
+        var DiagramInitialized = false;
+        function onFlowDiagramSelected(e) {
+            OrderedSelections.addRange(e.selected);
+            OrderedSelections.removeRange(e.deselected);
+            if (e.selected.length == 0) {
+                console.log('No elements selected; editing root flow instance.');
+                editFlow(FlowContext.Flow);
+                return;
+            } else if (e.selected.length > 1) {
+                console.log('Multiple elements selected; disabling all editors.');
+                clearEditors();
+                return;
+            }
+            var selection = e.selected[0];
+            var isConnection = (selection instanceof kendo.dataviz.diagram.Connection);
+            if (isConnection) {
+                if (selection.link != null) {
+                    editLink(selection.link);
+                }
+            } else {
+                editStep(selection.step);
+            }
+        }
+        function onFlowDiagramBound(e) {
+            var flow = FlowContext.Flow;
+            initializeMainDiagram(flow);
+            if (DiagramInitialized)
+                return;
+            editFlow(flow);
+            DiagramInitialized = true;
+        }
+        function onFlowDiagramEdited(e) {
+        }
+        function onFlowDiagramChanged(e) {
+        }
+        function onFlowDiagramDragEnd(e) {
+            $.each(e.shapes, function (idx, shape) {
+                var step = shape.step;
+                // TODO: Using the set method causes the shape to be redrawn, sometimes at the wrong location due to delays.
+                // For now, we use property assignment to avoid binding callbacks from executing and redrawing the visual.
+                // But there may be circumstances where the set methos is required.
+                step.Layout.X = shape.getPosition('left').x;
+                step.Layout.Y = shape.getPosition('top').y;
+            });
+        }
+    </script>
+
+    @* Step Shapes *@
+    <script>
+        function extendShapeMethods(diagram) {
+            $.extend(diagram, {
+                createStepShape: function (step) {
+                    var self = this;
+                    var index = self.shapes.length;
+                    var width = 200;
+                    var options = {
+                        // dataItem: step, // TODO: Is this preferred over 'shape.step = step' ?
+                        data: {
+                            Guid: step.Guid,
+                            DefaultLayout: {
+                                X: 20 + 2 * width * (index % 3),
+                                Y: 100 + 200 * Math.floor(index / 3),
+                                Width: width,
+                                Height: 90
+                            },
+                        },
+                        visual: stepShapeContentTemplate
+                    };
+                    if (step.IsTerminal) {
+                        options.data.DefaultLayout.X = 550;
+                        options.data.DefaultLayout.Y = 450;
+                    } else if (index == 1) {
+                        options.data.DefaultLayout.X = options.data.DefaultLayout.X - 60;
+                    }
+                    var shape = self.addShape(options);
+                    shape.step = step;
+                    step.ShapeGuid = shape.id;
+                    FlowContext.ShapeMap[shape.id] = shape;
+                    self.bindStep(step);
+                    return shape;
+                },
+                removeStepShape: function (step) {
+                    var self = this;
+                    var shape = FlowContext.ShapeMap[step.ShapeGuid];
+                    self.remove(shape);
+                    delete FlowContext.ShapeMap[step.ShapeGuid];
+                },
+                initializeShapes: function (flow) {
+                    var self = this;
+                    $.each(flow.Steps, function (idx, step) {
+                        self.createStepShape(step);
+                    });
+                },
+                onStepAdded: function (step) {
+                    this.createStepShape(step);
+                },
+                onStepRemoved: function (step) {
+                    this.removeStepShape(step);
+                },
+                bindSteps: function () {
+                    var self = this;
+                    self.flow.Steps.bind('change', function (e) {
+                        if (e.action == "add") {
+                            $.each(e.items, function (idx, step) {
+                                var shape = self.createStepShape(step);
+                            });
+                        }
+                    });
+                },
+                bindStep: function (step) {
+                    var self = this;
+                    step.bind('change', function (e) {
+                        var shape = FlowContext.ShapeMap[step.ShapeGuid];
+                        shape.redrawVisual();
+                    });
+                    step.Links.bind('change', function (e) {
+                        if (e.action == "add") {
+                            $.each(e.items, function (idx, link) {
+                                self.createLinkConnection(link);
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
+    @* Link Connections *@
+    <script>
+        function extendConnectionMethods(diagram) {
+            $.extend(diagram, {
+                createLinkConnection: function (link) {
+                    var self = this;
+                    var src = FlowContext.ModelMap[link.SourceStepGuid];
+                    var tgt = FlowContext.ModelMap[link.TargetStepGuid];
+
+                    var srcShape = self.getShapeById(src.ShapeGuid);
+                    var tgtShape = self.getShapeById(tgt.ShapeGuid);
+
+                    var connection = self.connect(srcShape, tgtShape, { hover: { stroke: { color: "#1cff15" } } });
+                    link.ConnectionGuid = connection.id;
+                    connection.link = link;
+                    FlowContext.ConnectionMap[connection.id] = connection;
+                },
+                removeLinkConnection: function (link) {
+                    var self = this;
+                    var src = FlowContext.ModelMap[link.SourceStepGuid];
+                    src.Links.splice($.inArray(link, src.Links), 1);
+                    var connection = FlowContext.ConnectionMap[link.ConnectionGuid];
+                    self.remove(connection);
+                },
+                initializeConnections: function (flow) {
+                    var self = this;
+                    $.each(flow.Steps, function (stepIdx, step) {
+                        $.each(step.Links, function (linkIdx, link) {
+                            self.createLinkConnection(link);
+                        });
+                    });
+                },
+                onLinkAdded: function (link) {
+                    this.createLinkConnection(link);
+                },
+                onLinkRemoved: function (link) {
+                    this.removeLinkConnection(link);
+                }
+            });
+        }
+    </script>
+
+    @* Diagram Initialization *@
+    <script>
+        function initializeMainDiagram(flow) {
+            var diagram = $("#FlowDiagram").data("kendoDiagram");
+            extendShapeMethods(diagram);
+            extendConnectionMethods(diagram);
+            $.extend(diagram, {
+                initialize: function (flow) {
+                    this.flow = flow;
+                    this.initializeShapes(flow);
+                    this.initializeConnections(flow);
+                    this.bindSteps();
+                }
+            });
+            diagram.initialize(flow);
+        }
+    </script>
+
+    @* Shape Templating *@
+    <script>
+        function computeShapeSize(element) {
+            var diagram = kendo.dataviz.diagram;
+            var size = { width: 0, height: 0 };
+            if (arguments.length > 1) {
+                $.each(arguments, function (idx, child) {
+                    var childSize = computeShapeSize(child);
+                    size.height += childSize.height;
+                    size.width = Math.max(size.width, childSize.width);
+                });
+            }
+            else if (element instanceof diagram.Group) {
+                $.each(element.children, function (idx, child) {
+                    var childSize = computeShapeSize(child);
+                    size.height += childSize.height;
+                    size.width = Math.max(size.width, childSize.width);
+                });
+            } else {
+                size.width = element.options.width;
+                size.height = element.options.height;
+                if (element instanceof diagram.TextBlock && element.options.text != null) {
+                    if (size.width == null) {
+                        size.width = 8.5 * element.options.text.length;
+                        if (element.options.fontWeight == "bold")
+                            size.width = 13 * element.options.text.length;
+                    }
+                    if (size.height == null)
+                        size.height = element.options.fontSize * 1.7;
+                }
+            }
+            if (size.width == null)
+                size.width = 0;
+            if (size.height == null)
+                size.height = 0;
+            return size;
+        }
+        function applySizeMinima(size) {
+            var minWidth = 100, minHeight = 60;
+            if (size.width == null || size.width < minWidth)
+                size.width = minWidth;
+            if (size.height == null || size.height < minHeight)
+                size.height = minHeight;
+            return size;
+        }
+        function stepShapeContentTemplate(options) {
+            var diagram = kendo.dataviz.diagram;
+            var step = FlowContext.ModelMap[options.data.Guid];
+            var layout = $.extend({}, options.data.DefaultLayout);
+            $.extend(layout, step.Layout);
+
+            var mainGroup = new diagram.Group();
+            options.x = layout.X;
+            options.y = layout.Y;
+            var currentY = 0;
+            var topMargin = 10, bottomMargin = 10;
+            var nameText = new diagram.TextBlock({
+                text: step.Name,
+                x: 10,
+                y: currentY += topMargin,
+                color: "#dfe4ed",
+                fontSize: 20,
+                fontWeight: "bold"
+            });
+            var queryGroup = new diagram.Group();
+            queryGroup.append(new diagram.TextBlock({
+                text: "Queries:",
+                x: 10,
+                y: currentY += 30,
+                fontWeight: "bold",
+                color: "#dfe4ed"
+            }));
+            currentY += 5;
+            $.each(step.Queries, function (idx, query) {
+                queryGroup.append(new diagram.TextBlock({
+                    text: query.RequestText,
+                    color: "#a7b1c2",
+                    x: 20,
+                    y: currentY += 18
+                }));
+            });
+            var size = computeShapeSize(nameText, queryGroup);
+            if (step.Queries.length == 0)
+                size = computeShapeSize(nameText);
+            size = applySizeMinima(size, 100, 20);
+            // TODO: Integrate persisted width/height
+            var rect = new diagram.Rectangle({
+                width: size.width,
+                height: size.height,
+                x: 0,
+                y: 0,
+                fill: "#2f4050"
+            });
+            mainGroup.append(rect);
+            mainGroup.append(nameText);
+            if (step.Queries.length > 0)
+                mainGroup.append(queryGroup);
+            return mainGroup;
+        }
+    </script>
+}
+
+@(Html.Razor().Diagram()
+    .Name("FlowDiagram")
+    .Events(x =>
+    {
+        x.DataBound("onFlowDiagramBound");
+        x.Select("onFlowDiagramSelected");
+        x.Edit("onFlowDiagramEdited");
+        x.Change("onFlowDiagramChanged");
+        x.DragEnd("onFlowDiagramDragEnd");
+    })
+    .ConnectionDefaults(conn =>
+    {
+        conn.EndCap("ArrowEnd");
+    })
+)

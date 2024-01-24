@@ -1,0 +1,62 @@
+﻿<#@ template language="C#" debug="false" hostspecific="true"#>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+<#
+
+
+#>using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using ModelStateDictionary = Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary;
+using IdentityResult = Microsoft.AspNetCore.Identity.IdentityResult;
+using IAuthorizationRequirement = Microsoft.AspNetCore.Authorization.IAuthorizationRequirement;
+using AuthorizationFailureReason = Microsoft.AspNetCore.Authorization.AuthorizationFailureReason;
+<#
+
+
+    var statusCodes = new List<string> { "BadRequest", "NotFound", "Unauthorized", "Forbidden", "InternalServerError" };
+    var methodArgNames = new List<string> { "message", "ex", "errors", "errors", "modelState", "idResult", "failures", "failures" };
+    var methodArgTypes = new List<string> { "string", "Exception", "params string[]", "IEnumerable<string>", "ModelStateDictionary", "IdentityResult", "IEnumerable<IAuthorizationRequirement>", "IEnumerable<AuthorizationFailureReason>" };
+    var methodSignatures = new List<(List<string>, List<string>)>
+    {
+        (new List<string>{ "Exception", "params string[]"}, new List<string>{"ex", "messages" })
+    };
+    for (int i = 0; i < methodArgNames.Count; i++)
+    {
+        var argName = methodArgNames[i];
+        var argType = methodArgTypes[i];
+        methodSignatures.Add((new List<string> { argType }, new List<string> { argName }));
+    }
+#>
+
+namespace GmWeb.Logic.Utility.Web;
+
+public partial class ErrorResponse
+{
+<#
+        foreach(var statusCode in statusCodes)
+        {
+            foreach (var ms in methodSignatures)
+            {
+                if (ms.Item1.Count == 0)
+                    continue;
+                string signature = $"{ms.Item1[0]} {ms.Item2[0]}";
+                for (int i = 1; i < ms.Item1.Count; i++)
+                {
+                    signature += $", {ms.Item1[i]} {ms.Item2[i]}";
+                }
+                string args = string.Join(", ", ms.Item2);
+#>    public static ErrorResponse <#= statusCode #>(<#= signature #>)
+        => new ErrorResponse(HttpStatusCode.<#= statusCode #>, <#= args #>);
+<#
+            }
+
+        }
+#>
+}

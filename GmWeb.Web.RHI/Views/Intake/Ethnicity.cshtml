@@ -1,0 +1,131 @@
+﻿@using PrimaryLanguages = GmWeb.Logic.Services.Datasets.Languages.PrimaryLanguages
+@using RaceService = GmWeb.Logic.Services.Datasets.Races.RaceService
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake
+@using GmWeb.Logic.Enums
+@using GmWeb.Logic.Utility.Extensions.Enums
+@using GmWeb.Web.RHI.Utility
+@using GmWeb.Web.RHI.Views.Shared.Component 
+@using Microsoft.Extensions.DependencyInjection
+@model GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake.EthnicityData
+@{
+    Layout = null;
+    ViewBag.Title = Model.Racial.ToString();
+    var ServiceProvider = this.Html.ViewContext.HttpContext.RequestServices;
+    var RaceService = ServiceProvider.GetService<RaceService>();
+}
+
+<script>
+    var EthnicityRaceMap = {
+        @foreach(var race in RaceService.Sources)
+        {
+            <text>
+            '@race.Ethnicity.Code': @race.Code,
+            </text>
+        }
+    };
+    function LanguageHandler() {
+        var ctrl = $("#PrimaryLanguage").data("kendoDropDownList");
+        
+        $('#ChineseLanguageDiv').hide();
+        $('#ChineseLanguage').removeAttr('required');
+
+        $('#ExtendedLanguageDiv').hide();
+        $('#ExtendedLanguage').prop('required', false);
+
+        var primaryCode = ctrl.dataItem().Value.toLowerCase();
+        if (primaryCode == '@(PrimaryLanguages.OtherLanguageTag.ToLower())') {
+            $('#ExtendedLanguageDiv').show();
+            $('#ExtendedLanguage').prop('required', true);
+        }
+        else if (primaryCode == '@(PrimaryLanguages.Chinese.Value.ToLower())') {
+            $('#ChineseLanguageDiv').show();
+            $('#ChineseLanguage').prop('required', true);
+        }
+    }
+    function EthnicityHandler() {
+        let otherRaceCode = "@(GmWeb.Logic.Services.Datasets.Ethnicities.GmEthnicity.OtherEthnicity.Code)";
+        var ethnicityCtrl = $("#Ethnicity").data("kendoMultiSelect");
+        var ethnicityCodes = ethnicityCtrl.value();
+        var raceCode = 0;
+        for(var ethnicityCode of ethnicityCodes) {
+            var ethRaceCode = EthnicityRaceMap[ethnicityCode];
+            raceCode |= ethRaceCode;
+        }
+        if(raceCode != null && raceCode != otherRaceCode)
+        {
+            $('#Racial').input(raceCode);
+        }
+    }
+</script>
+
+<div class="gray-bg">
+        <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is your ethnicity?</h4>
+        <span class="k-form-field-wrap">
+        @(Html.Kendo().MultiSelectFor(m => m.Ethnicity)
+                             .HtmlAttributes(new { required = "required" })
+                             .Placeholder("...")
+                             .AutoWidth(false)
+                             .HandleUpdates("EthnicityHandler")
+                             .BindToEthnicities(this.Html)
+         )
+    </span>
+    <div class="validator-msg"><span data-for="Ethnicity" class="k-invalid-msg"></span></div>      
+    <br />
+        <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is your racial identity?</h4>
+        <span class="k-form-field-wrap">
+        @(await this.Html.BitVectorControlFor(Model, m => m.Racial, new { Layout = CheckBoxGroupLayout.Horizontal }))
+        </span>
+        <div class="validator-msg"><span data-for="Racial" class="k-invalid-msg"></span></div>      
+    <br />
+        <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is your primary language spoken at home?</h4>
+        <span class="k-form-field-wrap">
+ 	         @(Html.Kendo().DropDownListFor(m => m.PrimaryLanguage)
+                .HtmlAttributes(new { required = "required", style = "width:auto" })
+                .OptionLabel("...")
+                .Height(310)
+                .AutoWidth(true)
+                .HandleUpdates("LanguageHandler")
+                .BindToPrimaryLanguages(this.Html)
+             )
+        </span>
+        <div class="validator-msg"><span data-for="PrimaryLanguage" class="k-invalid-msg"></span></div>      
+    <br />
+    <div id="ExtendedLanguageDiv" style="display: none">
+            <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">Please choose a language:</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.ExtendedLanguage)
+                .HtmlAttributes(new { required = "required", style = "width:auto" })
+                .OptionLabel("...")
+                .AutoWidth(true)
+                .Height(310)
+                .BindToExtendedLanguages(this.Html)
+            )
+        </span>
+        <div class="validator-msg"><span data-for="ExtendedLanguage" class="k-invalid-msg"></span></div>
+        </div>
+    <div id="ChineseLanguageDiv" style="display: none">
+        <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">Please choose a dialect:</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.ChineseLanguage)
+                    .HtmlAttributes(new { required = "required", style = "width:auto" })
+                    .OptionLabel("...")
+                    .AutoWidth(true)
+                    .Height(310)
+                    .BindToChineseLanguages(this.Html)
+                  )
+          </span>
+        <div class="validator-msg"><span data-for="ChineseLanguage" class="k-invalid-msg"></span></div>
+        </div>
+     <br />
+    <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">Are you comfortable conversing in English?</h4>
+        @(Html.Kendo().RadioGroupFor(m => m.ConversationalEnglish)
+            .Items(i =>
+            {
+                i.Add().Label("Yes").Value("true");
+                i.Add().Label("No").Value("false");
+            })
+            .Value("true")
+            .Layout(RadioGroupLayout.Horizontal)
+        )
+    <br />
+</div>

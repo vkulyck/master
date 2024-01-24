@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Current File",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${file}",
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "Dev Deploy",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceRoot}/web-deploy.ps1",
+            "args": [ "-Env", "dev", "-Projects", "api,identity,rhi" ],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "Team Deploy",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceRoot}/web-deploy.ps1",
+            "args": [ "-Env", "team", "-Projects", "api,identity,rhi" ],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "Beta Deploy",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceRoot}/web-deploy.ps1",
+            "args": [ "-Env", "beta", "-Projects", "api" ],
+            "cwd": "${workspaceRoot}"
+        },
+    ]
+}

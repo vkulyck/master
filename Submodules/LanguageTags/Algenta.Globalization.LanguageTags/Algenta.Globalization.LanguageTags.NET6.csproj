@@ -1,0 +1,68 @@
+﻿<Project>
+  <PropertyGroup>
+    <PackageId>LanguageTags.NET</PackageId>
+    <Version>8.0.30703</Version>
+    <Authors>Dan Smith (Primary), Jake Menashe</Authors>
+    <Company>Open Source Community</Company>
+    <!-- General Settings -->
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>Latest</LangVersion>
+    <AssemblyName>Algenta.Globalization.LanguageTags</AssemblyName>
+    <RootNamespace>Algenta.Globalization.LanguageTags</RootNamespace>
+
+    <!-- Compatibility for adjacent Standard/Framework builds. -->
+    <MSBuildProjectExtensionsPath>$(ProjectDir)obj\NET6</MSBuildProjectExtensionsPath>
+    <BaseIntermediateOutputPath>$(ProjectDir)obj\NET6</BaseIntermediateOutputPath>
+    <OutputPath>bin\NET6\$(Configuration)</OutputPath>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+    <!-- Dependencies -->
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <ItemGroup>
+    <!-- T4 Tool -->
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    <None Update="**\*.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- T4 compile unit. -->
+    <None Update="TagRegistry.tt">
+      <LastGenOutput>TagRegistry.generated.cs</LastGenOutput>
+    </None>
+    <Compile Update="Language.generated.cs">
+        <DependentUpon>TagRegistry.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Region.generated.cs">
+        <DependentUpon>TagRegistry.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Script.generated.cs">
+        <DependentUpon>TagRegistry.tt</DependentUpon>
+    </Compile>
+    <Compile Update="TagRegistry.generated.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>TagRegistry.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <!-- Incompatible .NET Framework components. -->
+  <ItemGroup>
+    <Folder Remove="Properties\" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Compile Remove="obj\**" />
+    <None Remove="obj\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="RegistryData\language-dataset.json" />
+    <None Remove="RegistryData\language-subtag-registry.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RegistryData\language-subtag-registry.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

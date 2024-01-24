@@ -1,0 +1,13 @@
+# renew_before_expiry = 30 days
+version = 0.40.0
+archive_dir = /etc/letsencrypt/archive/{prj_id;domain}.{vpc;domain}.goodmojo.io
+cert = /etc/letsencrypt/live/{prj_id;domain}.{vpc;domain}.goodmojo.io/cert.pem
+privkey = /etc/letsencrypt/live/{prj_id;domain}.{vpc;domain}.goodmojo.io/privkey.pem
+chain = /etc/letsencrypt/live/{prj_id;domain}.{vpc;domain}.goodmojo.io/chain.pem
+fullchain = /etc/letsencrypt/live/{prj_id;domain}.{vpc;domain}.goodmojo.io/fullchain.pem
+
+# Options used in the renewal process
+[renewalparams]
+account = 76ded38fb078faf0cb7ffecba4cf5f72
+authenticator = dns-route53
+server = https://acme-v02.api.letsencrypt.org/directory

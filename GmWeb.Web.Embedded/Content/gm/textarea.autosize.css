@@ -1,0 +1,9 @@
+﻿textarea.autosize {
+    display: block;
+    box-sizing: padding-box;
+    overflow: hidden;
+    width: 250px;
+    font-size: 14px;
+    box-shadow: 2px 2px 8px rgba(black, .3);
+    max-height: 300px;
+}

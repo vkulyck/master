@@ -1,0 +1,3 @@
+﻿<# // Includes #>
+<#@ include file="ScriptContext.t4" #>
+<#@ include file="ProjectFileAccess.t4" #>

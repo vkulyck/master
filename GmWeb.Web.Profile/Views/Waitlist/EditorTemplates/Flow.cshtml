@@ -1,0 +1,4 @@
+﻿@model GmWeb.Web.Profile.Models.Waitlist.Flow
+
+@Html.CollectionEditorFor(m => m.Data, CollectionTitle: "Category Data", ItemTitle: "Variable", StartCollapsed: true, AreItemsCollapsible: true, StartItemsCollapsed: true)
+@Html.CollectionEditorFor(m => m.Results, CollectionTitle: "Result Sets", ItemTitle: "Set", StartCollapsed: true, AreItemsCollapsible: true, StartItemsCollapsed: true)

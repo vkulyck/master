@@ -1,0 +1,28 @@
+﻿@using GmWeb.Logic.Enums
+@using GmWeb.Web.Profile.Models.Waitlist
+@using GmWeb.Logic.Data.Models.Shared
+
+@model ClientResponse
+
+<div style="float:right">
+@switch (Model.DataType)
+{
+    case DataType.B:
+            @(Html.GmRazor().Checkbox().DataBind("RawValue"))
+        break;
+    case DataType.D:
+        <text>
+            <input data-role="datepicker" data-bind="value: RawValue" />
+        </text>
+        break;
+    case DataType.L:
+            @(Html.GmRazor().Dropdown<LookupOption>().Display(x => x.Description).Value(x => x.ID).Values(Model.Options).DataBind("RawValue"))
+        break;
+    case DataType.N:
+            @(Html.GmRazor().Textbox().DataBind("RawValue"))
+        break;
+    case DataType.S:
+            @(Html.GmRazor().Textarea().DataBind("RawValue"))
+        break;
+}
+</div>

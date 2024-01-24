@@ -1,0 +1,156 @@
+﻿@using Kendo.Mvc.UI
+@using GmWeb.Web.Profile.Models
+@using GmWeb.Web.Profile.Models.ClientProfile
+@model ClientProfileViewModel
+
+@using (Html.Delayed(isOnlyOne: "GridSupplementalData-Handlers"))
+{
+    <script type="text/javascript">
+        /// SEE:
+        // full kendo dropdown grid example: https://demos.telerik.com/kendo-ui/grid/editing-custom
+        // basic kendo DDL example: https://demos.telerik.com/kendo-ui/dropdownlist/index
+        // kendo grid row styling example: https://www.telerik.com/forums/709229-e-dataitem-on-grid-databound
+        function onSupplementalDataBound(e) {
+            var grid = e.sender;
+            var valueIndex = grid.columns.findIndex(function(v, i) { return v.title == 'Value'; })
+            var rows = grid.tbody.children();
+            for (var j = 0; j < rows.length; j++) {
+                var row = $(rows[j]);
+                var cell = row.children()[valueIndex];
+                var dataItem = e.sender.dataItem(row);
+                fundingEditor(cell, dataItem);
+            }
+        }
+        function fundingEditor(cell, item) {
+            $(cell).empty();
+            switch (item.DataType) {
+                case "L":
+                    fundingListEditor(cell, item);
+                    break;
+                case "B":
+                    fundingCheckboxEditor(cell, item);
+                    break;
+                default:
+                    fundingTextEdtor(cell, item);
+            }
+        }
+        function fundingTextEdtor(cell, item) {
+            $(cell).append($('<input />', { type: 'text', value: item.FundingValue }));
+        }
+        function fundingListEditor(cell, item) {
+            var selectionListData = item.ListSettings.Items;
+            $(cell).kendoDropDownList({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataSource: selectionListData,
+                value: item.FundingValue,
+                optionLabel: item.ListSettings.OptionalRowText,
+                change: function () {
+                    item.set('FundingValue', this.value());
+                }
+            }); 
+        }
+        function fundingCheckboxEditor(cell, item) {
+            $(cell).append($('<input />', { type: 'checkbox', value: item.FundingValue }));
+        }
+        function saveClicked() {
+            var grid = $('#GridSupplementalData').kwidget();
+            console.log('saving grid:', grid);
+            var data = grid.dataSource.data().toJSON();
+            console.log('saving data:', data);
+            $.ajax({
+                url: "@Url.Action("SaveSupplementalData", "ClientProfile")",
+                type: "POST",
+                data: {
+                    data: data,
+                    ClientDataTypeID: @(Model.ClientDataTypeID)
+                },
+                success: function (data) {
+                    console.log("grid saved successfully");
+                    console.log('return data:', data);
+                },
+                error: function (data) {
+                    console.log('save error data:', data);
+                }
+            });
+        }
+    </script>
+}
+
+<div class="ibox">
+    <div class="ibox-title">
+        <h2>Please fill out your profile interests</h2>
+    </div>
+    <div class="ibox-content">
+        <table style="border: 0px; width: 100%; background:#fff;" class="table">
+            <tr style="display:none;">
+                <td style="width: 100%;" valign="top">
+                    @Model.ClientSupplementalData
+                </td>
+            </tr>
+            <tr style="display:none;">
+                <td style="width: 100%;" align="left" valign="top">
+                    @Model.Category
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%;" align="left" valign="top">
+                    @Model.Description
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%;" align="left" valign="top">
+                    <div ID="PanelGridSupplemental" Height="600px">
+                        @(Html.Razor().Grid<SupplementalGridRow>()
+                            .Name("GridSupplementalData")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(row => row.Name).Title("Eligibility Name");
+                                columns.Bound(row => row.Operation).Title("Op");
+                                columns.Bound(row => row.FundingValue).Title("Value");
+                            })
+                            .Events(events =>
+                            {
+                                events.DataBound("onSupplementalDataBound");
+                            })
+                            .DataSource(src =>
+                            {
+                                src.Ajax()
+                                    .Read("GetSupplementalGridData", "ClientProfile")
+                                    .Update("UpdateSupplementalData", "ClientProfile", new { Model.ClientDataTypeID })
+                                ;
+                            })
+                        )
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%;" align="left" valign="top">
+                    <div>
+                        <div class="ibox float-e-margins m-t-lg">
+                            @(
+                                Html.GmRazor().Defaults.ButtonLink()
+                                    .Name("ButtonPrevious").Content("<< Previous")
+                                    .Enable(Model.EnablePrevButton)
+                                    .Uri(Url.Action("Index", "ClientProfile", new { ClientDataTypeID = Model.PrevClientDataTypeID }))
+                            )
+                            @(
+                                Html.GmRazor().Defaults.ButtonLink()
+                                    .Name("ButtonNext").Content("Next >>")
+                                    .Enable(Model.EnableNextButton)
+                                    .Uri(Url.Action("Index", "ClientProfile", new { ClientDataTypeID = Model.NextClientDataTypeID }))
+                            )
+                        </div>
+                        <div class="ibox float-e-margins">
+                            @(Html.Razor().Defaults.Button().Name("ButtonSupplementalSave").Content("Save").Events(e => e.Click("saveClicked")))
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <asp:Label runat="server" ID="LabelErrorSupplemental" Font-Bold="False"
+                                        ForeColor="Red" Visible="False" CssClass="alert alert-danger" />
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

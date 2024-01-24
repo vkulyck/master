@@ -1,0 +1,10 @@
+/var/log/gmweb/*.log {
+  daily
+  missingok
+  rotate 7
+  copytruncate
+  compress
+  delaycompress
+  notifempty
+  create 0640 root webdev
+}

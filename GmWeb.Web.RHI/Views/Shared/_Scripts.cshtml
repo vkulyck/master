@@ -1,0 +1,242 @@
+﻿@using GmWeb.Web.RHI.Utility
+<script>
+    $.fn.disable = function() {
+        $(this).addClass('disabled');
+    };
+    $.fn.enable = function() {
+        $(this).removeClass('disabled');
+    };
+    $.fn.require = function() {
+        if(value == null)
+            throw "The jQuery function 'require' requires a Boolean parameter specifying whether the element is required (true) or optional (false)";
+        $(this).prop('required', !!value);
+    };
+    $.fn.radioInvalidate = function() {
+        var radio = $(this).data("kendoRadioGroup");
+        if(radio == null)
+            return;
+        radio.wrapper.addClass('radio-group-error');
+    };
+    $.fn.radioValidate = function() {
+        var radio = $(this).data("kendoRadioGroup");
+        if(radio == null)
+            return;
+        radio.wrapper.removeClass('radio-group-error');
+    };
+    $.fn.radioValue = function() {
+        var radio = $(this).data("kendoRadioGroup");
+        if(radio == null)
+            return null;
+        return radio.value();
+    }
+    $(function () {
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("RequestVerificationToken", $('input[name=__RequestVerificationToken]').val());
+            },
+            converters: {
+                "text json": function (data) {
+                    return $.parseJSON(data, true);
+                }
+            }
+        });
+    });
+    function IncludeForgeryTokens(callbackName) {
+        if (callbackName != undefined){
+            return {
+                paramID : callbackName(),
+                __RequestVerificationToken : kendo.antiForgeryTokens()['__RequestVerificationToken']
+            }
+        }else{
+             return kendo.antiForgeryTokens()
+        }
+    }
+
+    class IntakePage {
+        constructor({ name, index, navPagerID, navMenuID, tabID, formID }) {
+            this.name = name;
+            this.index = index;
+            this.navPagerID = navPagerID;
+            this.navMenuID = navMenuID;
+            this.tabID = tabID;
+            this.formID = formID;
+        }
+        get navPager() {
+            return $('#' + this.navPagerID);
+        }
+        get navMenu() {
+            return $('#' + this.navMenuID);
+        }
+        get tab() {
+            return $('#' + this.tabID);
+        }
+        get form() {
+            return $('#' + this.formID);
+        }
+        #updateNavMenu(target) {
+            if(target == null) {
+                target = this;
+            } else {
+                this.navMenu.removeClass('active');
+            }
+            target.navMenu.addClass('active');
+        }
+        #updateNavPager(target) {
+            if(target == null)
+                target = this;
+            UpdateNavPager(target);
+        }
+        #updateTab(target) {
+            if(target == null) {
+                target = this;
+            } else {
+                this.tab.hide();
+            }
+            target.tab.show();
+        }
+        goto(target) {
+            this.#updateNavMenu(target);
+            this.#updateNavPager(target);
+            this.#updateTab(target);
+        }
+        cache(success, error) {
+            var intakeData = this.serialize();
+            PostJson(intakeData, '/Intake/CacheData/', success, error);
+        }
+        save(success, error) {
+            var intakeData = this.serialize();
+            PostJson(intakeData, '/Intake/SaveData/', success, error);
+        }
+        cacheGoto(target, success, error) {
+            var innerSuccess = data => {
+                this.goto(target);
+                if(success)
+                    success(data);
+            };
+            var innerError = err => {
+                console.error('Error caching progress:');
+                console.error(err);
+                if(error)
+                    error(data);
+                if(@(!this.Html.IsDevelopment())) {
+                    this.goto(target);
+                }
+            }
+            this.cache(innerSuccess, innerError);
+        }
+        serialize() {
+            var pageData = SerializeForm(this.form);
+            var intakeData = {
+                [this.name]: pageData
+            };
+            return intakeData;
+        }
+        validate() {
+            var validator = CreateFormValidator(this.form);
+            var result = validator.validate();
+            return result;
+        }
+    }
+    class IntakeNavigator {
+        constructor(pages) {
+            this.current = null;
+            this.pages = pages;
+            this.name_map = {};
+            this.index_map = {};
+            for(var page of pages) {
+                this.name_map[page.name] = page;
+                this.index_map[page.index] = page;
+            }
+        }
+        getPage(pageID) {
+            if(pageID == null)
+                return null;
+            if(pageID instanceof IntakePage)
+                return pageID;
+            if(pageID in this.name_map)
+                return this.name_map[pageID];
+            if(pageID in this.index_map)
+                return this.index_map[pageID];
+            throw 'Invalid page index: ' + JSON.stringify(pageID);
+        }
+        get first() {
+            return this.pages[0];
+        }
+        get last() {
+            return this.pages[this.pages.length - 1];
+        }
+        get prev() {
+            if(this.current.index == 0)
+                return null;
+            return this.pages[this.current.index - 1];
+        }
+        get next() {
+            if(this.current.index == this.pages.length - 1)
+                return null;
+            return this.pages[this.current.index + 1];
+        }
+        get hasPrev() {
+            return this.current.index > 0;
+        }
+        get hasNext() { 
+            return this.current.index < this.pages.length - 1; 
+        }
+        goto(target) {
+            target = this.getPage(target);
+            if(this.current == null) {
+                this.current = target;
+                target = null;
+            }
+            this.current.goto(target);
+            if(target != null)
+                this.current = target;
+        }
+        cache() {
+            this.current.cache();
+        }
+        save() {
+            this.current.save();
+        }
+        cacheGoto(target) {
+            target = this.getPage(target);
+            this.current.cacheGoto(
+                target,
+                data => {
+                    this.current = target;
+                }
+            );
+        }
+        serialize() {
+            var intakeData = {};
+            for(var page of this.pages) {
+                var pageData = page.serialize();
+                $.extend(intakeData, pageData);
+            }
+            return intakeData;
+        }
+        validate() {
+            var finalResult = true;
+            for(var page of this.pages) {
+                var formResult = page.validate();
+                finalResult = finalResult && formResult;
+            }
+            return finalResult;
+        }
+        submit() {
+            var status = $('#validation-summary');
+            var success = data => {
+                status.text("SUCCESS").removeClass("invalid").addClass("valid");
+            };
+            var error = err => {
+                status.text("FAIL").removeClass("valid").addClass("invalid");
+            };
+            var isValid = this.validate();
+            if (isValid) {
+                var intakeData = this.serialize();
+                PostJson(intakeData, '/Intake/SubmitData/', success, error);
+            } else {
+                error();
+            }
+        }
+    }
+</script>

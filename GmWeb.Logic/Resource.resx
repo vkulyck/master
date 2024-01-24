@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AgencyPartnerSQL" xml:space="preserve">
+    <value>SELECT [ID] AS AgencyID, [Name] AS AgencyName FROM tblAgency WHERE [ID] = {0}</value>
+  </data>
+  <data name="AuthorizeNetLogonID" xml:space="preserve">
+    <value>8gATj9U7qn</value>
+  </data>
+  <data name="AuthorizeNetLogonIDSandbox" xml:space="preserve">
+    <value>27H4fv4hRw5C</value>
+  </data>
+  <data name="AuthorizeNetTransactionKey" xml:space="preserve">
+    <value>3fQ9R98g6mwUES2g</value>
+  </data>
+  <data name="AuthorizeNetTransactionKeySandbox" xml:space="preserve">
+    <value>7J58bu2Mp6HFa44c</value>
+  </data>
+  <data name="ContractRevisionMessage" xml:space="preserve">
+    <value>Agency: {0}&lt;br&gt;
+Program: {1}&lt;br&gt;
+Project ID: {2}&lt;br&gt;
+Description: {3}&lt;br&gt;
+&lt;br&gt;
+Please be advised that service to 7c2 for contracts associated with Project ID {2} has been temporarily interrupted due to the contract revision process.&lt;br&gt;
+&lt;br&gt;
+We apologize for the inconvenience. If you have any questions, please contact your grant coordinator, {4} at {5}.&lt;br&gt;
+&lt;br&gt;
+Thank you.</value>
+  </data>
+  <data name="ContractRevisionSubject" xml:space="preserve">
+    <value>Revision for Contracts associated with Project ID {0}</value>
+  </data>
+  <data name="DonorECheckApprovalMessage" xml:space="preserve">
+    <value>Dear {0} {1}:&lt;br /&gt;
+&lt;br /&gt;
+A {2} for {6:c} has been submitted against your checking account by us at {3}. Please click &lt;a href='{4}'&gt;here&lt;/a&gt; to approve or to reject this {2}. If we receive no response after {5} days, this {2} will expire.&lt;br /&gt;
+&lt;br /&gt;
+Thank you,&lt;br /&gt;
+{3}</value>
+  </data>
+  <data name="DonorECheckApprovalSubject" xml:space="preserve">
+    <value>An electronic check request has been submitted</value>
+  </data>
+  <data name="DonorECheckTimeoutDays" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="DonorEmail" xml:space="preserve">
+    <value>The following donation has been made to {0}:&lt;br /&gt;
+&lt;br /&gt;
+Donor: {1}&lt;br /&gt;
+&lt;br /&gt;
+Amount: {2:c}&lt;br /&gt;
+Type of donation: {3}&lt;br /&gt;
+Date: {4:MMMM d, yyyy, h:mm tt}&lt;br /&gt;
+&lt;br /&gt;
+Phone: {5}&lt;br /&gt;
+Email: {6}&lt;br /&gt;
+&lt;br /&gt;
+Pledge amount: {7:c}&lt;br /&gt;
+In Honor Of: {8}&lt;br /&gt;
+&lt;br /&gt;
+Thank you,&lt;br /&gt;
+GoodMojo, Inc (GoodMojo.Us)</value>
+  </data>
+  <data name="DonorEmailInKind" xml:space="preserve">
+    <value>The following donation has been made to {0}:&lt;br /&gt;
+&lt;br /&gt;
+Donor: {1}&lt;br /&gt;
+&lt;br /&gt;
+Number of items: {2}&lt;br /&gt;
+Total value: {3:c}&lt;br /&gt;
+Type of transaction:  {4}&lt;br /&gt;
+Date: {5:MMMM d, yyyy, h:mm tt}&lt;br /&gt;
+&lt;br /&gt;
+Phone: {6}&lt;br /&gt;
+Email: {7}&lt;br /&gt;
+&lt;br /&gt;
+Thank you,&lt;br /&gt;
+GoodMojo, Inc (GoodMojo.Us)</value>
+  </data>
+  <data name="DonorEmailSubject" xml:space="preserve">
+    <value>Donation receipt</value>
+  </data>
+  <data name="FedTaxIDPartnerSQL" xml:space="preserve">
+    <value>SELECT [ID] AS AgencyID, [Name] AS AgencyName FROM tblAgency WHERE FedTaxID = '{0}'</value>
+  </data>
+  <data name="GetAgencyDocumentation" xml:space="preserve">
+    <value>SELECT AgencyDocumentationID AS DocumentID,
+       DocumentPath AS Filename,
+       CONVERT(varchar, UploadedDate, 101) AS UploadedDate,
+       UploadedByUserID AS UploadedBy,
+       CASE
+           WHEN UploadedBy = '{0}' THEN 'images/unlock.png'
+           ELSE 'images/lock.png'
+       END AS Status
+FROM tblAgencyDocumentation
+WHERE DocumentTypeID IN ({1})
+AND AgencyID = '{2}'
+AND Deleted = 0
+AND RIGHT(DocumentPath, 4) = '.pdf'
+ORDER BY DocumentPath</value>
+  </data>
+  <data name="GetApprovalStatusReversalItems" xml:space="preserve">
+    <value>SELECT pmt.PaymentKey,
+       a.Name AS [AGENCY NAME],
+       rcp.ContractID AS [CONTRACT ID],
+       pmt.PaymentSubmittedDate AS [REPORTING PERIOD],
+       pmt.PaymentKey AS [TRANSACTION ID],
+       CASE
+           WHEN ISNULL(pmt.StaffApproved, 0) = 1 THEN 'X'
+           ELSE ''
+       END AS [GC],
+       CASE
+           WHEN ISNULL(pmt.ManagerApproved, 0) = 1 THEN 'X'
+           ELSE ''
+       END AS [MGR]
+FROM   tblPayments pmt
+INNER JOIN tblRelCtrPrj rcp ON pmt.ContractID = rcp.ContractID
+INNER JOIN tblProjects p ON rcp.ProjectID = p.ProjectID
+INNER JOIN tblAgency a ON p.AgencyID = a.ID
+WHERE pmt.PaymentKey IN ({0})</value>
+  </data>
+  <data name="GetInitiatePaymentProcessItems" xml:space="preserve">
+    <value>SELECT pmt.PaymentKey,
+       a.Name AS [AGENCY NAME],
+       a.VendorCCSF AS [VENDOR],
+       pmt.PaymentKey AS [TRANSACTION ID],
+       rcp.GrantDetail AS [GRANT ID],
+       pTotal.NetAmount AS [NET AMOUNT]
+FROM   tblPayments pmt
+INNER JOIN tblRelCtrPrj rcp ON pmt.ContractID = rcp.ContractID
+INNER JOIN tblProjects p ON rcp.ProjectID = p.ProjectID
+INNER JOIN tblAgency a ON p.AgencyID = a.ID
+LEFT OUTER JOIN (
+    SELECT pd.PaymentKey, SUM(pd.AmountRequested) AS SubmittedAmount, SUM(pd.NetAmountRequested) AS NetAmount
+    FROM tblPaymentDetail pd
+    GROUP BY pd.PaymentKey
+    ) pTotal ON pmt.PaymentKey = pTotal.PaymentKey
+WHERE pmt.PaymentKey IN ({0})</value>
+  </data>
+  <data name="GetTransactionEmails" xml:space="preserve">
+    <value>SELECT DISTINCT c.ClientID, c.Email
+FROM tblClient c
+INNER JOIN tblDonorTransaction dt ON c.ClientID = dt.ClientID
+WHERE dt.DonorTransactionID IN ({0})</value>
+  </data>
+  <data name="IncompleteStepSQL" xml:space="preserve">
+    <value>SELECT pt.ProcessTypeID
+FROM   tblProcessType pt
+INNER JOIN tblProcessStep ps ON pt.ProcessTypeID = ps.ProcessTypeID
+WHERE pt.ClientCategoryID = {0}
+AND   ps.Checked = 1
+AND   ps.DateRecorded IS NULL
+AND   pt.ProcessTypeIDlkp = {1}</value>
+  </data>
+  <data name="InHonorEmail" xml:space="preserve">
+    <value>The following donation has been made in your honor to {0}:&lt;br /&gt;
+&lt;br /&gt;
+Donor: {1}&lt;br /&gt;
+&lt;br /&gt;
+Amount: {2:c}&lt;br /&gt;
+Type of donation: {3}&lt;br /&gt;
+Date: {4:MMMM d, yyyy, h:mm tt}&lt;br /&gt;
+&lt;br /&gt;
+Phone: {5}&lt;br /&gt;
+Email: {6}&lt;br /&gt;
+&lt;br /&gt;
+Pledge amount: {7:c}&lt;br /&gt;
+&lt;br /&gt;
+Thank you,&lt;br /&gt;
+GoodMojo, Inc (GoodMojo.Us)</value>
+  </data>
+  <data name="InHonorEmailSubject" xml:space="preserve">
+    <value>A pledge has been made in your honor</value>
+  </data>
+  <data name="InviteeEmailMessage" xml:space="preserve">
+    <value>You have been invited to be a partner with Agency {0}. The invitation name is {1}. It's description is {2}.</value>
+  </data>
+  <data name="InviteeEmailSubject" xml:space="preserve">
+    <value>You have been invited</value>
+  </data>
+  <data name="IsLiveApplication" xml:space="preserve">
+    <value>False</value>
+  </data>
+  <data name="NotApprovedMessage" xml:space="preserve">
+    <value>This e-mail is being sent from TOTAL GRANT SOLUTION(tm) to notify you that one of the 7c2 submissions from your agency has been NOT APPROVED.
+                    &lt;br /&gt;&lt;br /&gt;
+The details are as follows:&lt;br /&gt;
+Project #{0}&lt;br /&gt;
+Contract #{1}&lt;br /&gt;
+{2}
+&lt;br /&gt;&lt;br /&gt;
+Request Month: {3:MMMM, yyyy}
+&lt;br /&gt;&lt;br /&gt;
+Please contact your Grant Coordinator, {4} {5}, to resolve the issue(s).
+&lt;br /&gt;&lt;br /&gt;
+You may re-submit your expense info for the affected month as long as future months have not already been submitted. To do so, log in to 7c2, and to the right of the affected month on the Welcome screen, click the "Re-open" button (note: the "Re-open" button is available to those with Organziation Administrator access only).
+&lt;br /&gt;&lt;br /&gt;
+If future months have been submitted, you will not be able to re-submit the affected month, but you can reclaim the money for each line item by logging in to 7c2 and to the right of the affected month on the Welcome screen, clicking the "Re-open" button. This will zero out the request for the affected month, allowing the money to be used in a future month. (note: the "Re-open" button is available to those with Organziation Administrator access only).</value>
+  </data>
+  <data name="PartnersSQL" xml:space="preserve">
+    <value>SELECT DISTINCT TOP 1000 a.[ID] AS AgencyID, a.[Name] AS AgencyName
+FROM tblAgency a
+LEFT OUTER JOIN tblAgencyBudgetItem abi ON a.ID = abi.AgencyID
+LEFT OUTER JOIN (
+    SELECT AgencyID, SUM(ItemAmount) AS TotalAmount FROM tblAgencyBudgetItem GROUP BY AgencyID
+    ) abit ON a.ID = abit.AgencyID
+LEFT OUTER JOIN (
+    SELECT AgencyID, COUNT(*) AS BoardCount FROM tblBoardOfDirectors GROUP BY AgencyID
+    ) bd ON a.ID = bd.AgencyID
+WHERE</value>
+  </data>
+  <data name="RegisteredForServiceSQL" xml:space="preserve">
+    <value>SELECT cc.ClientCategoryID
+FROM   tblClientCategory cc
+INNER JOIN tblClientCategoryDate ccd ON cc.ClientCategoryID = ccd.ClientCategoryID
+WHERE  cc.ClientCategoryID = {0}
+AND    cc.DateCreated IS NOT NULL
+AND    ccd.Assigned = 1</value>
+  </data>
+  <data name="TGSUserAgreement" xml:space="preserve">
+    <value>Total Grant Solutions (TGS) User Agreement Terms and Conditions&lt;br /&gt;
+&lt;br /&gt;
+IMPORTANT: BY USING TOTAL GRANT SOLUTIONS, YOU ARE AGREEING TO BE BOUND BY THE FOLLOWING TEKMECA SOFTWARE SINGLE USE LICENSE AGREEMENT TERMS AND CONDITIONS:&lt;br /&gt;
+ &lt;br /&gt;
+PLEASE READ THIS SOFTWARE LICENSE AGREEMENT ("LICENSE") CAREFULLY BEFORE USING OR DOWNLOADING THE SOFTWARE ACCOMPANYING THIS LICENSE. YOU ARE AGREEING TO BE BOUND BY THE TERMS OF THIS LICENSE.  IF YOU DO NOT AGREE TO THE TERMS OF THIS LICENSE, DO NOT USE TGS.&lt;br /&gt;
+&lt;br /&gt;
+1. General. The software, documentation, interfaces, content, fonts and any data that come with TGS, and as may be updated, are collectively referred to as the ("TGS Software") and are licensed, not sold, to you by Tekmeca, Inc. ("Tekmeca") for use only under the terms of this License. Tekmeca retains ownership of the TGS Software and reserves all rights not expressly granted to you.&lt;br /&gt;
+&lt;br /&gt;
+2. Permitted Uses and Restrictions.  &lt;br /&gt;
+&lt;br /&gt;
+(a) Subject to the terms and conditions of this License, you are granted a limited non-exclusive license to use the TGS website to complete and submit certain reports to your funder.  Except as permitted in Section 2(b) below, this License does not grant you any rights to use TGS for any other purpose.  This means that you may use it for your contracted reporting use only, subject to the terms set out in these Terms and Conditions. You may not rent, lease, lend, sell, redistribute, or sublicense the TGS Software.  Additional rights may be available under separate licenses from Tekmeca.&lt;br /&gt;
+&lt;br /&gt;
+(b) You may not and you agree not to, or to enable others to copy, decompile, reverse engineer, disassemble, attempt to derive the source code of, decrypt, modify, or create derivative works of the TGS Software or any services provided by the TGS Software, or any part thereof except as and only to the extent any foregoing restriction is prohibited by applicable law. Any attempt to do so is a violation of the rights of Tekmeca. &lt;br /&gt;
+&lt;br /&gt;
+(c) You agree to use the TGS website in compliance with all applicable laws, including local laws of the country or region in which you reside or in which you download or use the TGS site.&lt;br /&gt;
+&lt;br /&gt;
+(d) Unless you have our prior written consent, you agree not to modify, adapt, translate, prepare derivative works from, decompile, reverse engineer, disassemble or otherwise attempt to derive source code from TGS Software.  Furthermore, you may not use TGS Software in any manner that could damage, disable, overburden, or impair Tekmeca or TGS Software’s services, nor may you use TGS Software in any manner that could interfere with any other party's use and enjoyment of TGS Software. &lt;br /&gt;
+&lt;br /&gt;
+(e) If you have comments on TGS Software or ideas on how to improve it, please contact Tekmeca by sending your correspondence to TGS Community Program at 150 Broadway, San Francisco CA  94111 or any other electronic communication services. Please note that by doing so, you also grant Tekmeca permission to use and incorporate your ideas or comments into TGS Software without further notice or compensation.&lt;br /&gt;
+&lt;br /&gt;
+3.  Consent to Use of Electronic Mail Address, Personal Information and Data.   &lt;br /&gt;
+&lt;br /&gt;
+By using TGS, you are entering data that you understand and agree may be used in compiled form for research, marketing, promotional and other purposes.  You also agree that Tekmeca and its agents may collect, maintain, process and use information, including but not limited to information about your computer, system and application software, peripheral, user profile data, grant reporting, financial reporting, and organization, that is gathered periodically, and may use this information, as long as it is in a form that does not personally identify you for educational, research, marketing, promotional and informational purposes.  Information available publicly in documents such, as IRS Form 990 are not subject to compilation.  &lt;br /&gt;
+&lt;br /&gt;
+You agree that Tekmeca may share your personal information with and you may receive communications from:&lt;br /&gt;
+•   Members of the Tekmeca corporate family and affiliates– such as Good Mojo and Oplync –to provide joint content, products and services, to help detect and prevent potentially illegal acts and violations of our policies, and to guide decisions about products, services and communications. Members of our corporate family will use this information to send you marketing communications only if you have requested their services.&lt;br /&gt;
+•   Service providers who help with parts of our business operations such as technology services, fraud prevention, and marketing. Our contracts dictate that these service providers only use your information in connection with the services they perform for us and not for their own benefit.  The service providers may include:  Constant Contact, Icontact, Vertical Response, Benchmark Email, and Mail Chimp.&lt;br /&gt;
+•   Financial institutions that we may partner with to jointly create and offer a product. These financial institutions may only use this information to market Tekmeca-related products, unless you have given consent for other uses.&lt;br /&gt;
+•   Companies that we plan to merge with or be acquired by. (Should such a combination occur, we require that the new combined entity follow this privacy policy with respect to your personal information. If your personal information could be used contrary to this policy, you will receive prior notice.)&lt;br /&gt;
+•   Law enforcement, government officials, or other third parties when we are compelled to do so by a subpoena, court order, similar legal procedure, or to comply with law, or we believe in good faith that the disclosure of personal information is necessary to prevent physical harm or financial loss, to report suspected illegal activity, or to investigate violations of our User Agreement.&lt;br /&gt;
+•   Other third parties with your consent or direction to do so.&lt;br /&gt;
+&lt;br /&gt;
+4.  Intellectual Property&lt;br /&gt;
+&lt;br /&gt;
+As between you and Tekmeca, you agree and acknowledge that Tekmeca owns all rights, title and interest in and to TGS and related software, including without limitation all associated Intellectual Property Rights. "Intellectual Property Rights" means any and all rights existing from time to time under patent law, copyright law, trade secret law, trademark law, unfair competition law, and any and all other proprietary rights, and any and all applications, renewals, extensions and restorations thereof, now or hereafter in force and effect worldwide. You agree to not remove, obscure, or alter Tekmeca’s copyright notice, trademarks, or other proprietary rights notices affixed to or contained within or accessed in conjunction with or through TGS Software. &lt;br /&gt;
+&lt;br /&gt;
+5. TGS Accounts&lt;br /&gt;
+&lt;br /&gt;
+a.  In order to access some features of the TGS Software, you will have to create a TGS account. You may never use another's account without permission. When creating your account, you must provide accurate and complete information. You are solely responsible for the activity that occurs on your account, and you must keep your account password secure. You must notify Tekmeca immediately of any breach of security or unauthorized use of your account.&lt;br /&gt;
+b.  Although Tekmeca will not be liable for your losses caused by any unauthorized use of your account, you may be liable for the losses of Tekmeca or others due to such unauthorized use.&lt;br /&gt;
+&lt;br /&gt;
+6. Account Termination. This License is effective until terminated. Your rights under this License will terminate automatically or otherwise cease to be effective without notice from Tekmeca if you fail to comply with any term(s) of this License and Tekmeca will terminate your access to TGS and its website. Tekmeca reserves the right to decide whether content or a user submission is appropriate and complies with these terms for violations other than copyright infringement, such as, but not limited to, obscene or defamatory material, or excessive length.  Tekmeca may remove such user submissions and/or terminate a User's access in violation of these terms at any time, without prior notice and at its sole discretion.   Sections 4, 10 and 11, 12, 13, and 14 of this License shall survive any such termination.&lt;br /&gt;
+&lt;br /&gt;
+7.  Changes In Terms and Conditions. Tekmeca may modify or terminate its services from time to time, for any reason, and without notice, including the right to terminate with or without notice, without liability to you, any other user or any third party. Tekmeca reserves the right to modify TGS from time to time without notice. &lt;br /&gt;
+&lt;br /&gt;
+8. GoodMojo  Website.  &lt;br /&gt;
+(a) TGS enables access to GoodMojo. Use of GoodMojo requires Internet access and use of certain Services requires you to accept additional terms. By accessing GoodMojo in connection with a TGS account, you agree to the latest GoodMojo Terms and Conditions.&lt;br /&gt;
+&lt;br /&gt;
+(b) Information posted on this wehsite  (such as service and housing opportunities, events, and volunteer opportunities etc) are displayed for general informational purposes only and should not be relied upon as advice. Before executing any transaction based upon information obtained through the GoodMojo website, you should seek service and/or housing advice from a professional who is qualified to give advice. Neither Tekmeca nor GoodMojo, or any of their content providers guarantees the availability, accuracy, completeness, reliability, or timeliness of information, products, or data displayed. &lt;br /&gt;
+&lt;br /&gt;
+(c) You agree that GoodMojo contains proprietary content, information and material that is owned by Tekmeca, and/or its licensors and/or other third parties, and is protected by applicable intellectual property and other laws, including but not limited to copyright, and that you will not use such proprietary content, information or materials in any way whatsoever except for permitted use of the Services or in any manner that is inconsistent with the terms of this License or that infringes any intellectual property rights of a third party or Tekmeca. No portion of GoodMojo may be reproduced in any form or by any means. You agree not to modify, rent, lease, loan, sell, distribute, or create derivative works based on GoodMojo, in any manner, and you shall not exploit GoodMojo in any unauthorized way whatsoever, including but not limited to, using GoodMojo to transmit any computer viruses, worms, trojan horses or other malware, or by trespass or burdening network capacity. You further agree not to use GoodMojo in any manner to harass, abuse, stalk, threaten, defame or otherwise infringe or violate the rights of any other party, and that is not in any way responsible for any such use by you, nor for any harassing, threatening, defamatory, offensive, infringing or illegal messages or transmissions that you may receive as a result of using any of GoodMojo.&lt;br /&gt;
+&lt;br /&gt;
+(d) In addition, GoodMojo provides access to marketed services and product. To the extent you choose to access such services or products, you do so at your own initiative and are responsible for compliance with any applicable laws, including but not limited to applicable local laws. Tekmeca and its licensors reserve the right to change, suspend, remove, or disable access to GoodMojo at any time without notice. In no event will Tekmeca be liable for the removal of or disabling of access to GoodMojo. Tekmeca may also impose limits on the use of or access to GoodMojo, in any case and without notice or liability. &lt;br /&gt;
+&lt;br /&gt;
+(e) By using GoodMojo, you are providing data that you understand and agree may be used in compiled form for research and other educational purposes.  You also agree that GoodMojo, Tekmeca and their agents may collect, maintain, process and use information, including but not limited to information about your computer, system and application software, peripheral, grant reporting, financial reporting, and organization, that is gathered periodically, and may use this information, as long as it is in a form that does not personally identify you for educational, research, marketing, promotional and informational purposes. &lt;br /&gt;
+&lt;br /&gt;
+(f) You understand that by using GoodMojo, you may encounter content, reviews, and opinions that may be deemed offensive, indecent, inaccurate, or objectionable, which content may or may not be identified as having explicit language. Nevertheless, you agree to use the Services at your sole risk and that GoodMojo shall have no liability to you for content that may be found to be offensive, indecent, inaccurate, or objectionable. You agree that Tekmeca and GoodMojo do not guarantee their accuracy.&lt;br /&gt;
+&lt;br /&gt;
+(g) GoodMojo may also enable access to other third party websites.  You understand that by accessing these websites, you may encounter content that may be deemed offensive, indecent, or objectionable, which content may or may not be identified as having explicit language. Nevertheless, you agree to access these websites and their services at your sole risk and that GoodMojo shall have no liability to you for content that may be found to be offensive, indecent, or objectionable. &lt;br /&gt;
+&lt;br /&gt;
+(h) You acknowledge and agree that neither Tekmeca nor GoodMojo is responsible for examining or evaluating the content or accuracy of any such third-party material or web sites. Tekmeca does not warrant or endorse and do not assume and will not have any liability or responsibility for any third-party materials or web sites, or for any other materials, products, or services of third parties. Links to other web sites are provided solely as a convenience to you. You agree that you will not use any third-party materials in a manner that would infringe or violate the rights of any other party, and that Tekmeca and GoodMojo are not in any way responsible for any such use by you.&lt;br /&gt;
+&lt;br /&gt;
+(i) Tekmeca, GoodMojo, and their licensors reserve the right to change, suspend, remove, or disable access to any services at any time without notice. In no event will Tekmeca or GoodMojo be liable for the removal of or disabling of access to any such services. Either Tekmeca or GoodMojo may also impose limits on the use of or access to certain services, in any case and without notice or liability. &lt;br /&gt;
+&lt;br /&gt;
+(j) Disclaimer of Warranties.  Tekmeca and GoodMojo disclaim any and all responsibility or liability for the accuracy, content, completeness, legality, reliability, or operability or availability of information or material displayed on the GoodMojo website. Tekmeca and GoodMojo disclaim any responsibility for the deletion, failure to store, misdelivery, or untimely delivery of any information or material. Tekmeca and GoodMojo disclaim any responsibility for any harm resulting from downloading or accessing any information or material on the Internet through GoodMojo. &lt;br /&gt;
+&lt;br /&gt;
+SERVICES, INFORMATION, AND PRODUCTS ARE PROVIDED "AS IS", WITH NO WARRANTIES WHATSOEVER.  TEKMECA AND GOODMOJO EXPRESSLY DISCLAIM TO THE FULLEST EXTENT PERMITTED BY LAW ALL EXPRESS, IMPLIED, AND STATUTORY WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS. TEKMECA AND GOODMOJO DISCLAIM ANY WARRANTIES REGARDING THE SECURITY, RELIABILITY, TIMELINESS, AND PERFORMANCE OF INFORMATION, PRODUCTS, AND SERVICES ON GOODMOJO. TEKMECA AND GOODMOJO DISCLAIM ANY WARRANTIES FOR ANY INFORMATION OR ADVICE OBTAINED. TEKMECA AND GOODMOJO DISCLAIM ANY WARRANTIES FOR SERVICES OR GOODS RECEIVED THROUGH OR ADVERTISED ON GOODMOJO OR RECEIVED THROUGH ANY LINKS PROVIDED BY GOODMOJO, AS WELL AS FOR ANY INFORMATION OR ADVICE RECEIVED THROUGH ANY LINKS PROVIDED ON GOODMOJO. &lt;br /&gt;
+&lt;br /&gt;
+YOU UNDERSTAND AND AGREE THAT YOU DOWNLOAD OR OTHERWISE OBTAIN MATERIAL OR DATA THROUGH THE USE OF GOODMOJO AT YOUR OWN DISCRETION AND RISK AND THAT YOU WILL BE SOLELY RESPONSIBLE FOR ANY DAMAGES TO YOUR COMPUTER SYSTEM OR LOSS OF DATA THAT RESULTS IN THE DOWNLOAD OF SUCH MATERIAL OR DATA. &lt;br /&gt;
+&lt;br /&gt;
+SOME STATES OR OTHER JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES, SO THE ABOVE EXCLUSIONS MAY NOT APPLY TO YOU. YOU MAY ALSO HAVE OTHER RIGHTS THAT VARY FROM STATE TO STATE AND JURISDICTION TO JURISDICTION. &lt;br /&gt;
+&lt;br /&gt;
+Limitation of Liability. UNDER NO CIRCUMSTANCES SHALL TEKMECA OR GOODMOJO BE LIABLE TO ANY USER ON ACCOUNT OF THAT USER'S USE OR MISUSE OF OR RELIANCE ON GOODMOJO ARISING FROM ANY CLAIM RELATING TO THIS LICENSE OR THE SUBJECT MATTER HEREOF. SUCH LIMITATION OF LIABILITY SHALL APPLY TO PREVENT RECOVERY OF DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL, EXEMPLARY, AND PUNITIVE DAMAGES WHETHER SUCH CLAIM IS BASED ON WARRANTY, CONTRACT, TORT (INCLUDING NEGLIGENCE), OR OTHERWISE (EVEN IF GOODMOJO AND TEKMECA HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES). SUCH LIMITATION OF LIABILITY SHALL APPLY WHETHER THE DAMAGES ARISE FROM USE OR MISUSE OF AND RELIANCE ON THE GOODMOJO, FROM INABILITY TO USE GOODMOJO, OR FROM THE INTERRUPTION, SUSPENSION, OR TERMINATION OF GOODMOJO (INCLUDING SUCH DAMAGES INCURRED BY THIRD PARTIES). THIS LIMITATION SHALL ALSO APPLY WITH RESPECT TO DAMAGES INCURRED BY REASON OF OTHER SERVICES OR GOODS RECEIVED THROUGH OR ADVERTISED ON GOODMOJO OR RECEIVED THROUGH ANY LINKS PROVIDED ON GOODMOJO, AS WELL AS BY REASON OF ANY INFORMATION OR ADVICE RECEIVED THROUGH OR ADVERTISED ON GOODMOJO OR RECEIVED THROUGH ANY LINKS PROVIDED ON GOODMOJO. THIS LIMITATION SHALL ALSO APPLY, WITHOUT LIMITATION, TO THE COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, LOST PROFITS, OR LOST DATA. SUCH LIMITATION SHALL FURTHER APPLY WITH RESPECT TO THE PERFORMANCE OR NON-PERFORMANCE OF GOODMOJO OR ANY INFORMATION OR MERCHANDISE THAT APPEARS ON, OR IS LINKED OR RELATED IN ANY WAY TO, GOODMOJO. SUCH LIMITATION SHALL APPLY NOTWITHSTANDING ANY FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY AND TO THE FULLEST EXTENT PERMITTED BY LAW. &lt;br /&gt;
+&lt;br /&gt;
+SOME STATES OR OTHER JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY FOR INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THE ABOVE LIMITATIONS AND EXCLUSIONS MAY NOT APPLY TO YOU. &lt;br /&gt;
+&lt;br /&gt;
+9.   Access to other Third Party Websites&lt;br /&gt;
+&lt;br /&gt;
+TGS may also enable access to other third party websites.  You understand that by accessing these websites, you may encounter content that may be deemed offensive, indecent, or objectionable, which content may or may not be identified as having explicit language. Nevertheless, you agree to access these websites and their services at your sole risk and that Tekmeca shall have no liability to you for content that may be found to be offensive, indecent, or objectionable. &lt;br /&gt;
+&lt;br /&gt;
+You acknowledge and agree that Tekmeca is not responsible for examining or evaluating the content or accuracy of any such third-party material or web sites. Tekmeca does not warrant or endorse and does not assume and will not have any liability or responsibility for any third-party materials or web sites, or for any other materials, products, or services of third parties. Links to other web sites are provided solely as a convenience to you. You agree that you will not use any third-party materials in a manner that would infringe or violate the rights of any other party, and that Tekmeca is not in any way responsible for any such use by you.&lt;br /&gt;
+&lt;br /&gt;
+You agree that the services, including but not limited to housing and service opportunities and other content contain proprietary information and material that is owned by Tekmeca and/or its licensors, and is protected by applicable intellectual property and other laws, including but not limited to copyright, and that you will not use such proprietary information or materials in any way whatsoever except for permitted use of the services. No portion of the services may be reproduced in any form or by any means. You agree not to modify, rent, lease, loan, sell, distribute, or create derivative works based on the services, in any manner, and you shall not exploit the services in any unauthorized way whatsoever, including but not limited to, by trespass or burdening network capacity. &lt;br /&gt;
+&lt;br /&gt;
+Tekmeca and its licensors reserve the right to change, suspend, remove, or disable access to any services at any time without notice. In no event will Tekmeca be liable for the removal of or disabling of access to any such services. Tekmeca may also impose limits on the use of or access to certain services, in any case and without notice or liability. &lt;br /&gt;
+ &lt;br /&gt;
+Without limiting the foregoing, under no circumstances shall Tekmeca be held liable for any delay or failure in performance resulting directly or indirectly from acts of nature, forces, or causes beyond its reasonable control, including, without limitation, Internet failures, computer equipment failures, telecommunication equipment failures, other equipment failures, electrical power failures, strikes, labor disputes, riots, insurrections, civil disturbances, shortages of labor or materials, fires, floods, storms, explosions, acts of God, war, governmental actions, orders of domestic or foreign courts or tribunals, non-performance of third parties, or loss of or fluctuations in heat, light, or air conditioning. &lt;br /&gt;
+&lt;br /&gt;
+10.  Disclaimer of Warranties&lt;br /&gt;
+&lt;br /&gt;
+Tekmeca disclaims any responsibility for any harm resulting from your use of TGS Software or access to third party websites.&lt;br /&gt;
+&lt;br /&gt;
+TGS SOFTWARE IS PROVIDED "AS IS," WITH NO WARRANTIES WHATSOEVER. TEKMECA EXPRESSLY DISCLAIMS TO THE FULLEST EXTENT PERMITTED BY LAW ALL EXPRESS, IMPLIED, AND STATUTORY WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS. TEKMECA DISCLAIMS ANY WARRANTIES REGARDING THE SECURITY, RELIABILITY, TIMELINESS, AND PERFORMANCE OF TGS SOFTWARE.&lt;br /&gt;
+&lt;br /&gt;
+YOU UNDERSTAND AND AGREE THAT YOU USE TGS AT YOUR OWN DISCRETION AND RISK AND THAT YOU WILL BE SOLELY RESPONSIBLE FOR ANY DAMAGES:  (I) TO YOUR COMPUTER  OR LOSS OF DATA THAT RESULTS FROM THE DOWNLOAD OR USE OF TGS SOFTWARE;  (II) FROM ANY UNAUTHORIZED ACCESS TO OR USE OF TEKMECA SECURE SERVERS AND/OR ANY AND ALL PERSONAL INFORMATION AND/OR FINANCIAL INFORMATION STORED THEREIN, (IV) FROM ANY INTERRUPTION OR CESSATION OF TRANSMISSION TO OR FROM TGS, (IV) FROM ANY BUGS, VIRUSES, TROJAN HORSES, OR THE LIKE WHICH MAY BE TRANSMITTED TO OR THROUGH TGS BY ANY THIRD PARTY, AND/OR (V) FROM ANY ERRORS OR OMISSIONS IN ANY CONTENT OR FOR ANY LOSS OR DAMAGE OF ANY KIND INCURRED AS A RESULT OF THE USE OF ANY CONTENT POSTED, EMAILED, TRANSMITTED, OR OTHERWISE MADE AVAILABLE VIA TGS. &lt;br /&gt;
+&lt;br /&gt;
+SOME STATES OR OTHER JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES, SO THE ABOVE EXCLUSIONS MAY NOT APPLY TO YOU. YOU MAY ALSO HAVE OTHER RIGHTS THAT VARY FROM STATE TO STATE AND JURISDICTION TO JURISDICTION.&lt;br /&gt;
+&lt;br /&gt;
+11.  Limitation of Liability&lt;br /&gt;
+&lt;br /&gt;
+UNDER NO CIRCUMSTANCES SHALL TEKMECA BE LIABLE TO ANY USER ON ACCOUNT OF THAT USER'S USE OR MISUSE OF TGS SOFTWARE. SUCH LIMITATION OF LIABILITY SHALL APPLY TO PREVENT RECOVERY OF DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL, EXEMPLARY, AND PUNITIVE DAMAGES WHETHER SUCH CLAIM IS BASED ON WARRANTY, CONTRACT, TORT (INCLUDING NEGLIGENCE), OR OTHERWISE, (EVEN IF TEKMECA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES). SUCH LIMITATION OF LIABILITY SHALL APPLY WHETHER THE DAMAGES ARISE FROM USE OR MISUSE OF AND RELIANCE ON TGS SOFTWARE, FROM INABILITY TO USE TGS SOFTWARE, OR FROM THE INTERRUPTION, SUSPENSION, OR TERMINATION OF TGS SOFTWARE; FROM ANY BUGS, VIRUSES, TROJAN HORSES, OR THE LIKE, WHICH MAY BE TRANSMITTED TO OR THROUGH OUR WEBSITE BY ANY THIRD PARTY, AND/OR FROM ANY ERRORS OR OMISSIONS IN ANY CONTENT OR FOR ANY LOSS OR DAMAGE OF ANY KIND INCURRED AS A RESULT OF ANY CONTENT POSTED, TRANSMITTED, OR OTHERWISE MADE AVAILABLE VIA TGS. YOU SPECIFICALLY ACKNOWLEDGE THAT TEKMECA SHALL NOT BE LIABLE FOR USER SUBMISSIONS OR THE DEFAMATORY, OFFENSIVE, OR ILLEGAL CONDUCT OF ANY THIRD PARTY AND THAT THE RISK OF HARM OR DAMAGE FROM THE FOREGOING RESTS ENTIRELY WITH YOU.  SUCH LIMITATION SHALL APPLY NOTWITHSTANDING A FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY AND TO THE FULLEST EXTENT PERMITTED BY LAW.&lt;br /&gt;
+SOME STATES OR OTHER JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY FOR INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THE ABOVE LIMITATIONS AND EXCLUSIONS MAY NOT APPLY TO YOU.&lt;br /&gt;
+&lt;br /&gt;
+12. Indemnity&lt;br /&gt;
+&lt;br /&gt;
+You agree to defend, indemnify and hold harmless Tekmeca, its officers, directors, employees and agents, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees) arising from: (i) your use of and access to TGS; (ii) your violation of any term of these terms; (iii) your violation of any third party right, including without limitation any copyright, property, or privacy right; or (iv) any claim that one of your User Submissions caused damage to a third party. This defense and indemnification obligation will survive these Terms of Service and your use of TGS.&lt;br /&gt;
+&lt;br /&gt;
+13.  Controlling Law&lt;br /&gt;
+&lt;br /&gt;
+These Terms and Conditions will be governed by and construed in accordance with the laws of the State of California, without giving effect to the conflict of laws provisions of California or your actual state or country of residence. If for any reason a court of competent jurisdiction finds any provision or portion of these Terms and Conditions to be unenforceable, the remainder of these Terms and Conditions will continue in full force and effect.&lt;br /&gt;
+&lt;br /&gt;
+14. Complete Agreement; Governing Language.  These Terms and Conditions constitute the entire agreement between you and Tekmeca with respect to the subject matter hereof and supersede and replace all prior or contemporaneous understandings or agreements, written or oral, regarding such subject matter. Any waiver of any provision of these Terms and Conditions will be effective only if in writing and signed by Tekmeca.  No amendment to or modification of this License will be binding unless in writing and signed by Tekmeca.&lt;br /&gt;</value>
+  </data>
+  <data name="AttendedServiceSQL" xml:space="preserve">
+    <value>SELECT c.ClientID
+FROM   tblClient c
+INNER JOIN tblClientCategory cc ON c.ClientID = cc.ClientID
+INNER JOIN tblClientCategoryDate ccd ON cc.ClientCategoryID = ccd.ClientCategoryID
+WHERE  cc.ClientCategoryID = {0}
+AND    cc.DateCreated IS NOT NULL
+AND    ccd.Assigned = 1
+AND    ccd.Attended = 1</value>
+  </data>
+  <data name="ServiceSigRequiredSQL" xml:space="preserve">
+    <value>SELECT cc.ClientCategoryID
+FROM   tblClientCategory cc
+INNER JOIN tblClientCategoryDate ccd ON cc.ClientCategoryID = ccd.ClientCategoryID
+WHERE  cc.ClientCategoryID = {0}
+AND    ccd.Attended = 1
+AND    ccd.Signature IS NOT NULL</value>
+  </data>
+</root>

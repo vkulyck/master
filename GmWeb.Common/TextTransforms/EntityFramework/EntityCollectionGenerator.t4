@@ -1,0 +1,44 @@
+﻿<#+
+
+public void GenerateCollectionClasses(string ns, string baseName, IEnumerable<string> includes, IEnumerable<string> entityNames)
+{
+    foreach(var entityName in entityNames)
+    {
+        GenerateCollectionClass(ns, baseName, includes, entityName);
+    }
+}
+
+public void GenerateCollectionClass(string ns, string baseName, IEnumerable<string> includes, string entityName)
+{
+    var collectionName = ScriptContext.Pluralizer.Pluralize(entityName);
+    var primaryKey = entityName + "ID";
+    string cacheName = baseName + "Cache";
+    string contextName = baseName + "Context";
+    ScriptContext.FileMgr.StartNewFile(collectionName + ".generated.cs");
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+<#+
+
+foreach(var include in includes)
+{
+#>using <#= include #>;
+<#+
+}
+#>
+
+namespace <#= ns #>
+{
+    public partial class <#= collectionName #> : BaseDataCollection<<#= entityName #>, <#= collectionName #>, <#= cacheName #>, <#= contextName #>>
+    {
+        public <#= collectionName #>(<#= cacheName #> cache) : base(cache) { }
+
+        public override DbSet<<#= entityName #>> EntitySet => this.DataContext.<#= collectionName #>;
+	}
+}
+<#+
+}
+#>

@@ -1,0 +1,48 @@
+﻿@using GmWeb.Common
+@using GmWeb.Web.Identity.Models
+@model RegisterViewModel
+@{
+    Layout = this.SimplifiedLayout();
+    ViewBag.Title = $"Register";
+    string acctType = Model.IdentityType.ToString().ToLower();
+}
+<style>
+    .tooltip-content {
+        width: 250px;
+    }
+</style>
+<div style="width: 440px">
+    @using (var form = Html.GmRazor().BeginForm(opts =>
+    {
+
+        opts.Action = "Register";
+        opts.Description = $"Register your {acctType} account here.";
+        opts.SubmitLabel = $"Submit";
+        opts.GenerateItemLabels = true;
+    }))
+    {
+        @Html.GmRazor().FormItem(m => m.Token)
+        @Html.GmRazor().FormItem(m => m.Email)
+        if (ViewBag.RequireRegistrationPassword == true)
+        {
+            using (var meter = Html.GmRazor().BeginPasswordMeter(m => m.Password)) { }
+            @Html.GmRazor().PasswordFormItem(m => m.ConfirmPassword)
+@*
+            @Html.GmRazor().FormItem(m => m.Password).Configure(cfg =>
+            {
+                cfg.EditorSelector = Html.PasswordFor;
+                cfg.Description = @"
+                    <ul>
+                        <li>8-32 characters long</li>
+                        <li>At least one special character</li>
+                        <li>At least one upper-case and lower-case character</li>
+                        <li>No repeating sequences</li>
+                    </ul>
+                ";
+            })
+*@
+        }
+    }
+    <small>@Html.ActionLink("Forgot password?", "RequestPasswordResetToken")</small>
+    @Html.GmRazor().BrandedFooter()
+</div>

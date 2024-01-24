@@ -1,0 +1,12 @@
+﻿@using GMaps.Mvc
+
+@{
+    Html.GoogleMap()
+        .Name("map")
+        .Markers(marker => marker.Add()
+            .Window(w => w.Add()
+                .Content((o) => String.Format("Hello PartialView {0}", Model))))
+        .Render();
+}
+
+@(Html.GoogleMap().LoadScripts())

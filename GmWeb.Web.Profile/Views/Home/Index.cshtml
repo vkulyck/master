@@ -1,0 +1,757 @@
+﻿@using GmWeb.Web.Profile.Models;
+@model HomeViewModel
+@{
+    ViewBag.Title = "Home";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        var SelectedParameters = {
+            ClientCategoryID: null,
+            ClientCategoryDateID: null
+        };
+
+        function ServiceDetails(categoryID, clientCategoryID, clientCategoryDateID, phone, agencyName, signatureRequired, agencyConsentID, signature) {
+            $('#ServiceDetails').children('.ibox-content').toggleClass('sk-loading');
+
+            var tableDataUrl = '@(Url.Action("GetPersonCategory", "Home"))?' + $.param({ CategoryID: categoryID, ClientCategoryID: clientCategoryID });
+            SelectedParameters.ClientCategoryID = clientCategoryID;
+            SelectedParameters.ClientCategoryDateID = clientCategoryDateID;
+
+            //Show Signature Pad
+            ShowSignaturePad(signatureRequired, signature);
+
+            //Show Consent
+            ShowConsentRequired(agencyConsentID);
+
+            // Ajax call for table data
+            $.ajax({
+                url: tableDataUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function (item) {
+                    $('#Phone').text(phone);
+                    $('#AgencyName').text(agencyName);
+                    $('#Description').text(item.Description);
+                    $('#BriefDescription').text(item.BriefDescription);
+
+                    $('#StartDate').text(moment(item.StartDate).format('MM/DD/YYYY'));
+                    $('#EndDate').text(moment(item.EndDate).format('MM/DD/YYYY'));
+                    $('#ServiceTypeDescription').text(item.ServiceTypeDescription);
+                    $('#MaxAttendees').text(item.MaxAttendees);
+                    $('#FeeToClient').text("$" + item.FeeToClient);
+
+                    var clientAddress = '@Model.Address';
+                    var targetAddress = item.VenueAddressNo + " " + item.VenueAddressStreet + " " + item.VenueAddressStreetType + " " + item.VenueZip;
+                    $('#Directions').attr('onclick', 'parent.open("https://maps.google.com?saddr=' + clientAddress + '&daddr=' + targetAddress + '&driving")');
+                            
+                    if (item.IsActionNeeded) {
+                        var url = '@Url.Action("Index", "Services")?' + $.param({ ClientCategoryID: item.clientCategoryID });
+                        $('#ActionNeeded').attr('onclick', 'location.href = "' + url + '"');
+                        $('#ActionNeeded').attr('class', 'btn btn-primary btn-sm btn-block');
+
+                        $("#ActionNeeded").removeAttr("disabled", "disabled");
+                    }
+                    else {
+                        $('#ActionNeeded').attr('class', 'btn disabled btn-sm btn-block');
+                        $('#ActionNeeded').attr('disabled', 'disabled');
+                        $("#ActionNeeded").removeAttr("onclick");
+                    }
+                    $('#ServiceDetails').children('.ibox-content').toggleClass('sk-loading');
+                }
+            });
+
+        }
+
+        function ShowSignaturePad(boolean, signature) {
+            //Reset signature
+            $('#ResetSignature').click();
+            $('#signed').empty();
+
+            if (signature.length > 0) {
+                $('#content').hide();
+                $('#signed').append("<p><strong><small>Signed:</small></strong> </p><img src='" + signature + "' />");
+                return;
+            }
+
+            //Display/Hide Signature Pad
+            boolean ? $('#content').show() : $('#content').hide();
+        }
+
+        function ShowConsentRequired(agencyConsentID) {
+            //Display/Hide Consent
+            agencyConsentID > 0 ? $('#ConsentRequired').show() : $('#ConsentRequired').hide();
+        }
+
+        // Create JSON url to controller
+        var tableDataUrl = '@(Url.Action("GetClientServicesDates", "Home"))';
+        var tableFamilyMembersUrl = '@(Url.Action("GetFamilyMembers", "Home"))';
+
+        // Get services
+        function GetServices() {
+            $.ajax({
+                url: tableDataUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#ServicesCount').text(data.length - 1);
+                    $('#ServicesCountHeader').text(data.length - 1);
+                    $('#servicesList').empty();
+                    var div = $('#ajaxTable');
+
+                    $.each(data, function (i, item) {
+                        if (item.CategoryID > 0) {
+                            var signature = JSON.parse(JSON.stringify(item.Signature).replace(/null/g, '""'));
+
+                            div.append(
+                                $(FirstServiceRecordClass(i))
+                                    .append($('<td class="client-avatar">').html('<i class="fa fa-calendar" style="font-size:25px;color: #a4aebf;"></i>')).append($('<td>').html('<a data-toggle="tab" href="#contact-1" class="client-link" id="' + item.ClientCategoryDateID + '" onclick="javascript:ServiceDetails(' + item.CategoryID + ',' + item.ClientCategoryID + ',' + item.ClientCategoryDateID + ",\'" + item.Phone + "\',\'" + item.AgencyName + '\'' + ',' + item.SignatureRequired + ',' + item.AgencyConsentID + ',\'' + signature + '\');' + " $(this).closest('tr').addClass('client-link-active').siblings().removeClass('client-link-active');" + '">' + item.ServiceName + '</a>')).append($('<td>').html(item.Venue)).append($('<td>').html('<span class="label label-info">' + item.ScheduledDate.format('MM/DD/YYYY') + '</span>'))
+                            );
+                        }
+                        if (i == 1) {
+                            ServiceDetails(item.CategoryID, item.ClientCategoryID, item.ClientCategoryDateID, item.Phone, item.AgencyName, item.SignatureRequired, item.AgencyConsentID, signature);
+                        }
+                    })
+                }
+            });
+        }
+
+        function FirstServiceRecordClass(record) {
+            return record == 1 ? '<tr class="client-link-active">' : '<tr class="">';
+        }
+
+        $(function () {
+            //Get services
+            GetServices();
+
+            //Specify table link class
+            //     $('#ajaxTable').on('click', '.client-link-row', function(event) {
+            //      $(this).addClass('client-link-active').siblings().removeClass('client-link-active');
+            //     });
+
+            //Get family members
+            $.ajax({
+                url: tableFamilyMembersUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var div = $('#FamilyMembers');
+                    $.each(data, function (i, item) {
+                        if (data.length > 0) {
+                            var address = "(" + item.AddressNo + " " + item.AddressStreet
+                                + " " + item.AddressStreetType + ", " + item.City + ", " + item.Zip + ")";
+                            var imgStart = "<img alt='image' class='img-circle' data-toggle='tooltip' data-placement='bottom' title='";
+                            var imgTitle = item.FirstName + ' ' + item.LastName + ' ' + address;
+                            var imgEnd = "' src='@(Url.ImagePath("inspinia/avatar.jpg"))'>";
+                            var img = imgStart + imgTitle + imgEnd;
+                            div.append(img);
+                        }
+                    })
+                }
+            });
+
+
+        });
+
+        $("#sparkline1").sparkline([34, 43, 43, 35, 44, 32, 44, 48], {
+            type: 'line',
+            width: '100%',
+            height: '50',
+            lineColor: '#1ab394',
+            fillColor: "transparent"
+        });
+
+        $(function () {
+            $('#CheckinPass').click(function () {
+                swal({
+                    title: "Check-in Pass",
+                    text: "<img src='https://api.qrserver.com/v1/create-qr-code/?data=https://www.totalgrantsolution.org/NPCOM/GoodMojoScheduler/PersonCheckIn.aspx?ClientCategoryDateID=" + SelectedParameters.ClientCategoryDateID + "&ClientCategoryID=" + SelectedParameters.ClientCategoryID + "'>",
+                    html: true
+                });
+            });
+
+            $('#ManageServiceDate').click(function () {
+                swal({
+                    title: "Are you sure?",
+                    text: "You will need to register the service date for <strong>" + $('#Description').text() + "</strong> again if it's deleted!",
+                    html: true,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                }, function () {
+                    var clientCategoryDateID = SelectedParameters.ClientCategoryDateID;
+                    var clientCategoryID = SelectedParameters.ClientCategoryID;
+                    var RemoveClientCategoryDateUrl = '@(Url.Action("RemoveClientCategoryDate", "Home"))?' + $.param({ ClientCategoryDateID: clientCategoryDateID, ClientCategoryID: clientCategoryID });
+
+                    //Delete service date
+                    $.ajax({
+                        url: RemoveClientCategoryDateUrl,
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+
+                            })
+                        },
+                        async: false
+                    });
+
+                    // Get services
+                    GetServices();
+
+                    swal("Deleted!", "Service date has been deleted.", "success");
+                });
+            });
+
+            $('#ConsentRequired').click(function () {
+                swal({
+                    title: "Agreement 1",
+                    text: "Long legal verbiage 1.",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#1ab394",
+                    confirmButtonText: "Yes, I agree!",
+                    cancelButtonText: "No, I disagree!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            swal("Success!", "You have given your consent.", "success");
+                        } else {
+                            swal("Cancelled", "You refused to give consent.", "error");
+                        }
+                    });
+            });
+
+        });
+    </script>
+
+
+    <!-- JSignature -->
+    <script type="text/javascript">
+        // This call breaks $ references, and there should only be one version of jquery running. - jmenashe
+        // jQuery.noConflict()
+    </script>
+    <script type="text/javascript">
+
+        (function ($) {
+            var topics = {};
+            $.publish = function (topic, args) {
+                if (topics[topic]) {
+                    var currentTopic = topics[topic],
+                        args = args || {};
+
+                    for (var i = 0, j = currentTopic.length; i < j; i++) {
+                        currentTopic[i].call($, args);
+                    }
+                }
+            };
+            $.subscribe = function (topic, callback) {
+                if (!topics[topic]) {
+                    topics[topic] = [];
+                }
+                topics[topic].push(callback);
+                return {
+                    "topic": topic,
+                    "callback": callback
+                };
+            };
+            $.unsubscribe = function (handle) {
+                var topic = handle.topic;
+                if (topics[topic]) {
+                    var currentTopic = topics[topic];
+
+                    for (var i = 0, j = currentTopic.length; i < j; i++) {
+                        if (currentTopic[i] === handle.callback) {
+                            currentTopic.splice(i, 1);
+                        }
+                    }
+                }
+            };
+        })(jQuery);
+
+    </script>
+    <script type="text/javascript">
+        (function ($) {
+
+            $(function () {
+
+                // This is the part where jSignature is initialized.
+                var $sigdiv = $("#signature").jSignature({ 'UndoButton': true })
+
+                    // All the code below is just code driving the demo.
+                    , $tools = $('#tools')
+                    , $extraarea = $('#displayarea')
+                    , pubsubprefix = 'jSignature.demo.'
+
+                var export_plugins = $sigdiv.jSignature('listPlugins', 'export')
+                    , chops = ['<span style="display:none;"><b>Extract signature data as: </b></span><select style="display:none;">', '<option value="">(select export format)</option>']
+                    , name
+                for (var i in export_plugins) {
+                    if (export_plugins.hasOwnProperty(i)) {
+                        name = export_plugins[i]
+                        chops.push('<option value="' + name + '">' + name + '</option>')
+                    }
+                }
+                chops.push('</select><span style="display:none;"><b> or: </b></span>')
+
+                $(chops.join('')).bind('change', function (e) {
+                    if (e.target.value !== '') {
+                        var data = $sigdiv.jSignature('getData', e.target.value)
+                        $.publish(pubsubprefix + 'formatchanged')
+                        if (typeof data === 'string') {
+                            $('textarea', $tools).val(data)
+                        } else if ($.isArray(data) && data.length === 2) {
+                            $('textarea', $tools).val(data.join(','))
+                            $.publish(pubsubprefix + data[0], data);
+                        } else {
+                            try {
+                                $('textarea', $tools).val(JSON.stringify(data))
+                            } catch (ex) {
+                                $('textarea', $tools).val('Not sure how to stringify this, likely binary, format.')
+                            }
+                        }
+                    }
+                }).appendTo($tools)
+
+
+                $('<input id="ResetSignature" type="button" value="Reset" style="display:none;">').bind('click', function (e) {
+                    $sigdiv.jSignature('reset')
+                }).appendTo($tools)
+
+                $('<input id="ajaxButton" type="button" value="Submit" style="display:none;">').bind('click', function (e) {
+                    // add submit event here
+                    var datapair = $sigdiv.jSignature("getData", "image")
+                    var data = $('#signature').jSignature('getData');
+                    UpdateClientSignature('Ajax.aspx', SelectedParameters.ClientCategoryDateID, data)
+
+                }).appendTo($tools)
+
+                $('<div><textarea style="width:100%;height:7em; display:none;"></textarea></div>').appendTo($tools)
+
+                $.subscribe(pubsubprefix + 'formatchanged', function () {
+                    $extraarea.html('')
+                })
+
+                $.subscribe(pubsubprefix + 'image/svg+xml', function (data) {
+
+                    try {
+                        var i = new Image()
+                        i.src = 'data:' + data[0] + ';base64,' + btoa(data[1])
+                        $(i).appendTo($extraarea)
+                    } catch (ex) {
+
+                    }
+
+                    var message = [
+                        "If you don't see an image immediately above, it means your browser is unable to display in-line (data-url-formatted) SVG."
+                        , "This is NOT an issue with jSignature, as we can export proper SVG document regardless of browser's ability to display it."
+                        , "Try this page in a modern browser to see the SVG on the page, or export data as plain SVG, save to disk as text file and view in any SVG-capabale viewer."
+                    ]
+                    $("<div>" + message.join("<br/>") + "</div>").appendTo($extraarea)
+                });
+
+                $.subscribe(pubsubprefix + 'image/svg+xml;base64', function (data) {
+                    var i = new Image()
+                    i.src = 'data:' + data[0] + ',' + data[1]
+                    $(i).appendTo($extraarea)
+
+                    var message = [
+                        "If you don't see an image immediately above, it means your browser is unable to display in-line (data-url-formatted) SVG."
+                        , "This is NOT an issue with jSignature, as we can export proper SVG document regardless of browser's ability to display it."
+                        , "Try this page in a modern browser to see the SVG on the page, or export data as plain SVG, save to disk as text file and view in any SVG-capabale viewer."
+                    ]
+                    $("<div>" + message.join("<br/>") + "</div>").appendTo($extraarea)
+                });
+
+                $.subscribe(pubsubprefix + 'image/png;base64', function (data) {
+                    var i = new Image()
+                    i.src = 'data:' + data[0] + ',' + data[1]
+                    $('<span><b>As you can see, one of the problems of "image" extraction (besides not working on some old Androids, elsewhere) is that it extracts A LOT OF DATA and includes all the decoration that is not part of the signature.</b></span>').appendTo($extraarea)
+                    $(i).appendTo($extraarea)
+                });
+
+                $.subscribe(pubsubprefix + 'image/jsignature;base30', function (data) {
+                    $('<span><b>This is a vector format not natively render-able by browsers. Format is a compressed "movement coordinates arrays" structure tuned for use server-side. The bonus of this format is its tiny storage footprint and ease of deriving rendering instructions in programmatic, iterative manner.</b></span>').appendTo($extraarea)
+                });
+
+                if (Modernizr.touch) {
+                    $('#scrollgrabber').height($('#content').height())
+                }
+
+            })
+
+        })(jQuery)
+    </script>
+
+    <script type="text/javascript">
+        var httpRequest;
+
+        function UpdateClientSignature(url, clientCategoryDateID, signature) {
+            if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+                httpRequest = new XMLHttpRequest();
+            } else if (window.ActiveXObject) { // IE
+                try {
+                    httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                }
+                catch (e) {
+                    try {
+                        httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    catch (e) { }
+                }
+            }
+
+            if (!httpRequest) {
+                alert('Giving up :( Cannot create an XMLHTTP instance');
+                return false;
+            }
+
+            httpRequest.onreadystatechange = alertContents(clientCategoryDateID, signature);
+            //Get Method
+            //httpRequest.open('GET', url);
+            //httpRequest.send();
+
+            //Post Method
+            httpRequest.open('POST', url);
+            httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            httpRequest.send('ClientCategoryDateID=' + encodeURIComponent(clientCategoryDateID) + '&Signature=' + encodeURIComponent(signature));
+
+        }
+
+        function alertContents(clientCategoryDateID, signature) {
+            var onclick = $('#' + clientCategoryDateID).attr('onclick');
+            $('#' + clientCategoryDateID).attr('onclick', onclick.replace("'')", "'" + signature + "')"));
+            $('#' + clientCategoryDateID).click();
+
+            if (httpRequest.readyState === 4) {
+                if (httpRequest.status === 200) {
+                    // Load signed signature
+                    var onclick = $('#' + clientCategoryDateID).attr('onclick');
+                    $('#' + clientCategoryDateID).attr('onclick', onclick.replace("'')", "\'" + signature + "\')"));
+                    $('#' + clientCategoryDateID).click();
+
+                    // ServiceDetails(item.CategoryID, item.ClientCategoryID, item.ClientCategoryDateID, item.Phone, item.AgencyName, item.SignatureRequired, item.AgencyConsentID, item.Signature);
+
+
+                } else {
+                    console.log('There was a problem with submitting the signature.');
+                }
+            }
+        }
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+
+/**/</script>
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row m-b-lg">
+            <div class="col-md-3">
+                <div class="profile-image">
+                    <i class="fa fa-user" style="font-size:70px;color: #fff;background:#2f4050;border-radius:100%;padding:10px 20px;"></i>
+                </div>
+                <div class="profile-info">
+                    <div class="">
+                        <div>
+                            <h2 class="no-margins">
+                                @Model.ClientFullName
+                            </h2>
+                            <h4>Birthday: @Html.DisplayName(Model.Birthday)</h4>
+                            @Html.DisplayName(Model.Gender)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <table class="table m-b-xs">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Ethnicity</strong> @Html.DisplayName(Model.Ethnicity)
+                            </td>
+                            <td>
+                                <strong>Secondary Language</strong> @Html.DisplayName(Model.LanguageIDSecondary)
+                            </td>
+                            <td>
+                                <strong>Address</strong> @Html.DisplayName(Model.Address)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Cultural Identity</strong> @Html.DisplayName(Model.CulturalIdentityID)
+                            </td>
+                            <td>
+                                <strong>Email</strong> @Model.Email
+                            </td>
+                            <td>
+                                <strong>Mailing Address</strong> @Html.DisplayName(Model.AddressLine2)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Primary Language</strong> @Html.DisplayName(Model.LanguageIDPrimary)
+                            </td>
+                            <td>
+                                <strong>Phone</strong> @Html.DisplayName(Model.Phone)
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2">
+                <table class="table m-b-xs">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong><label class="label badge-success">0</label></strong> Messages
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong><label id="ServicesCountHeader" class="label badge-warning">0</label></strong> Services
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong><label class="label badge-danger">0</label></strong> Tags
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-3">
+                Activities in last month
+                <div id="sparkline1"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3">
+
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h3>About @Model.ClientFullName</h3>
+
+                        <p class="">
+                            There are many variations of passages of Lorem Ipsum available, but the majority have
+                            suffered alteration in some form, by injected humour, or randomised words which don't.
+                            <br />
+                            <br />
+                            If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't
+                            anything embarrassing
+                        </p>
+
+                        <p class="small font-bold">
+                            <span><i class="fa fa-circle text-navy"></i> Online status</span>
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h3>Family Members</h3>
+                        <p class="">
+                            You are connected to the following family members.
+                        </p>
+                        <div id="FamilyMembers" class="user-friends tooltip-demo">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h3>Followers and friends</h3>
+                        <p class="">
+                            You are connected to the following followers and friends.
+                        </p>
+                        <div class="user-friends">
+                            <a href=""><img alt="image" class="img-circle" src="~/Content/images/inspinia/a3.jpg"></a>
+                            <a href=""><img alt="image" class="img-circle" src="~/Content/images/inspinia/a1.jpg"></a>
+                            <a href=""><img alt="image" class="img-circle" src="~/Content/images/inspinia/a2.jpg"></a>
+                            <a href=""><img alt="image" class="img-circle" src="~/Content/images/inspinia/a4.jpg"></a>
+                            <a href=""><img alt="image" class="img-circle" src="~/Content/images/inspinia/a5.jpg"></a>
+                            <a href=""><img alt="image" class="img-circle" src="~/Content/images/inspinia/a6.jpg"></a>
+                            <a href=""><img alt="image" class="img-circle" src="~/Content/images/inspinia/a7.jpg"></a>
+                            <a href=""><img alt="image" class="img-circle" src="~/Content/images/inspinia/a2.jpg"></a>
+                            <a href=""><img alt="image" class="img-circle" src="~/Content/images/inspinia/a1.jpg"></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-5">
+                <div id="ServiceList" class="ibox">
+                    <div class="ibox-content">
+                        <h4>Please select a service for details</h4>
+                        <div class="clients-list">
+                            <ul class="nav nav-tabs">
+                                <span class="pull-right small text-muted"><label id="ServicesCount"></label> <label> Services</label></span>
+                                <li class="active"><a data-toggle="tab" href="#tab-1"> All</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="full-height-scroll">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover" id="ajaxTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Service</th>
+                                                        <th>Venue</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="servicesList"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div id="ServiceDetails" class="ibox">
+                    <div class="ibox-title">
+                        <h5><span id="ServiceTypeDescription"> </span></h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="sk-spinner sk-spinner-double-bounce">
+                            <div class="sk-double-bounce1"></div>
+                            <div class="sk-double-bounce2"></div>
+                        </div>
+                        <div class="tab-content">
+                            <div id="contact-1" class="tab-pane active">
+                                <div class="row m-b-lg">
+                                    <div class="col-lg-4 text-center">
+                                        <h2><span id="AgencyName"></span></h2>
+                                        <div class="m-b-sm">
+                                            <i class="fa fa-map-marker" style="font-size:30px;color: #a4aebf;"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <strong><span id="Description"></span></strong><p></p>
+                                        <p><i class="fa fa-phone"></i> <span id="Phone"></span> </p>
+                                        <button id="Directions" type="button" class="btn btn-primary btn-sm btn-block" onclick="parent.open('https://maps.google.com?saddr=Current+Location&daddr=2000+Dolores+Sq+94110&driving')">
+                                            <i class="fa fa-map"></i> Map
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="client-detail">
+                                    <div class="full-height-scroll">
+                                        <p><strong>Descriptions</strong></p>
+                                        <p><span id="BriefDescription"></span></p>
+                                        <br />
+                                        <strong>Activities</strong>
+                                        <ul class="list-group clear-list">
+                                            <li id="ListItemConsentRequired" class="list-group-item fist-item">
+                                                <button id="ConsentRequired" type="button" class="btn btn-sm btn-block badge-warning" style="margin:0 0 5px 0">
+                                                    <i></i>CONSENT REQUIRED
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-block badge-warning" data-toggle="modal" data-target="#ConsentRequiredModal" style="display:none;">CONSENT REQUIRED MODAL</button>
+                                                <div id="content">
+                                                    <p style="padding:0 0 10px 0;"><strong><small>Signature Required</small></strong></p>
+                                                    <div id="signatureparent">
+                                                        <div id="signature"></div>
+                                                    </div>
+                                                    <div id="tools"></div>
+                                                    <div id="displayarea"></div>
+                                                </div>
+                                                <div id="scrollgrabber"></div>
+                                                <div id="signed"></div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <input type="hidden" id="ClientCategoryDateID" />
+                                                <input type="hidden" id="ClientCategoryID" />
+                                                <button id="ActionNeeded" type="button" class="btn disabled btn-sm btn-block" disabled="disabled">
+                                                    <i></i>ACTION NEEDED
+                                                </button>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <button id="CheckinPass" type="button" class="btn btn-primary btn-sm btn-block">
+                                                    <i></i>CHECK-IN PASS
+                                                </button>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <button id="ManageServiceDate" type="button" class="btn btn-primary btn-sm btn-block">
+                                                    <i></i>CANCEL/MANAGE
+                                                </button>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <button id="Review" type="button" class="btn disabled btn-sm btn-block" disabled="disabled">
+                                                    <i></i>REVIEW
+                                                </button>
+                                            </li>
+                                        </ul>
+
+                                        <strong>Details</strong>
+                                        <ul class="list-group clear-list">
+                                            <li class="list-group-item fist-item">
+                                                <span id="StartDate" class="pull-right"></span>Start Date
+                                            </li>
+                                            <li class="list-group-item">
+                                                <span id="EndDate" class="pull-right"></span>End Date
+                                            </li>
+                                            <li class="list-group-item">
+                                                <%--<span id="ServiceTypeDescription" class="pull-right"> </span>Service Type
+                                            </li>--%>
+                                            <li class="list-group-item">
+                                                <span id="MaxAttendees" class="pull-right"></span>Max # of Attendees
+                                            </li>
+                                            <li class="list-group-item">
+                                                <span id="FeeToClient" class="pull-right label label-info"></span>Fee
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="ConsentRequiredModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Agreement 1</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Long legal verbiage 1.
+                    </p>
+                    <%--<div id="content">
+                        <div id="signatureparent">
+                            <div id="signature"></div>
+                        </div>
+                        <div id="tools"></div>
+                        <div><p>Display Area:</p><div id="displayarea"></div></div>
+                    </div>
+                    <div id="scrollgrabber"></div>--%>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

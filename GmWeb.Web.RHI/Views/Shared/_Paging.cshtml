@@ -1,0 +1,94 @@
+﻿@using System.Linq;
+@using System.Linq.Expressions;
+@using Kendo.Mvc.UI;
+@using Microsoft.AspNetCore.Html;
+@using GmWeb.Web.RHI.Utility;
+@using GmWeb.Logic.Utility.Extensions.Collections;
+@using GmWeb.Logic.Utility.Extensions.Reflection;
+@using GmWeb.Logic.Utility.Extensions.Enums;
+@using GmWeb.Logic.Utility.Attributes;
+
+<script>
+    function ActivatePagerItem(pagerItem) {
+        pagerItem.addClass('active');
+        pagerItem.attr('aria-current', 'page');
+    }
+    function DeactivatePagerItem(pagerItem) {
+        pagerItem.removeClass('active');
+        pagerItem.removeAttr('aria-current');
+    }
+    function EnablePagerItem(pagerItem) {
+        pagerItem.removeClass('disabled');
+        pagerItem.removeAttr('aria-disabled');
+        pagerItem.removeAttr('tabindex');
+    }
+    function DisablePagerItem(pagerItem) {
+        pagerItem.addClass('disabled');
+        pagerItem.attr('aria-disabled', 'true');
+        pagerItem.attr('tabindex', '-1');
+    }
+    function UpdateNavPager(target) {
+        var current = Navigator.current;
+        if(target == null)
+            target = Navigator.current;
+        DeactivatePagerItem(current.navPager);
+        ActivatePagerItem(target.navPager);
+    }
+</script>
+
+@{
+    var PagerItems = new[]{
+        new[] { (PagerItemType.First, default(IntakePage)), (PagerItemType.Previous, default(IntakePage)) },
+        IntakePage.GetPages().Select(pg => (ItemType: PagerItemType.Target, Page: pg)),
+        new [] { (PagerItemType.Next, default(IntakePage)), (PagerItemType.Last, default(IntakePage)) }
+    }.Flatten();
+    void createTargetPagerItem(IntakePage target)
+    {
+        <li class="page-item" id="@target.NavPagerID">
+            <a class="page-link" onclick="@target.CacheGotoInvocation">
+                @target.Number
+            </a>
+        </li>
+    }
+
+    void createRelativePagerItem(PagerItemType pagerItemType)
+    {
+        if (pagerItemType == PagerItemType.Target)
+            throw new ArgumentException($"Attempted to create a pager item of type 'Target' without specifying the target page.");
+
+        var id = $"NavPager-{pagerItemType.ToString()}";
+        var handleClick = $"Navigator.cacheGoto(Navigator.{pagerItemType.GetShortName().ToLower()})";
+        var iconConfig = pagerItemType.GetAttribute<PagerItemType, IconAttribute>();
+
+        <li class="page-item" id="@id">
+            <a class="page-link" onclick="@handleClick">
+                @if(@pagerItemType.Matches(PagerItemType.First, PagerItemType.Previous))
+                {
+                    <i class="@iconConfig.IconClass"></i>
+                }
+                @pagerItemType
+                @if(@pagerItemType.Matches(PagerItemType.Next, PagerItemType.Last))
+                {
+                    <i class="@iconConfig.IconClass"></i>
+                }
+            </a>
+        </li>
+    }
+    void createPagerItem(PagerItemType itemType, IntakePage page)
+    {
+        if (page == null)
+            createRelativePagerItem(itemType);
+        else
+            createTargetPagerItem(page);
+    }
+
+}
+ 
+<div id="paging">
+    <ul class="pagination justify-content-center">
+        @foreach(var item in PagerItems)
+        {
+            createPagerItem(item.ItemType, item.Page);
+        }
+    </ul>
+</div>

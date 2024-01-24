@@ -1,0 +1,77 @@
+﻿@using System.Drawing
+@using GMaps.Mvc
+@using GmWeb.Web.Demographics.Helpers
+@using GmWeb.Web.Demographics.ViewModels.Geo
+@model IEnumerable<RegionData>
+
+@{ 
+    var hmModel = new
+    {
+        Gradient = new List<Color>(),
+        Points = Model,
+        Dissipating = true,
+        Opacity = .6M
+    };
+}
+@(Html.GoogleMap()
+    .Name("region-map")
+    .Height(700)
+    .Center(GeoLocations.SanFrancisco)
+    .MapTypeId(MapType.Roadmap)
+    .Zoom(13)
+    .Polygons(pf =>
+    {
+        foreach(var region in Model)
+        {
+            pf.Add()
+                .Points(ptn =>
+                {
+                    foreach (var point in region.GEOM.Coordinates)
+                    {
+                        ptn.Add(point.Y, point.X);
+                    }
+                })
+                .FillColor(region.Stats.Color)
+                .FillOpacity(0.6)
+                .StrokeColor(region.Stats.Color)
+            ;
+        }
+    })
+    .Markers(marker =>
+    {
+        foreach(var region in Model)
+        {
+            marker.Add()
+                .Latitude(region.Latitude)
+                .Longitude(region.Longitude)
+                .Title(region.Title)
+                .Window(w => w.Add()
+                    .MaxWidth(325)
+                    .DisableAutoPan(true)
+                    .Content(@<text>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 120px"></th>
+                                    <th style="width: 400px; margin-left: 7px"></th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>@(region.Stats.Region_Type):</td>
+                                <td>@(region.Stats.Name)</td>
+                            </tr>
+                            <tr>
+                                <td>Clients:</td>
+                                <td>@($"{region.Stats.ClientCount:N0}")</td>
+                            </tr>
+                            <tr>
+                                <td>Median Income:</td>
+                                <td>@($"{region.Stats.Median_Income:C}")</td>
+                            </tr>
+                        </table>
+                    </text>)
+                )
+            ;
+        }
+    })
+)

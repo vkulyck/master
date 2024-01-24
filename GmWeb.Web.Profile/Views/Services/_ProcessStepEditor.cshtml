@@ -1,0 +1,58 @@
+﻿@model ProcessStepModalViewModel
+@using GmWeb.Web.Profile.Models.Services
+
+<div class="modal-body">
+    <table style="border: 0px; width: 100%;" align="center" cellspacing="3" cellpadding="3" class="table">
+        <tr>
+            <td style="width: 50%" align="left" valign="top">
+                @Html.LabelFor(x => x.ProcessTypeValue) @Model.ProcessTypeValue
+            </td>
+            <td style="width: 50%" align="left" valign="top">
+                @Html.LabelFor(x => x.Description) @Model.Description
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 50%" align="left" valign="top">
+                @Html.LabelFor(x => x.IsChecked) @Html.EditorFor(x => x.IsChecked)
+            </td>
+            <td style="width: 50%" align="left" valign="top"></td>
+        </tr>
+        <tr>
+            <td style="width: 50%" align="left" valign="top">
+                @Html.LabelFor(x => x.DateRecorded) @Model.DateRecorded
+            </td>
+            <td style="width: 50%" align="left" valign="top">
+                @Html.LabelFor(x => x.DocumentComments) @Html.EditorFor(x => x.DocumentComments)
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 50%" align="left" valign="top">
+                @Html.LabelFor(x => x.IsChecked) @Html.EditorFor(x => x.IsChecked)
+            </td>
+            <td style="width: 50%" align="left" valign="top"></td>
+        </tr>
+        <tr>
+            <td style="width: 50%" align="left" valign="top">
+                @Html.LabelFor(x => x.DocumentPath) @Model.DocumentPath
+            </td>
+            <td style="width: 50%" align="left" valign="top"></td>
+        </tr>
+        <tr>
+            <td style="width: 50%" align="left" valign="top">
+                @Html.Label("Document: ") @Html.Razor().Upload().Name("FileUploadDocuments")
+            </td>
+            <td style="width: 50%" align="left" valign="top">
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 100%" colspan="4" align="left" valign="top">
+                <asp:label id="LabelErrorStep" runat="server" font-bold="True" forecolor="Red"
+                           visible="False" />
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="modal-footer">
+    @Html.Razor().Defaults.Button().Name("ButtonSave").Content("Save")
+</div>

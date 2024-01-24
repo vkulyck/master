@@ -1,0 +1,82 @@
+﻿<#@ template language="C#" hostspecific="true" #>
+<#@ assembly name="Microsoft.VisualStudio.Shell.Interop.8.0" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Reflection" #>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NCalc.Domain;
+
+namespace NCalc.Evaluators
+{
+    public static partial class SetComparisonEvaluator
+    {
+        public static bool? Evaluate(BinaryExpressionType type, object left, object right)
+        {
+            switch(left)
+            {
+                <#    GenerateSwitchCases(); #>
+            }
+            return null;
+        }              
+    }
+
+}
+<#+
+
+    public List<string> GetPrimitiveValueTypes()
+    {
+        return new List<string>
+        {
+            "char",
+            "byte",
+            "sbyte",
+            "ushort",
+            "short",
+            "uint",
+            "int",
+            "ulong",
+            "long",
+            "float",
+            "double",
+            "decimal",
+            "DateTime",
+        };
+    }
+
+    public void GenerateSwitchCases()
+    {
+        var types = GetPrimitiveValueTypes();
+        foreach(var type in types)
+        {
+            // Generate standard value type cases
+            GenerateSwitchCase(type, type);
+            // Generate nullable value type cases
+            GenerateSwitchCase(type + "?", "N_" + type);
+        }
+        GenerateSwitchCase("string", "string");
+    }
+
+    public void GenerateSwitchCase(string type, string id)
+    {
+#>  
+                case ISet<<#= type #>> <#= id #>Set: {
+                    var leftSet = left as ISet<<#= type #>>;
+                    var rightSet = right as ISet<<#= type #>>;
+                    return Evaluate(type, leftSet, rightSet);
+                }
+<#+
+    }
+
+#>

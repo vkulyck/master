@@ -1,0 +1,221 @@
+// Copyright (c) Juan M. Elosegui. All rights reserved.
+// Licensed under the GPL v2 license. See LICENSE.txt file in the project root for full license information.
+
+namespace GMaps.Mvc
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Web.Mvc;
+    using System.Web.Optimization;
+    using System.Web.UI;
+    using System.Text.RegularExpressions;
+
+    public class ScriptRegistrar
+    {
+        public static readonly string Key = typeof(ScriptRegistrar).AssemblyQualifiedName;
+        private bool hasRendered;
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScriptRegistrar", Justification = "Need to specify the actual name")]
+        public ScriptRegistrar(ViewContext viewContext)
+        {
+            if (viewContext == null)
+            {
+                throw new ArgumentNullException(nameof(viewContext));
+            }
+
+            if (viewContext.HttpContext.Items[Key] != null)
+            {
+                throw new InvalidOperationException("Only one ScriptRegistrar is allowed in a single request");
+            }
+
+            this.Components = new Collection<Map>();
+            this.FixedScriptCollection = new List<string>();
+            viewContext.HttpContext.Items[Key] = this;
+            this.BasePath = "~/Scripts";
+            this.ViewContext = viewContext;
+        }
+
+        public string BasePath { get; set; }
+
+        internal List<string> FixedScriptCollection { get; }
+
+        protected Collection<Map> Components { get; }
+
+        protected ViewContext ViewContext
+        {
+            get;
+        }
+
+        public void Render()
+        {
+            if (this.hasRendered)
+            {
+                throw new InvalidOperationException("Cannot call render more than once.");
+            }
+
+            TextWriter writer = this.ViewContext.Writer;
+            if (writer == null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            using (new HtmlTextWriter(writer))
+            {
+                this.Write(writer);
+            }
+
+            this.hasRendered = true;
+        }
+
+        public string ToHtmlString()
+        {
+            string result;
+            using (var stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            {
+                this.Write(stringWriter);
+                result = stringWriter.ToString();
+            }
+
+            return result;
+        }
+
+        internal void AddComponent(Map component)
+        {
+            if (component == null)
+            {
+                throw new ArgumentNullException(nameof(component));
+            }
+
+            this.Components.Add(component);
+        }
+
+        protected virtual void Write(TextWriter writer)
+        {
+            this.WriteScriptSources(writer);
+            this.WriteScriptStatements(writer);
+        }
+
+        private static string CombinePath(string directory, string fileName)
+        {
+            const string slash = "/";
+
+            string path = (directory.EndsWith(slash, StringComparison.Ordinal) ? directory : directory + slash) +
+                          (fileName.StartsWith(slash, StringComparison.Ordinal) ? fileName.Substring(1) : fileName);
+
+            return path;
+        }
+
+        private List<string> ConsolidateScripts(IEnumerable<string> scripts)
+        {
+            var consolidated = new List<string>();
+            var queryMaps = new Dictionary<string,List<IDictionary<string, string>>>();
+            foreach(var script in scripts)
+            {
+                Regex uriSplit = new Regex(@"^(?<left>[^\?]+?)(?<right>\?.*)?$");
+                var match = uriSplit.Match(script);
+                string path = match.Groups["left"].Value, query = match.Groups["right"].Value;
+                var qm = System.Web.HttpUtility.ParseQueryString(query).ToDictionary();
+                if (!queryMaps.ContainsKey(path))
+                    queryMaps[path] = new List<IDictionary<string, string>>();
+                queryMaps[path].Add(qm);
+            }
+            foreach(var kvp in queryMaps)
+            {
+                string path = kvp.Key;
+                var qmList = kvp.Value;
+                var merged = qmList.MergeCompatible();
+                var query = string.Join("&", merged.Select(x => $"{x.Key}={x.Value}"));
+                var uri = path;
+                if (query.Length > 0)
+                    uri += $"?{query}";
+                consolidated.Add(uri);
+            }
+            return consolidated;
+        }
+
+        private void WriteScriptSources(TextWriter writer)
+        {
+            const string bundlePath = "~/GMaps.Mvc/Scripts";
+            var bundle = new ScriptBundle(bundlePath);
+            var scripts = this.Components
+                .SelectMany(c => c.ScriptFileNames)
+                .Distinct()
+                .Union(this.FixedScriptCollection)
+                .ToList()
+            ;
+            var consolidated = this.ConsolidateScripts(scripts);
+
+            foreach (var scriptFileName in consolidated)
+            {
+                var localScriptFileName = scriptFileName;
+
+                if(Regex.IsMatch(scriptFileName, @"^(https?://|/?GMapsMvcApi)"))
+                {
+                    writer.WriteLine(Scripts.Render(localScriptFileName).ToHtmlString());
+                }
+                else
+                {
+                    localScriptFileName = CombinePath(this.BasePath, scriptFileName);
+                    bundle.Include(localScriptFileName);
+                }
+            }
+
+            BundleTable.Bundles.Add(bundle);
+
+            writer.WriteLine(Scripts.Render(bundlePath).ToHtmlString());
+        }
+
+        private void WriteScriptStatements(TextWriter writer)
+        {
+            if (!this.Components.Any())
+            {
+                return;
+            }
+
+            writer.WriteLine("<script type=\"text/javascript\">{0}//<![CDATA[", Environment.NewLine);
+            writer.WriteLine(this.ViewContext.HttpContext.Request.IsAjaxRequest()
+                ? this.GetAjaxScriptStart()
+                : "jQuery(document).ready(function(){");
+
+            foreach (var component in this.Components)
+            {
+                component.WriteInitializationScript(writer);
+                writer.WriteLine();
+            }
+
+            writer.WriteLine(this.ViewContext.HttpContext.Request.IsAjaxRequest()
+               ? this.GetAjaxScriptEnd()
+               : "});");
+            writer.Write("//]]>{0}</script>", Environment.NewLine);
+        }
+
+        private bool ShouldLoadScripts()
+        {
+            return this.Components.FirstOrDefault(m => m.LoadScripts) != null;
+        }
+
+        private string GetAjaxScriptStart()
+        {
+            if (this.ShouldLoadScripts())
+            {
+                return "function executeAsync(){";
+            }
+
+            return "(function (){";
+        }
+
+        private string GetAjaxScriptEnd()
+        {
+            if (this.ShouldLoadScripts())
+            {
+                return "}";
+            }
+
+            return "})();";
+        }
+    }
+}

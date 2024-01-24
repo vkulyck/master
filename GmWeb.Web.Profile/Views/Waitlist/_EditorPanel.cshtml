@@ -1,0 +1,105 @@
+﻿@model GmWeb.Web.Profile.Models.WaitlistViewModel
+
+@using (Html.DelayedHandlers())
+{
+    <script>
+        $(function () {
+            var _toJSON = kendo.data.ObservableObject.prototype.toJSON;
+            kendo.data.ObservableObject.prototype.toJSON = function () {
+                var json = _toJSON.apply(this);
+                return json;
+            };
+        });
+        function clearEditors() {
+            $('#ElementEditorContainer').html('');
+        }
+        function editStep(step) {
+            console.log('editing step:', step);
+            var editUrl = '@Url.Action("_FlowStepEditor","Waitlist")';
+            loadElementEditor(editUrl, step);
+            var viewUrl = '@Url.Action("_FlowStepViewer","Waitlist")';
+            loadElementViewer(viewUrl, step);
+        }
+        function editLink(link) {
+            console.log('editing link:', link);
+            var url = '@Url.Action("_FlowLinkEditor","Waitlist")';
+            loadElementEditor(url, link);
+        }
+        function editFlow(flow) {
+            console.log('editing flow:', flow);
+            var url = '@Url.Action("_FlowEditor","Waitlist")';
+            loadElementEditor(url, flow);
+        }
+        function bindRecursively(model, depth) {
+            if (depth == null) {
+                depth = 0;
+            }
+            if (model instanceof kendo.data.ObservableObject) {
+                var element = $('div[model-guid="' + model.Guid + '"]');
+                kendo.bind(element, model);
+                if (depth == 0) {
+                    console.log('recursively binding with root model:', model);
+                    console.log('recursively binding with root element:', element);
+                }
+            }
+            $.each(model, function (key, val) {
+                if (val instanceof kendo.Observable) {
+                    bindRecursively(val, depth + 1);
+                }
+            });
+        }
+        function loadElementEditor(url, model) {
+            var payload = model.toJSON();
+            console.log('loading editor; url:', url, 'model:', payload);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: { Model: payload },
+                success: function (data) {
+                    console.log('editor loaded successfully');
+                    $('#ElementEditorContainer').html(data);
+                    InspiniaInitializer();
+                    bindRecursively(model);
+                },
+                error: function (e) {
+                    console.log('err:', e);
+                }
+            });
+        }
+        function loadElementViewer(url, model) {
+            var payload = model.toJSON();
+            console.log('loading viewer; url:', url, 'model:', payload);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: { Model: payload },
+                success: function (data) {
+                    console.log('viewer loaded successfully');
+                    $('#StepViewerContainer').html(data);
+                    bindRecursively(model);
+                },
+                error: function (e) {
+                    console.log('err:', e);
+                }
+            });
+        }
+    </script>
+}
+<style>
+    #ElementEditorScrollview {
+        overflow: auto;
+        height: 350px;
+        background-color: white;
+    }
+
+    #ElementEditorScrollview thead {
+        display: none;
+    }
+
+    #ElementEditorScrollview .ibox-content {
+        border: none;
+    }
+</style>
+<div id="ElementEditorScrollview">
+    <div id="ElementEditorContainer"></div>
+</div>

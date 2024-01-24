@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+
+# Set up the bash prompt
+export PATH="$HOME/code/configs/scripts/git:$HOME/code/configs/scripts/utils:$PATH"
+
+chr() {
+  printf \\$(printf '%03o' $1)
+}
+
+ord() {
+  printf '%d' "'$1"
+}
+
+a2z_exp() {
+  if [ $(ord $n) -gt $(ord Z) ]; then
+    echo -n "10 + 2 * ($(ord $n) - $(ord a))"
+  elif [ $(ord $n) -gt $(ord 9) ]; then
+    echo -n "11 + 2 * ($(ord $n) - $(ord A))"
+  else
+    echo -n "$(ord $n) - $(ord 0)"
+  fi
+}
+
+z2k() {
+  local n=$1
+  local k=$2
+  local lower=( {a..n} {p..z} )
+  local upper=( {A..N} {P..Z} )
+  local base_k_map=( {0..9} )
+  for (( i=0; i<${#lower[*]}; ++i)); do 
+    base_k_map+=( ${upper[$i]} ); 
+    base_k_map+=( ${lower[$i]} ); 
+  done
+  for i in $(bc <<< "obase=$k; $n"); do
+    echo -n "${base_k_map[$(( 10#$i ))]}"
+  done
+}
+
+k2z() {
+  local n=$1
+  local k=$2
+  local digits=($(echo $n | sed -e 's/\(.\)/\1\n/g' | tac -s ''))
+  local sum=0
+  for digit in "${digits[@]}"; do
+    local value=$(a2z_exp $digit)
+    ((sum+=$value))
+  done
+  echo $sum
+
+
+}
+
+b60() {
+  local n=$1
+  local k=60
+  z2k $n $k
+}
+
+b60i() {
+  local n=$1
+  local k=60
+  k2z $n $k
+}
+
+time60() {
+  local k=60
+  local h=$(date +%H)
+  local m=$(date +%M)
+  local s=$(date +%S)
+  local h60=$(z2k $h $k)
+  local m60=$(z2k $m $k)
+  local s60=$(z2k $s $k)
+  echo -n "$h60$m60$s60"
+}
+
+time60i() {
+  local ts60=$1
+  local parts=(${ts60//:/ })
+  local hour=$(printf "%02d" $(b60i ${parts[0]}))
+  local min=$(printf "%02d" $(b60i ${parts[1]}))
+  local sec=$(printf "%02d" $(b60i ${parts[2]}))
+  echo "$hour:$min:$sec"
+}
+
+# Main Palette
+BOLD_LIME="\[\e[38;5;154;1m\]";
+BOLD_FUCHSIA="\[\e[38;5;197;1m\]";
+BOLD_EBLUE="\[\e[38;5;39;1m\]";
+BOLD_YELLEROW="\[\e[33;1;255m\]";
+BOLD_YELLEROW_INV="\[\e[33;7;226m\]";
+BOLD_LIME="\[\e[38;5;154;1m\]"
+COLOR_RESET="\[\e[m\]"
+
+# Remove duplicate entries in your bash command history
+export HISTCONTROL=ignoredups
+source ~/.git_prompt
+export GIT_PS1_SHOWDIRTYSTATE=1
+
+generate_machine_name() {
+  local mname="$HOSTNAME"
+  if [[ $mname = helios ]]; then
+    mname="☉"
+  elif [[ $mname = hephaestus ]]; then
+    mname="⚒"
+  elif [[ $mname = hecate ]]; then
+    mname="☽ ⃝ ☾"
+  elif [[ $mname = ate ]]; then
+    mname="ate"
+  elif [[ $mname = athena ]]; then
+    mname="📚"
+  fi
+  echo -n "$mname"
+}
+
+generate_user_name() {
+  local uname=$USER
+  if [[ $uname = ubuntu ]]; then
+    uname="∴"
+  elif [[ $uname = jake ]]; then
+    uname="♏"
+  elif [[ $uname = jimbroof ]]; then
+    uname="ϐʳ⃝ ⃝ ﬀ"
+  else
+    uname="⚡"
+  fi
+  echo -n $uname
+}
+
+generate_prompt() {
+  local mname=$(generate_machine_name)
+  local uname=$(generate_user_name)
+  local prompt=$(__git_ps1);
+  local git_prompt_length=${#prompt}
+  prompt="$BOLD_YELLEROW_INV$prompt\[\e[0m\]"
+  prompt="$BOLD_YELLEROW\w $prompt"
+  prompt="$BOLD_LIME$(time60)$BOLD_FUCHSIA$uname$BOLD_EBLUE$mname$COLOR_RESET            $prompt"
+  prompt="$(tr -s " " <<< $prompt)"
+  if [ $git_prompt_length -gt 0 ]; then
+    prompt="$prompt "
+  fi
+  PS1=$prompt
+}
+PROMPT_COMMAND=generate_prompt

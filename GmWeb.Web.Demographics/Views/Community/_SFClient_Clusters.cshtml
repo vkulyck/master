@@ -1,0 +1,24 @@
+﻿@using System.Drawing
+@using GMaps.Mvc
+@using GmWeb.Web.Demographics.Helpers
+@using GmWeb.Web.Demographics.ViewModels.Geo
+@model IEnumerable<MarkerData>
+
+@(Html.GoogleMap()
+    .Name("cluster-map")
+    .Height(700)
+    .Zoom(12)
+    .Center(GeoLocations.SanFrancisco)
+    .EnableMarkersClustering()
+    .BindTo<MarkerData, Marker>(Model,
+        mappings => mappings.For<MarkerData>(binding => 
+            binding.ItemDataBound((marker, obj) =>
+                {
+                    marker.Latitude = obj.Latitude;
+                    marker.Longitude = obj.Longitude;
+                    marker.Title = obj.Label;
+                }
+            )
+        )
+    )
+)

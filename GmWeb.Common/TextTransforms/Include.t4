@@ -1,0 +1,3 @@
+﻿<# // Includes #>
+<#@ include file="EntityFramework\Include.t4" #>
+<#@ include file="Utility\Include.t4" #>

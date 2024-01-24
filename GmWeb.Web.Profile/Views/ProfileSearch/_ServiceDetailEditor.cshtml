@@ -1,0 +1,186 @@
+﻿@using GmWeb.Web.Profile.Models.ProfileSearch
+@model ServiceDetailViewModel
+
+<script type="text/javascript">
+    $(function () {
+        window.ActiveClosableModal = $('#MainTableServiceDetail').closest('[data-role=window]').data('kendoWindow');
+    });
+</script>
+<table class="table" id="MainTableServiceDetail">
+    <tr>
+        <td style="vertical-align: top; text-align: right; width: 15%">
+            <label style="color: #1c6dbe; font-weight: bold">ACTIVITY:</label>
+        </td>
+        <td colspan="6" style="vertical-align: top">
+            <label style="color: #1c6dbe; font-weight: bold">@Model.SelectedActivity</label>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="7">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%; text-align: right; vertical-align: top">
+            <label>SERVICE NAME</label>
+        </td>
+        <td style="width: 30%; text-align: left; vertical-align: top">
+            <asp:Label ID="LabelDescription" runat="server" />
+            @Model.Description
+        </td>
+        <td style="width: 3%">
+            &nbsp;
+        </td>
+        <td style="width: 52%; text-align: left; vertical-align: text-top" colspan="4">
+            <label>START DATE</label>
+            @Model.StartDate
+            &nbsp;&nbsp;&nbsp;
+            <label>END DATE</label>
+            @Model.EndDate
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%; text-align: right; vertical-align: top">
+            <asp:Label ID="LabelServiceTypeTitle" runat="server" Font-Bold="true" Text="SERVICE TYPE" />
+            <label>SERVICE TYPE</label>
+        </td>
+        <td style="width: 30%; text-align: left; vertical-align: top">
+            @Model.ServiceType
+            &nbsp;
+        </td>
+        <td style="width: 3%">
+            &nbsp;
+        </td>
+        <td style="width: 52%; text-align: left; vertical-align: top" colspan="4">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%; text-align: right; vertical-align: top">
+            <label>BRIEF DESC.</label>
+        </td>
+        <td style="width: 30%; text-align: left; vertical-align: top">
+            @Model.BriefDescription
+        </td>
+        <td style="width: 3%">
+            &nbsp;
+        </td>
+        <td style="width: 29%; text-align: left; vertical-align: top" colspan="2">
+            &nbsp;
+        </td>
+        <td style="width: 23%; text-align: center; vertical-align: middle" colspan="2">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%; text-align: left; vertical-align: top" colspan="7">
+            <hr />
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%; text-align: right; vertical-align: top">
+            <label>VENUE</label>
+        </td>
+        <td style="width: 30%; text-align: left; vertical-align: top">
+            @Model.Venue
+        </td>
+        <td style="width: 3%">
+            &nbsp;
+        </td>
+        <td style="width: 52%; text-align: left; vertical-align: top" colspan="4">
+            <label>VENUE NEIGHBORHOOD</label>
+            @Model.Neighborhood
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%; text-align: right; vertical-align: top">
+            <label>VENUE ADDRESS</label>
+        </td>
+        <td style="width: 85%; text-align: left; vertical-align: top" colspan="6">
+            <table style="width: 95%; border: 0px; vertical-align: top" cellpadding="0" cellspacing="2">
+                <tr>
+                    <td style="width: 10%; text-align: left; vertical-align: top">
+                        @Model.VenueAddressNo
+                    </td>
+                    <td style="width: 30%; text-align: left; vertical-align: top">
+                        @Model.VenueAddressStreet
+                    </td>
+                    <td style="width: 25%; text-align: left; vertical-align: top">
+                        @Model.VenueAddressStreetType
+                    </td>
+                    <td style="width: 37%; text-align: left; vertical-align: top">
+                        @Model.VenueSuite
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%; text-align: right; vertical-align: top">
+            <label>CITY</label>
+        </td>
+        <td style="width: 30%; text-align: left; vertical-align: top">
+            @Model.VenueCity
+        </td>
+        <td style="width: 3%">
+            &nbsp;
+        </td>
+        <td style="width: 20%; text-align: right; vertical-align: top">
+            &nbsp;
+        </td>
+        <td style="width: 9%; text-align: left; vertical-align: top">
+            &nbsp;
+        </td>
+        <td style="width: 14%; text-align: right; vertical-align: top">
+            &nbsp;
+        </td>
+        <td style="width: 9%; text-align: left; vertical-align: top">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%; text-align: right; vertical-align: top">
+            <label>CLIENT FEE</label>
+        </td>
+        <td style="width: 30%; text-align: left; vertical-align: top">
+            @Model.FeeToClient
+        </td>
+        <td style="width: 3%">
+            &nbsp;
+        </td>
+        <td style="width: 29%; text-align: left; vertical-align: top" colspan="2">
+            &nbsp;
+        </td>
+        <td style="width: 14%; text-align: right; vertical-align: top">
+            &nbsp;
+        </td>
+        <td style="width: 9%; text-align: left; vertical-align: top">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 15%; text-align: right; vertical-align: top">
+            <label>MAX #<br />OF ATTENDEES</label>
+        </td>
+        <td style="width: 30%; text-align: left; vertical-align: top">
+            @Model.MaxAttendees
+        </td>
+        <td style="width: 3%">
+            &nbsp;
+        </td>
+        <td style="width: 52%; text-align: left; vertical-align: top" colspan="4">
+            <label>CURRENT ATTENDEES #:</label>
+            &nbsp;
+            <asp:label ID="LabelCurrentAttendeesEdit" runat="server" />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label>REMAINING SLOTS:</label>
+            &nbsp;
+            @Model.RemainingSlots
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%; text-align: left; vertical-align: top" colspan="7">
+            &nbsp;
+        </td>
+    </tr>
+</table>

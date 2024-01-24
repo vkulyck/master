@@ -1,0 +1,30 @@
+﻿<#@ template language="C#" debug="false" hostspecific="true"#>
+<#@ include file="$(SolutionDir)GmWeb.Common\TextTransforms\Include.t4"#>
+<#@ output extension=".cs" #>
+
+<#
+string baseName = "Demographics";
+string ns = "GmWeb.Web.Demographics.Logic.Data.Context";
+var includes = new List<string> {
+    "Microsoft.EntityFrameworkCore",
+    "GmWeb.Logic.Data.Context",
+    "GmWeb.Logic.Data.Models.Profile",
+    "GmWeb.Logic.Data.Models.Lookups",
+    "GmWeb.Logic.Data.Models.Geography",
+    "GmWeb.Logic.Data.Models.Demographics"
+};
+
+var dbSets = GetModelsFromDirectories(
+    @"..\GmWeb.Logic\Data\Models\Profile\Physical",
+    @"..\GmWeb.Logic\Data\Models\Geography\Physical",
+    @"..\GmWeb.Logic\Data\Models\Demographics\Physical",
+    @"..\GmWeb.Logic\Data\Models\Lookups"
+);
+var dbQueries = new List<string>{ };
+
+GenerateContextClass(ns, baseName, includes, dbSets, dbQueries);
+GenerateCollectionClasses(ns, baseName, includes, dbSets);
+GenerateCacheClass(ns, baseName, includes, dbSets, dbQueries);
+ScriptContext.FileMgr.Process();
+#>
+

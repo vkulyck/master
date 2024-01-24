@@ -1,0 +1,100 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Collections" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+
+<#+
+
+public void GenerateBitArray(string ParentClass, string PropertyName, string[] Flags, string[] Persisted)
+{
+    string enumName = ParentClass + PropertyName;
+#>
+
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using GmWeb.Logic.Data.Annotations;
+
+<#+
+
+    string baseType, sqlType;
+    if(Flags.Length < 8)
+    {
+        baseType = "byte";
+        sqlType = "TinyInt";
+    }
+    else if(Flags.Length < 16)
+    {
+        baseType = "short";
+        sqlType = "SmallInt";
+    }
+    else if(Flags.Length < 32)
+    {
+        baseType = "int";
+        sqlType = "int";
+    }
+    else
+    {
+        baseType = "long";
+        sqlType = "BigInt";
+    }
+
+#>
+
+[Flags]
+public enum <#= enumName #> : <#= baseType #>
+{
+    None = 0<#+
+
+    int value = 1;
+    foreach(var flag in Flags)
+    {
+        #>,
+<#+#>    <#= flag #> = <#= value #><#+
+        value *= 2;
+    }
+#>
+
+}
+
+public partial class <#= ParentClass #>
+{
+    [SqlDataType(System.Data.SqlDbType.<#= sqlType #>)]
+    public <#= enumName #> <#= PropertyName #> { get; set; } = <#= enumName #>.None;
+
+<#+
+    foreach(var flag in Flags)
+    {
+        if(Persisted.Contains(flag))
+        {
+#>
+    DatabaseGenerated(DatabaseGeneratedOption.Computed)
+    public bool Is<#= flag #> { get; set; }
+<#+
+        }
+        else
+        {
+#>
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public bool Is<#= flag #>
+    {
+        get => this.Get<#= PropertyName #>(<#= enumName #>.<#= flag #>);
+        set => this.Set<#= PropertyName #>(<#= enumName #>.<#= flag #>, value);
+    }
+<#+
+        }
+    }
+#>
+
+    private bool Get<#= PropertyName #>(<#= enumName #> <#= PropertyName.ToLower() #>) => this.<#= PropertyName #>.HasFlag(<#= PropertyName.ToLower() #>);
+    private void Set<#= PropertyName #>(<#= enumName #> <#= PropertyName.ToLower() #>, bool enable)
+    {
+        if (enable)
+            this.<#= PropertyName #> |= <#= PropertyName.ToLower() #>;
+        else
+            this.<#= PropertyName #> &= ~<#= PropertyName.ToLower() #>;
+    }
+}
+<#+
+}
+#>

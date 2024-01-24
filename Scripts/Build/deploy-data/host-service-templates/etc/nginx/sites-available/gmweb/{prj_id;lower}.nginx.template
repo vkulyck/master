@@ -1,0 +1,53 @@
+server {
+  server_name {prj_id:domain}.{vpc:domain}.goodmojo.io;
+  listen 443 ssl;
+  include /etc/nginx/addenda-enabled/*.{prj_id:domain}.https.nginx;
+  location /favicon.ico {
+    alias /srv/gmweb/favicon.ico;
+  }
+  location /elb-status {
+    access_log off;
+    return 200 'success';
+    # because default content-type is application/octet-stream,
+    # browser will offer to "save the file"...
+    # the next line allows you to see it in the browser so you can test
+    add_header Content-Type text/plain;
+  }
+  location / {
+    access_log "/var/log/nginx/{prj_id:domain}-access.log";
+    error_log "/var/log/nginx/{prj_id:domain}-error.log";
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-NginX-Proxy true;
+    proxy_set_header User-Agent $http_user_agent;
+    proxy_set_header Accept $http_accept;
+    proxy_connect_timeout       600;
+    proxy_send_timeout          600;
+    proxy_read_timeout          600;
+    send_timeout                600;
+    proxy_pass http://localhost:{prj_port}/;
+    proxy_redirect off;
+  }
+
+  ssl_certificate /etc/letsencrypt/live/{prj_id:domain}.{vpc:domain}.goodmojo.io/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{prj_id:domain}.{vpc:domain}.goodmojo.io/privkey.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+  server_name {prj_id:domain}.{vpc:domain}.goodmojo.io;
+  listen 80;
+  include /etc/nginx/addenda-enabled/*.{prj_id:domain}.http.nginx;
+  location /favicon.ico {
+    alias /srv/gmweb/favicon.ico;
+  }
+  location /elb-status {
+    access_log off;
+    return 200 'success';
+    add_header Content-Type text/plain;
+  }
+  return 307 https://$host$request_uri;
+}

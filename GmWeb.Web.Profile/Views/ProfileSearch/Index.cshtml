@@ -1,0 +1,99 @@
+﻿@using GmWeb.Web.Profile.Models
+@using GmWeb.Logic.Utility.Extensions
+@using GmWeb.Web.Profile.Controllers
+@using GmWeb.Web.Profile.Models.ProfileSearch
+@model ProfileSearchViewModel
+@{
+    ViewBag.Title = "Profile Search";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        var LocalProcessData = {
+            WrappedProfiles: {}
+        };
+        var ProfileSearchData = {
+            Profiles: [],
+            Keywords: [],
+            ClientDataTypes: [],
+            ClientDataTypeID: @Model.ClientDataTypeID,
+            SearchType: '@(Model.SearchType.ToString())'
+        };
+        function ShowPanel(panelType) {
+            var selector = '#' + panelType + '-panel';
+            $(selector).show();
+        }
+        function HidePanel(panelType) {
+            var selector = '#' + panelType + '-panel';
+            $(selector).hide();
+        }
+        function ShowMatches() {
+            var matchGrid = $('#GridServiceMatches').kwidget();
+            matchGrid.dataSource.read();
+            console.log('refreshed match grid');
+            ShowPanel('@(Panel.MatchedServices)');
+            HidePanel('@(Panel.SearchTypeSelect)');
+            HidePanel('@(Panel.Profiles)');
+            HidePanel('@(Panel.Keywords)');
+        }
+        function ShowConsent() {
+            ShowPanel('@(Panel.Consent)');
+            HidePanel('@(Panel.MatchedServices)');
+        }
+        $(function () {
+            ShowPanel('@(Panel.SearchTypeSelect)');
+        });
+    </script>
+}
+
+<div class="wrapper wrapper-content">
+    <section class="comments gray-section" style="margin-top: 0">
+        <div class="container" style="background-image:url('@(Url.ImagePath("profile-search-header-background.png"))'); height:160px; width:100%;">
+            <h1 style="color:#fff; text-shadow: 1px 1px #555;">A Helping Hand<br />When and Where You Need It</h1>
+        </div>
+    </section>
+    <style>
+        .profile-search-cell {
+            /*display: none;*/
+            width: 100%;
+            vertical-align: top;
+        }
+
+            .profile-search-cell > table {
+                display: none;
+            }
+    </style>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <h4>Please search by profiles or keywords</h4>
+                </div>
+
+                <table class="table">
+                    <tr>
+                        <td class="profile-search-cell">
+                            @Html.Partial("_SearchTypeSelectPanel")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="profile-search-cell">
+                            @Html.Partial("_ProfilesPanel")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="profile-search-cell">
+                            @Html.Partial("_KeywordsPanel")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="profile-search-cell">
+                            @Html.Partial("_ServicesPanel")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

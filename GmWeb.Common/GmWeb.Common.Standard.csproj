@@ -1,0 +1,58 @@
+<Project>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>Latest</LangVersion>
+    <AssemblyName>GmWeb.Common</AssemblyName>
+    <RootNamespace>GmWeb.Common</RootNamespace>
+    <MSBuildProjectExtensionsPath>$(ProjectDir)obj\Standard</MSBuildProjectExtensionsPath>
+    <BaseIntermediateOutputPath>$(ProjectDir)obj\Standard</BaseIntermediateOutputPath>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>GmWeb.SigningKey.pfx</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>  
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Standard\Debug</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\Standard\Release</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="GmWeb.Common.Framework\bin\**" />
+    <Compile Remove="GmWeb.Common.Framework\obj\**" />
+    <Compile Remove="GmWeb.Common.Framework\Properties\**" />
+    <Compile Remove="GmWeb.Common\Properties\**" />
+    <Compile Remove="obj\**" />
+    <Compile Remove="Properties\**" />
+    <EmbeddedResource Remove="GmWeb.Common.Framework\bin\**" />
+    <EmbeddedResource Remove="GmWeb.Common.Framework\obj\**" />
+    <EmbeddedResource Remove="GmWeb.Common.Framework\Properties\**" />
+    <EmbeddedResource Remove="GmWeb.Common\Properties\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <None Remove="GmWeb.Common.Framework\bin\**" />
+    <None Remove="GmWeb.Common.Framework\obj\**" />
+    <None Remove="GmWeb.Common.Framework\Properties\**" />
+    <None Remove="GmWeb.Common\Properties\**" />
+    <None Remove="obj\**" />
+    <None Remove="Properties\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+    <PackageReference Include="System.Linq.Async.Queryable" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+﻿@using GmWeb.Web.Identity.Models
+@using GmWeb.Web.Identity.Models.ProviderConfiguration
+@model PhoneConfigurationViewModel
+
+@if (Model.ManagementTask == ManagementTask.Update)
+{
+    @Html.GmRazor().FormItem(m => m.Phone)
+    @Html.GmRazor().FormItem(m => m.Token).Disable()
+}
+else if (Model.ManagementTask == ManagementTask.Verify)
+{
+    @Html.GmRazor().FormItem(m => m.Phone).Disable()
+    @Html.GmRazor().FormItem(m => m.Token)
+}

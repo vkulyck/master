@@ -1,0 +1,48 @@
+﻿@using GmWeb.Web.Identity.Models
+@using GmWeb.Web.Identity.Models.ProviderConfiguration
+@model GoogleAuthenticatorConfigurationViewModel
+
+@if (Model.ManagementTask == ManagementTask.Update)
+{
+    var qrInfo = TwoFactorExtensions.GenerateQrCode(Model.Email, Model.SecretKey);
+    Model.SecretKey = qrInfo.ManualEntryKey;
+
+    <div class="row">
+        <h3>Step 1: Configure the app</h3>
+    </div>
+    <div class="row">
+        <p>
+            Open your two-factor authentication app (example: Google Authenticator) and add your account by scanning this QR code:
+        </p>
+    </div>
+    <div class="row">
+        <p>
+            <img src="@(qrInfo.QrCodeSetupImageUrl)" style="width: 250px; " />
+        </p>
+    </div>
+    <div class="row">
+        <p>
+            Alternatively, you can manually type this secret key into the app:
+        </p>
+    </div>
+    <div class="row">
+        <p>
+            @qrInfo.ManualEntryKey
+        </p>
+    </div>
+    <div class="row">
+        <h3>Step 2: Submit the 6-digit code from the app.</h3>
+    </div>
+    <div class="row">
+        @Html.GmRazor().FormItem(m => m.Token)
+    </div>
+}
+else if (Model.ManagementTask == ManagementTask.Verify)
+{
+    <div class="row">
+        <h3>Enter the current 6-digit code found in your authenticator app:</h3>
+    </div>
+    <div class="row">
+        @Html.GmRazor().FormItem(m => m.Token)
+    </div>
+}

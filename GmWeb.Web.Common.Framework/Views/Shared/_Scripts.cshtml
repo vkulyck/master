@@ -1,0 +1,46 @@
+﻿@using GmWeb.Web.Common
+
+<script type="text/javascript">
+    $(LoadHandlers);
+        Date.prototype.format = function (fmt) {
+            return moment(this).format(fmt);
+        }
+    function getQueryParameters() {
+        var qparams = {};
+        return qparams;
+    }
+    function parseAjaxData(queryString) {
+        const urlParams = new URLSearchParams(queryString);
+        const entries = urlParams.entries(); //returns an iterator of decoded [key,value] tuples
+        let result = {}
+        for(let entry of entries) { // each 'entry' is a [key, value] tupple
+            const [key, value] = entry;
+            result[key] = value;
+        }
+        return result;
+    }
+    function LogAjaxData(settings) {
+        var url = settings.url;
+        var queryString = settings.data;
+        var data = parseAjaxData(queryString);
+        console.log('ajax ' + settings.type + ' to: ' + url);
+        console.log('request data:', data);
+    }
+    $(function () {
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                @if(Html.IsDebugBuild())
+                {
+                    @: LogAjaxData(settings);
+                }
+                console.log('here my token:', $('input[name=__RequestVerificationToken]').val());
+                xhr.setRequestHeader("__RequestVerificationToken", $('input[name=__RequestVerificationToken]').val());
+            },
+            converters: {
+                "text json": function (data) {
+                    return $.parseJSON(data, true);
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,12 @@
+﻿body {
+}
+.grid {
+    margin-top: 20px;
+}
+
+.grid .row label {
+    text-align: left;
+}
+ul {
+    display: inline-block;
+}

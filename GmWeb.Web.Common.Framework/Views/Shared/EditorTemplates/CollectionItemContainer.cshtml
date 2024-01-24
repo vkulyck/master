@@ -1,0 +1,12 @@
+﻿@using GmWeb.Web.Common.Models.Shared
+
+@model IEditableViewModel
+
+<td width="90%">
+    @(Html.EditorContainerForModel(new { IsCollapsible = ViewBag.IsCollapsible, StartCollapsed = ViewBag.StartCollapsed }))
+</td>
+<td width="10%" valign="top">
+    <a class="remove-link" onclick="removeCollectionItem(editorGuid, '@ViewBag.ParentGuid', '@ViewBag.CollectionName', '@Model.Guid')">
+        <i class="fa fa-2x fa-trash-o"></i>
+    </a>
+</td>

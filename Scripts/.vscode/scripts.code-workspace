@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"name": "GmWeb.Scripts",
+			"path": ".."
+		},
+		{
+			"name": "Gm-Command",
+			"path": "../../Submodules/GM-Command"
+		},
+	],
+	"settings": {
+		"powershell.scriptAnalysis.settingsPath": ".vscode/PSScriptAnalyzerSettings.psd1",
+    "files.exclude": {
+      "**/.git": true
+      ,"**/.gitignore": true
+      ,"**/key": true
+		},
+		"search.exclude": {
+			"**/init.ps1-default": true,
+			"**/bower_components": true,
+			"**/*.code-search": true
+		},
+		"search.useIgnoreFiles": false,
+		"search.useGlobalIgnoreFiles": true
+	}
+}

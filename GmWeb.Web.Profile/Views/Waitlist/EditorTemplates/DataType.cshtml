@@ -1,0 +1,4 @@
+﻿@using GmWeb.Logic.Enums
+@using GmWeb.Web.Common.RazorControls.ControlBuilders
+
+@(Html.GmRazor().EnumDropdown<DataType>(EnumValueField.ID).HtmlAttributes(new { style = "float:right" }).DataBind("DataType"))

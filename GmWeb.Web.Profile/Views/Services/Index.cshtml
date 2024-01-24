@@ -1,0 +1,134 @@
+﻿@using Kendo.Mvc.UI
+@using GmWeb.Web.Profile.Models;
+@model ServicesViewModel
+@{
+    ViewBag.Title = "Services";
+}
+
+@section scripts {
+    <script type="text/javascript">
+        function onDataBound(e) {
+            var data = e.sender.dataSource.data();
+            e.sender.enable(data.length > 0);
+        }
+        function onServiceChanged(e) {
+            var ccID = $('#DropDownListService').kvalue();
+            $('#DropDownListProcessTypes').krefresh();
+        }
+        function onProcessChanged(e) {
+            $('#GridProcessSteps').krefresh();
+        }
+        $(function () {
+            var mainParamAccessor = getQueryParameters;
+            getQueryParameters = function () {
+                var qparams = mainParamAccessor();
+                var ccID = $('#DropDownListService').kvalue();
+                var ptID = $('#DropDownListProcessTypes').kvalue();
+                $.extend(qparams, {
+                    'ClientCategoryID': ccID,
+                    'ProcessTypeID': ptID
+                });
+                return qparams;
+            }
+        })
+        function openProcessStepModal() {
+            $("#Modal_ProcessStepDialog").data("kendoWindow").center().open();
+        }
+    </script>
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="wrapper wrapper-content">
+        <section class="comments gray-section" style="margin-top: 0">
+            <div class="container" style="background-image:url('https://images.unsplash.com/photo-1500672860114-9e913f298978?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=18663cf942fc18c2d8e06c9d498e5f41&auto=format&fit=crop&w=2094&q=80 749w'); height:160px; width:100%;">
+                <h1 style="color:#fff; text-shadow: 1px 1px #555;">A Helping Hand<br />When and Where You Need It</h1>
+            </div>
+        </section>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h4>Please select a service and a process type. (Note: Not all service has a process type)</h4>
+                    </div>
+
+                    <table style="border: 0px; width: 100%;" align="left" class="table">
+                        <tr>
+                            <td style="width: 15%;" align="left" valign="top">
+                                <label style="font-weight:bold">Service:</label>
+                            </td>
+                            <td style="width: 35%;" align="left" valign="top">
+                                @(Html.Razor().DropDownList()
+                                        .Name("DropDownListService")
+                                        .DataTextField("ServiceName")
+                                        .DataValueField("ClientCategoryID")
+                                        .HtmlAttributes(new { style = "width: 98%; max-width: 200px" })
+                                        .OptionLabel("Select a service type...")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetClientServices", "Services").Data("getQueryParameters");
+                                            });
+                                        })
+                                        .Events(events =>
+                                        {
+                                            events.DataBound("onDataBound");
+                                            events.Change("onServiceChanged");
+                                        })
+                                )
+                            </td>
+                            <td style="width: 15%;" align="left" valign="top">
+                                <label style="font-weight:bold">Process Type:</label>
+                            </td>
+                            <td style="width: 35%;" align="left" valign="top">
+                                @(Html.Razor().DropDownList()
+                                        .Name("DropDownListProcessTypes")
+                                        .DataTextField("Description")
+                                        .DataValueField("ProcessTypeID")
+                                        .HtmlAttributes(new { style = "width: 98%; max-width: 200px" })
+                                        .OptionLabel("Select a process type...")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetProcessTypes", "Services").Data("getQueryParameters");
+                                            });
+                                        })
+                                        .Events(events =>
+                                        {
+                                            events.DataBound("onDataBound");
+                                            events.Change("onProcessChanged");
+                                        })
+                                )
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 100%;" colspan="4" align="left" valign="top">
+                                <div ID="PanelProcessStep" Height="600px">
+                                    @Html.Partial("_ProcessStepGrid")
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 100%;" colspan="4" align="left" valign="top">
+                                <asp:label id="LabelError" runat="server" font-bold="True" forecolor="Red"
+                                           visible="False" Font-Names="Trebuchet MS" Font-Size="9pt" />
+                            </td>
+                        </tr>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Razor().Window()
+        .Name("Modal_ProcessStepDialog")
+        .Title("Process Step")
+        .LoadContentFrom("_ProcessStepEditor", "Services")
+        .Width(600)
+        .Height(400)
+)

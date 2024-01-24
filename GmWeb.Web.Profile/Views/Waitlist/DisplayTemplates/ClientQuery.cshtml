@@ -1,0 +1,19 @@
+﻿@using GmWeb.Web.Profile.Models.Waitlist
+@model ClientQuery
+
+<table class="table">
+    <thead>
+        <tr>
+            <th style="width: 70%"></th>
+            <th style="width: 30%"></th>
+        </tr>
+    </thead>
+    <tr>
+        <td>
+            @(Html.GmRazor().Span().DataBind("RequestText"))
+        </td>
+        <td>
+            @(Html.DisplayContainerFor(x => x.ClientResponse))
+        </td>
+    </tr>
+</table>

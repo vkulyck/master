@@ -1,0 +1,200 @@
+﻿@using GmWeb.Web.Profile.Models;
+@using Kendo.Mvc.UI;
+@using GmWeb.Web.Common.RazorControls;
+@model ClientProfileViewModel
+@{
+    ViewBag.Title = "Client Profile";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row m-b-lg">
+        <div class="col-md-3">
+            <div class="profile-image">
+                <i class="fa fa-user" style="font-size:70px;color: #fff;background:#2f4050;border-radius:100%;padding:10px 20px;"></i>
+            </div>
+            <div class="profile-info">
+                <div class="">
+                    <div>
+                        <h2 class="no-margins">
+                            @(Model.ClientFullName)
+                        </h2>
+                        <h4>Birthday: @Model.Volunteer.Birthday</h4>
+                        @Model.Volunteer.Gender
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <table class="table m-b-xs">
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Ethnicity</strong> @Model.Volunteer.Ethnicity
+                        </td>
+                        <td>
+                            <strong>Secondary Language</strong> @Model.Volunteer.LanguageIDSecondary
+                        </td>
+                        <td>
+                            <strong>Address</strong> @Model.Volunteer.Address
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Cultural Identity</strong> @Model.Volunteer.CulturalIdentityID
+                        </td>
+                        <td>
+                            <strong>Email</strong> @Model.Volunteer.Email
+                        </td>
+                        <td>
+                            <strong>Mailing Address</strong> @Model.Volunteer.AddressLine2
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Primary Language</strong> @Model.Volunteer.LanguageIDPrimary
+                        </td>
+                        <td>
+                            <strong>Phone</strong> @Model.Volunteer.Phone
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2">
+            <table class="table m-b-xs">
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong><label class="label badge-success">0</label></strong> Messages
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong><label id="ProfilesCountHeader" class="label badge-warning">0</label></strong> Profiles
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <table class="table m-b-xs">
+                <tbody>
+                    <tr>
+                        <td>
+                            <i class="fa fa-home" style="font-size:16px;color: #2f4050;"></i> Homeless
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <i class="fa fa-building" style="font-size:16px;color: #1f86c6;"></i> Unemployed
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <i class="fa fa-trophy" style="font-size:16px;color: #f7ac59;"></i> Veterans
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row m-t-lg">
+
+        <div class="col-lg-3">
+
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h2>Client Profile <span class="pull-right small text-muted"><span id="ProfilesCount"><strong>0</strong></span> <span><strong>Profiles</strong></span></span></h2>
+                </div>
+                <div class="ibox-content">
+
+                    <div id="GroupClientProfile" class="list-group">
+                    </div>
+
+                    <div class="panel-group payments-method" id="accordion" style="display:none;">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="pull-right">
+                                    <i class="fa fa-id-badge text-success"></i>
+                                </div>
+                                <h5 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick="location.href='@Url.Action("Index", "ClientProfile")'">Citizenship</a>
+                                </h5>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="pull-right">
+                                    <i class="fa fa-address-card text-success"></i>
+                                </div>
+                                <h5 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick="location.href='@Url.Action("Index", "ClientProfile", new { ClientDataTypeID = 901 })'">Civic</a>
+                                </h5>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-9">
+            @Html.Partial("_SupplementalGrid", Model)
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            //Get Client Data Types
+            GetClientDataTypes();
+
+        });
+
+        //Create JSON url to controller
+        var tableGetClientDataTypesUrl = '@(Url.Action("GetClientDataTypes", "ClientProfile"))';
+
+        //Get Client Data Types
+        function GetClientDataTypes() {
+            $.ajax({
+                url: tableGetClientDataTypesUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    document.getElementById("ProfilesCountHeader").innerHTML = data.length - 1;
+                    var profilesCount = data.length - 1;
+                    document.getElementById("ProfilesCount").innerHTML = '<strong>' + profilesCount + '</strong>';
+                    $('#GroupClientProfile').empty();
+                    var div = $('#GroupClientProfile');
+
+                    $.each(data, function (i, item) {
+                        if (item.ClientDataTypeID > 0) {
+                            var na = $('<a/>');
+                            var url = '@Url.Action("Index", "ClientProfile")?' + $.param({ ClientDataTypeID: item.ClientDataTypeID });
+                            na.attr('href', url);
+                            na.attr('id', item.ClientDataTypeID);
+                            na.html('<h3 class="list-group-item-heading">' + item.Category + '</h3>');
+                            na.addClass(FirstClientProfileClass(item.ClientDataTypeID));
+                            div.append(na);
+                        }
+                    })
+                }
+            });
+        }
+
+        function FirstClientProfileClass(record) {
+            return record == '<%=_clientGroupID%>' ? 'list-group-item active' : 'list-group-item';
+        }
+    </script>
+}

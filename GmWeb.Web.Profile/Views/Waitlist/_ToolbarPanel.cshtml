@@ -1,0 +1,80 @@
+﻿@using GmWeb.Web.Profile.Models.Waitlist
+
+@using (Html.DelayedHandlers())
+{
+    <script>
+        function bindFlowToolbar(flow) {
+            flow.saveFlow = function (e) {
+                FlowContext.save();
+            };
+            flow.addFlowStep = function (e) {
+                FlowContext.create({ TypeName: 'FlowStep' });
+            };
+            flow.deleteSelectedFlowElements = function (e) {
+                console.log('called deleteSelectedFlowElements:', e);
+                $.each(OrderedSelections.collection, function (idx, item) {
+                    var modelGuid = item.options.data.Guid;
+                    console.log('deleting model with guid:', modelGuid);
+                    if (modelGuid in FlowContext.ModelMap) {
+                        var model = FlowContext.ModelMap[modelGuid];
+                        if (model.IsStep) {
+                            console.log('removing step:', model);
+                            FlowContext.Flow.Steps.remove(model);
+                        }
+                        else if (model.IsLink) {
+                            FlowContext.Flow.Links.remove(model);
+                            console.log('removing link:', model);
+                        }
+                    }
+                });
+                OrderedSelections.clear();
+            };
+            flow.addFlowLink = function (e) {
+                console.log('called addFlowLink:', e);
+                if (OrderedSelections.length() != 2) {
+                    console.log("can't construct a flow link unless exactly two items are selected.", OrderedSelections);
+                    return;
+                }
+                console.log('about to create a link; OrderedSelections:', OrderedSelections);
+                var source = OrderedSelections.getItem(0).step;
+                var target = OrderedSelections.getItem(1).step;
+                FlowContext.create({ TypeName: 'FlowLink', SourceShape: source, TargetShape: target });
+                console.log('connecting start(' + source.Name + ') to end(' + target.Name + ')');
+            };
+            kendo.bind($('#FlowToolbar'), flow);
+        }
+        $(function () {
+            bindFlowToolbar(FlowContext.Flow);
+        });
+    </script>
+}
+<style>
+    button.btn-primary i.fa + span {
+        font-weight: 600;
+        font-size: 13px;
+        font-family: Arial, Helvetica, sans-serif;
+        margin-left: 5px;
+    }
+    button.btn-primary i.link {
+        height: 11px;
+        content: url('/Content/icons/Link.png');
+        vertical-align: middle;
+    }
+</style>
+<div class="ibox" id="FlowToolbar">
+    <div class="ibox-content">
+        <button type="button" class="btn btn-primary" data-bind="click: saveFlow">
+            <i class="fa fa-save"></i><span>Save Flow</span>
+        </button>
+        <button type="button" class="btn btn-primary" data-bind="click: addFlowStep">
+            <i class="fa fa-plus"></i><span>Add New Step</span>
+        </button>
+        <button type="button" class="btn btn-primary" data-bind="click: deleteSelectedFlowElements">
+            <i class="fa fa-trash-o"></i><span>Delete Selected</span>
+        </button>
+        <button type="button" class="btn btn-primary" data-bind="click: addFlowLink">
+            <i class="link"></i>
+            <span>Link Steps</span>
+        </button>
+    </div>
+</div>

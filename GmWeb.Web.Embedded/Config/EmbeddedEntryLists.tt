@@ -1,0 +1,67 @@
+﻿<#@ template language="C#" hostSpecific="true" debug="True" #>
+<#@ include file="EF6.Utility.CS.ttinclude"#>
+<#@ assembly name="System.Data.Entity.Design" #>
+<#@ import namespace="System.Data.Entity.Design.PluralizationServices" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System" #>
+<#@ output extension="/"#>
+<#
+
+
+var	fileManager = EntityFrameworkTemplateFileManager.Create(this);
+string outputDir = this.Host.ResolvePath(string.Empty);
+
+fileManager.StartNewFile(outputDir + @"\EmbeddedFileList.txt");
+ListFiles(@"Scripts", "File");
+ListFiles(@"Content", "File"); 
+
+fileManager.StartNewFile(outputDir + @"\EmbeddedDirectoryList.txt");
+ListFiles(@"Scripts", "Directory");
+ListFiles(@"Content", "Directory"); 
+    fileManager.Process();
+#>
+
+
+<#+
+	public void ListFiles(string sourcePath, string type)
+	{
+        var sourceRoot = GetSolutionDirectory() + @"\GmWeb.Web.Embedded";
+        var sourceDir = Path.Combine(sourceRoot, sourcePath);
+
+        Func<string,string,SearchOption,IEnumerable<string>> enumerator;
+        if(type == "Directory")
+            enumerator = Directory.EnumerateDirectories;
+        else
+            enumerator = Directory.EnumerateFiles;
+		
+	    var fileNames = enumerator(sourceDir, "*.*", SearchOption.AllDirectories)
+	        .OrderBy(f => f)
+	        .ToList()
+	    ;
+        fileNames.Insert(0, sourceDir);
+	    foreach(string fileName in fileNames)
+	    {
+            var rel = fileName.Substring(sourceRoot.Length + 1, fileName.Length - sourceRoot.Length - 1);
+            WriteLine(rel);
+	    }
+	}
+
+    public string GetSolutionDirectory()
+    {
+	    var serviceProvider = this.Host as IServiceProvider;
+	    var dte = serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
+	    return System.IO.Path.GetDirectoryName(dte.Solution.FullName);
+    }
+
+    public static void ArgumentNotNull<T>(T arg, string name) where T : class
+    {
+        if (arg == null)
+        {
+            throw new ArgumentNullException(name);
+        }
+    }
+
+#>

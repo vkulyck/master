@@ -1,0 +1,27 @@
+﻿@using Kendo.Mvc
+@using Kendo.Mvc.UI
+@model GmWeb.Web.Demographics.ViewModels.CommunityViewModel
+
+@{
+    ViewBag.Title = "Community Snapshot";
+    int sTab = ViewBag.SelectedTab ?? 1;
+}
+
+<div class="demo-section k-content">
+    @(Html.Razor().TabStrip()
+        .Name("tabstrip")
+        .Animation(animation => animation.Open(effect => effect.Fade(FadeDirection.In)))
+        .HtmlAttributes(new { style = "width: 1280px; height: 760px;" })
+        .Items(tabstrip =>
+        {
+            tabstrip.Add()
+                .Text("Client Distribution")
+                .Selected(sTab == 1)
+                .Content(@<text>@Html.Partial("_SFClient_Heatmap", Model.Clients)</text>);
+            tabstrip.Add()
+                .Text("Client Income by Region")
+                .Selected(sTab == 2)
+                .Content(@<text>@Html.Partial("_SFClient_Regions", Model.Regions)</text>);
+        })
+    )
+</div>

@@ -1,0 +1,55 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<# // Assemblies #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity.Design" #>
+
+<# // Namespaces #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.Entity.Design.PluralizationServices" #>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
+
+namespace GmWeb.Web.Common.RazorControls
+{
+    public partial class GmFactory<TModel>
+    {
+<#
+    var signatures = new List<string[]>
+    {
+        new string[] { "CheckBoxFor", "bool", "this.Html.CheckBoxFor"},
+        new string[] { "TextBoxFor", "string", "this.Html.TextBoxFor"},
+        new string[] { "TextAreaFor", "string", "this.Html.TextAreaFor"},
+        new string[] { "PasswordBoxFor", "string", "this.Html.PasswordFor"},
+        new string[] { "NumericTextBoxFor", "int", "this.NumericTextBoxFor"},
+        new string[] { "FloatTextBoxFor", "float", "this.FloatTextBoxFor"},
+        new string[] { "FloatTextBoxFor", "double", "this.FloatTextBoxFor"},
+        new string[] { "FloatTextBoxFor", "decimal", "this.FloatTextBoxFor"},
+        new string[] { "CalendarClockFor", "DateTime", "this.CalendarClockFor"}
+    };
+    foreach(var signature in signatures)
+    {
+        string caller = signature[0];
+        string type = signature[1];
+        string callee = signature[2];
+#>
+        public MvcHtmlString <#= caller #>(
+            Expression<Func<TModel, <#= type #>>> selector
+        ) => <#= callee #>(selector);
+        public MvcHtmlString <#= caller #>(
+            Expression<Func<TModel, <#= type #>>> selector,
+            IDictionary<string,object> htmlAttributes
+        ) => <#= callee #>(selector, htmlAttributes);
+<#
+    }
+#>
+    }
+}

@@ -1,0 +1,3 @@
+location ~ /img/profile/photos/.*\.jpg$ {
+  alias /srv/gmweb/{prj_id;domain}/wwwroot/img/profile/default-photo.jpg;
+}

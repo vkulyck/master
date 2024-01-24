@@ -1,0 +1,14 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ include file="$(SolutionDir)GmWeb.Common\TextTransforms\EntityFramework\QueryAsync.t4" #>
+<#@ output extension=".generated.cs" #>
+
+namespace GmWeb.Logic.Data.Context;
+
+<#
+ImplementAsyncQueryableMethods(
+	ClassName: "BaseDataCollection<TEntity>", 
+	QueryableProperty: "this.EntitySet.AsQueryable()",
+	QueryableTypeVariable: "TEntity",
+	EnableNullableEntityTypes: false
+);
+#>

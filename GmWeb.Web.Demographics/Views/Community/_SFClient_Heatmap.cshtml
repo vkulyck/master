@@ -1,0 +1,36 @@
+﻿@using System.Drawing
+@using GMaps.Mvc
+@using GmWeb.Web.Demographics.Helpers
+@using GmWeb.Web.Demographics.ViewModels.Geo
+@model IEnumerable<MarkerData>
+
+@{ 
+    var hmModel = new
+    {
+        Gradient = new List<Color>(),
+        Points = Model,
+        Dissipating = true,
+        Opacity = .6M
+    };
+}
+@(Html.GoogleMap()
+    .Name("heat-map")
+    .Height(700)
+    .Center(GeoLocations.SanFrancisco)
+    .MapTypeId(MapType.Satellite)
+    .Zoom(13)
+    .Layers(layer => layer
+        .AddHeatmapLayer()
+        .Dissipating(hmModel.Dissipating)
+        .MaxIntensity(100)
+        .Opacity(hmModel.Opacity)
+        .Radius(20)
+        .BindTo<MarkerData, HeatmapLayer>(hmModel.Points, 
+            mappings => mappings.For<MarkerData>(binding => 
+                binding.ItemDataBound((heatmap, myLocationObject) =>
+                    heatmap.AddPoint(new Location(myLocationObject.Latitude, myLocationObject.Longitude))
+                )
+            )
+        )
+    )
+)

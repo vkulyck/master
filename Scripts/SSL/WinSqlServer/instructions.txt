@@ -1,0 +1,22 @@
+0. Certificate is managed with WinACME: C:\Program Files\WinAcme\wacs.exe (ALREADY ADDED TO PATH)
+1. verify the renewal process with: wacs --test --force --renew
+2. Once verified run wacs --renew
+3. On success:
+	a. open Sql Server Configuration Manager
+	b. go to the SQL Server Network Configuration dropdown
+	c. right-click Protocols for MSSQLSERVER
+	d. open the Certificate tab.
+	e. In the Certificate: dropdown, select the certificate that was renewed. There may be two if you ran a --test run, so make sure the certificate you select has Issued By = "US, Let's Encrypt, R3", NOT "US, (STAGING) Let's Encrypt, (STAGING) Artificial Apricot R3"
+	
+4. Set certificate permissions  (included in renew.ps1)
+	a. Open "Manage Computer Certificates" from the start menu
+	b. Go to Personal/Certificates and right click the non-staging version of the new certificate
+	c. Select "All Tasks > Manage Private Keys"
+	d. Grant full control to "NT Service\MSSQLSERVER"
+	e. Apply
+
+4. Restart SQL Server:
+	a. Go to the top-level tab SQL Server Services
+	b. right-click "SQL Server (MSSQLSERVER)" and restart the instance.
+
+5. Assign the new certificate to RDP (included in renew.ps1)

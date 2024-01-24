@@ -1,0 +1,104 @@
+" Vundle
+" source ~/.vim/bundle/bundles.vim
+
+let g:molokai_original = 1
+let g:rehash256 = 1
+colorscheme molokai
+set is hls " highlight search/replace matches as you type 
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set autoindent
+set cindent
+set number
+set hlsearch
+set mouse=a " enables mouse support for all modes, doesn't copy numbers
+"set modeline
+set modelines=0
+set ls=2
+set ignorecase " Default to case-insensitive
+syntax on
+filetype indent plugin on
+function SetProse()
+  set tw=80
+  set noautoindent
+  set nocindent
+endfunction
+au BufRead,BufNewFile *.launch set filetype=xml
+au BufRead,BufNewFile *.cc set filetype=cpp
+au BufRead,BufNewFile /etc/nginx/sites-* set filetype=nginx
+au BufRead,BufNewFile /etc/nginx/*.conf set filetype=nginx
+au BufRead,BufNewFile *.hbs set filetype=handlebars
+au BufRead,BufNewFile *.handlebars set filetype=handlebars
+au BufRead,BufNewFile *.ngx set filetype=nginx
+au BufRead,BufNewFile *.lp set filetype=lp
+au BufRead,BufNewFile *.jade set filetype=jade
+au BufNewFile,BufRead *.i set filetype=swig 
+au BufNewFile,BufRead *.swg set filetype=swig 
+au BufNewFile,BufRead *.txt set filetype=txt
+au BufNewFile,BufRead *.gp set filetype=gnuplot
+au BufNewFile,BufRead *.ipt set filetype=iptables
+autocmd BufRead,BufNewFile *.tex,*.txt,*.md call SetProse()
+au BufNewFile,BufRead *CMakeLists.txt set filetype=cmake
+autocmd BufRead,BufNewFile *CMakeLists.txt set tw=0 " unset max text width for CMake
+au BufRead,BufNewFile *.lua set filetype=lua
+map <Up> gk
+map <Down> gj
+"imap <Up> <C-o>gk
+"imap <Down> <C-o>gj
+
+" Angle bracket matching in C/C++
+let fts = ['c', 'cpp']
+if index(fts, &filetype) == -1
+  set matchpairs+=<:>
+endif
+
+" Tab, tab back in/out of insert mode
+nmap <Tab> >>
+nmap <S-Tab> <<
+imap <S-Tab> <C-d>
+
+" Add newlines without insert mode
+nmap <CR> o<Esc>
+
+" disable .netrwhist file because it is dumb
+au VimLeave * if filereadable($HOME . "/.vim/.netrwhist")|call delete($HOME . "/.vim/.netrwhist")|endif 
+
+" set clipboard to global
+set clipboard=unnamedplus
+set backspace=2
+set ruler
+set display=lastline
+
+" delete without yanking
+nnoremap <Leader>d "_d
+vnoremap <Leader>d "_d
+
+" replace currently selected text with default register
+" without yanking it
+vnoremap p "_dP
+
+let g:vim_markdown_folding_disabled=1
+
+" Disable shift up/down because it's easy to make mistakes going into visual
+" mode and selecting lines
+nnoremap <S-Up> <Nop>
+nnoremap <S-Down> <Nop>
+nnoremap <S-V-Up> <Nop>
+nnoremap <S-V-Down> <Nop>
+vnoremap <S-Up> <Nop>
+vnoremap <S-Down> <Nop>
+vnoremap <S-V-Up> <Nop>
+vnoremap <S-V-Down> <Nop>
+
+" Allow capital W/Q to save because i always hold shift for too long
+command W w
+command Q q
+command Wq wq
+command WQ wq
+set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣
+
+" Alias for 4-space indent -> 2-space indent replacement
+":command <AliasName> <string of command to be aliased>
+:command Indent4to2 %s;^\(\s\+\);\=repeat(' ', len(submatch(0))/2);g | noh
+" Convert 4-space indenting to 2-space indenting: ":%s;^\(\s\+\);\=repeat(' ', len(submatch(0))/2);g"

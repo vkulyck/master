@@ -1,0 +1,62 @@
+/* override absolute positioning styles of the validator messages */
+.validator-msg,
+.validator-msg .k-tooltip {
+    position: static;
+    display: inline-block;
+}
+    /* hide validator tooltip callouts */
+    .validator-msg .k-tooltip .k-callout {
+        display: none;
+    }
+
+.wrap {
+    display: flex;
+    justify-content: start;
+}
+
+label {
+    display: inline-block;
+    /*width: 90px;*/
+    text-align: right;
+}
+
+.required {
+    font-weight: bold;
+}
+
+.accept, .status {
+    /*padding-left: 90px;*/
+}
+
+.valid {
+    color: green;
+}
+
+.invalid {
+    color: red;
+}
+
+span.k-tooltip {
+    margin-left: 6px;
+}
+
+.k-dropdown-wrap.k-invalid {
+    border: 1px solid red;
+}
+
+.k-multiselect-wrap.k-invalid {
+    border: 1px solid red;
+}
+
+.k-textbox.k-invalid {
+    border: 1px solid red;
+}
+
+.invalidradiogroup {
+    border: 1px solid red;
+    border-radius: 6px;
+}
+
+.k-numeric-wrap.k-invalid {
+    border: 1px solid red;
+}

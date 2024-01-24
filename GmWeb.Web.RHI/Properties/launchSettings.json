@@ -1,0 +1,23 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "https://rhi.goodmojo.test",
+      "sslPort": 443
+    }
+  },
+  "profiles": {
+    "Debug": {
+      "launchBrowser": true,
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://rhi.goodmojo.test",
+      "launchUrl": "https://rhi.goodmojo.test/Profile/",
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "hotReloadEnabled": false
+    }
+  }
+}

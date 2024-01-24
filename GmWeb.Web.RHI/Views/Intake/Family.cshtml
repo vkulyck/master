@@ -1,0 +1,53 @@
+﻿@page
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake
+@using GmWeb.Web.RHI.Utility
+@model FamilyData
+@{
+    Layout = null;
+}
+
+<div class="gray-bg">
+    <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">How many children do you have?</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.AllChildren)
+                .HtmlAttributes(new { required = "required" })
+                .AutoWidth(true)
+                .OptionLabel("...")
+                .DataTextField("Value")
+                .DataValueField("Key")
+                .Height(310)
+                .DataSource(source => source.ReadAction("GetIntList", "Intake"))
+             )
+      </span>
+      <div class="validator-msg"><span data-for="AllChildren" class="k-invalid-msg"></span></div>      
+      <br />
+
+      <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">How many children live in your home now?</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.LivingChildren)
+                .HtmlAttributes(new { required = "required" })
+                .AutoWidth(true)
+                .OptionLabel("...")
+                .DataTextField("Value")
+                .DataValueField("Key")
+                .Height(310)
+                .DataSource(source => source.ReadAction("GetIntList", "Intake"))
+             )
+      </span>
+      <div class="validator-msg"><span data-for="LivingChildren" class="k-invalid-msg"></span></div>      
+      <br />
+      <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">Including yourself, how many people live in your home now?</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.PeopleCount)
+                .HtmlAttributes(new { required = "required" })
+                .AutoWidth(true)
+                .OptionLabel("...")
+                .DataTextField("Value")
+                .DataValueField("Key")
+                .Height(310)
+                .DataSource(source => source.ReadAction("GetIntList", "Intake"))
+             )
+      </span>
+      <div class="validator-msg"><span data-for="PeopleCount" class="k-invalid-msg"></span></div>      
+      <br />
+</div>

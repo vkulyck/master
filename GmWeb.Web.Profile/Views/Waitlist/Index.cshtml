@@ -1,0 +1,39 @@
+﻿@using GmWeb.Web.Profile.Models
+
+@model WaitlistViewModel
+@{
+    ViewBag.Title = "Waitlists";
+}
+@*
+    Developed based on this example: https://demos.telerik.com/kendo-ui/diagram/api
+*@
+@section scripts {
+    @Html.Partial("Scripts/_FlowEditorScripts")
+}
+
+<table style="width: 100%">
+    <thead>
+        <tr>
+            <th width="50%" />
+            <th width="50%" />
+        </tr>
+    </thead>
+    <tr>
+        <td>
+            @Html.Partial("_EditorPanel")
+        </td>
+        <td>
+            @Html.Partial("_ViewerPanel")
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.Partial("_ToolbarPanel")
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.Partial("_DiagramPanel")
+        </td>
+    </tr>
+</table>

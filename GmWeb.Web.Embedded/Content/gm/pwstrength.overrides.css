@@ -1,0 +1,15 @@
+﻿
+span.pwstrength-progress-bar > div.progress {
+    background-color: #576574;
+}
+.tooltip.in {
+    opacity: 1 !important;
+}
+div.tooltip-content {
+    border-radius: 7px;
+    padding: 7px;
+    border-color: #222f3e;
+    border: 3px;
+    border-style: solid;
+    background-color: #c8d6e5;
+}

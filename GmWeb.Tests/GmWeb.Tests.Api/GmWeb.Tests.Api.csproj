@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>Latest</LangVersion>
+    <IsPackable>false</IsPackable>
+    <UserSecretsId>27e6221a-b4a0-4cbd-9ce1-d5f1811d0963</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GmWeb.Logic\GmWeb.Logic.csproj" />
+    <ProjectReference Include="..\..\GmWeb.Web.Api\GmWeb.Web.Api.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\Images\UserProfile\default-user-profile-image.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\TestData\source-calendar.ics" Link="Data\Files\source-calendar.ics">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Files\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Settings\appsettings.json" />
+    <Content Remove="Settings\**\appsettings.*.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Settings\appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+    <None Include="Settings\**\appsettings.*.json" DependentUpon="Settings\appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Data\Files\.gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Extensions\Patterns.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Patterns.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Extensions\Patterns.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Patterns.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="rmdir /s /q $(TargetDir)\wwwroot\Images\UserProfile" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="pwsh.exe &quot;$(SolutionDir)Scripts\Build\on-post-build.ps1&quot; -SolutionDirectory &quot;$(SolutionDir)\&quot; -TargetDirectory &quot;$(TargetDir)\&quot; -ProjectDirectory &quot;$(ProjectDir)\&quot; -ProjectPath &quot;$(ProjectPath)&quot; -ProjectName &quot;$(ProjectName)&quot;" />
+  </Target>
+</Project>

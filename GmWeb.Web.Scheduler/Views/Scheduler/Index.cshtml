@@ -1,0 +1,21 @@
+﻿@using Kendo.Mvc.UI
+@using GmWeb.Web.Scheduler.Wrappers
+
+
+@Html.Raw(GoodMojoScheduler.goodmogoSchedulersExtraCtrls(GoodMojoScheduler.SchedulerParameters.ImportBtnCalID
+                                                        , GoodMojoScheduler.SchedulerParameters.ExportBtnCalID
+                                                        , GoodMojoScheduler.SchedulerParameters.ImportEventBtnID))
+
+@(Html.gmScheduler<GmWeb.Web.Scheduler.Models.TaskViewModel>(GoodMojoScheduler.SchedulerParameters.SchedulerWidgetID, GoodMojoScheduler.SchedulerParameters.SchedulerControllerID))
+
+<style>
+    .k-import-upload.k-upload {
+        padding: 0;
+        border-width: 0;
+        background: 0 0;
+    }
+
+    .k-import-upload.k-upload .k-upload-button {
+            margin-right: 0;
+    }
+</style>

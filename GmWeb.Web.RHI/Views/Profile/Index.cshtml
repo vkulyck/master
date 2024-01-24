@@ -1,0 +1,29 @@
+﻿@using System.Linq;
+@using System.Linq.Expressions;
+@using Kendo.Mvc.UI;
+@using Microsoft.AspNetCore.Html;
+@using GmWeb.Web.RHI.Utility;
+@using GmWeb.Logic.Utility.Extensions.Reflection;
+@using GmWeb.Logic.Utility.Extensions.Enums;
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake;
+@using GmWeb.Web.RHI.Views.Shared.Component;
+
+@model IntakeData
+@{
+    ViewBag.Title = "Client Profile";
+}
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('li#NavItem-Profile').addClass('active');
+            $('li#NavItem-Intake').removeClass('active');
+        });
+    </script>
+}
+
+<div id="MainView" class="gray-bg">
+    @if (this.Html.IsDevelopment())
+    {
+        @(await this.Html.RenderComponentAsync<ClientListControl>(RenderMode.ServerPrerendered, new { ControlID = "client-list" }))
+    }
+</div>

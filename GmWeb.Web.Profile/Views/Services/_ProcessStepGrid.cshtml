@@ -1,0 +1,53 @@
+﻿@using Kendo.Mvc.UI
+@using GmWeb.Web.Profile.Models.Services
+
+
+@using (Html.DelayedHandlers())
+{
+    <script type="text/javascript">
+        function onProcessStepsBound(e) {
+        }
+        $(function () {
+            var mainParamAccessor = getQueryParameters;
+            getQueryParameters = function () {
+                var qparams = mainParamAccessor();
+                var ccID = $('#DropDownListService').kvalue();
+                var ptID = $('#DropDownListProcessTypes').kvalue();
+                $.extend(qparams, {
+                    'ClientCategoryID': ccID,
+                    'ProcessTypeID': ptID
+                });
+                return qparams;
+            }
+        })
+    </script>
+}
+
+@(Html.Razor().Grid<ProcessStepRow>()
+    .Name("GridProcessSteps")
+    .Columns(columns =>
+    {
+        columns.Bound(cmd => cmd).ClientTemplate(Html.ActionLink("Select", "Select_Service", "Services").ToHtmlString());
+        columns.Bound(row => row).ClientTemplate(@"<a href='#:data.ActionUri#'>#:data.ActionText#</a>").Title("Action");
+        columns.Bound(row => row.ProcessStepName);
+        columns.Bound(row => row.ProcessStepDescription);
+        columns.Bound(row => row.EntityName).Title("Home Buyer");
+        columns.Select().Title("Completed").Width(30);
+        columns.Bound(row => row.DocumentName);
+        columns.Bound(row => row.DocumentRecordDate).Format("{0:MM/dd/yyyy}");
+        columns.Bound(row => row.Comments);
+        columns.Bound(row => row.GroupNumber);
+        foreach(var c in columns.ColumnsContainer.Columns)
+        {
+            c.HeaderTemplate.Html = "<label style='font-weight:bold'>" + c.Title + "</label>";
+        }
+    })
+    .Events(events =>
+    {
+        events.DataBound("onProcessStepsBound");
+    })
+    .DataSource(src =>
+    {
+        src.Ajax().Read(r => r.Action("GetProcessSteps", "Services").Data("getQueryParameters"));
+    })
+)

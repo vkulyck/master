@@ -1,0 +1,14 @@
+﻿@using GmWeb.Web.Identity.Models
+@using GmWeb.Web.Identity.Models.ProviderConfiguration
+@model EmailConfigurationViewModel
+
+@if (Model.ManagementTask == ManagementTask.Update)
+{
+    @Html.GmRazor().FormItem(m => m.Email)
+    @Html.GmRazor().FormItem(m => m.Token).Disable()
+}
+else if (Model.ManagementTask == ManagementTask.Verify)
+{
+    @Html.GmRazor().FormItem(m => m.Email).Disable()
+    @Html.GmRazor().FormItem(m => m.Token)
+}

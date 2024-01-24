@@ -1,0 +1,72 @@
+﻿@using GmWeb.Web.Profile.Models
+@using GmWeb.Web.Profile.Models.ProfileSearch
+@using GmWeb.Web.Profile.Controllers
+@model ProfileSearchViewModel
+@{
+    ViewBag.Panel = Panel.SearchTypeSelect;
+}
+
+@using (Html.DelayedHandlers())
+{
+    <script type="text/javascript">
+        function getSearchType() {
+            var btnProfile = $('#RadioButtonSearchProfiles');
+            if (btnProfile.is(':checked'))
+                return '@SearchType.Profiles';
+            else
+                return '@SearchType.Keywords';
+        }
+        function setSearchType(searchType) {
+            var btnProfile = $('#RadioButtonSearchProfiles');
+            var btnKeywords = $('#RadioButtonSearchKeywords');
+
+            if (searchType == '@SearchType.Profiles') {
+                btnProfile.prop('checked', true);
+                ShowPanel('@Panel.Profiles');
+                HidePanel('@Panel.Keywords');
+            } else {
+                btnKeywords.prop('checked', true);
+                HidePanel('@Panel.Profiles');
+                ShowPanel('@Panel.Keywords');
+            }
+        }
+        function onSearchTypeChanged() {
+            ProfileSearchData.SearchType = getSearchType();
+            console.log('new search ty;e:', ProfileSearchData.SearchType);
+            setSearchType(ProfileSearchData.SearchType);
+        }
+        $(function () {
+            setSearchType('@Model.SearchType');
+        })
+    </script>
+}
+
+<table class="table" id='@(ViewBag.Panel)-panel'>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            <h3><label>PROFILE SEARCH</label></h3>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%" align="left" valign="top">
+            <label style="margin: 5px">Current client name:</label>
+            @Model.ClientFullName
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%;" align="left" valign="top">
+            <label style="margin:5px; color:red; font-weight: bold; display: none;">Error</label>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%;" align="left" valign="top">
+            <h3><label>Search by:</label></h3>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%;" align="left" valign="top">
+            @(Html.GmRazor().RadioButton().Name("SearchTypes").Id("RadioButtonSearchProfiles").Label("Profiles").OnChange("onSearchTypeChanged"))
+            @(Html.GmRazor().RadioButton().Name("SearchTypes").Id("RadioButtonSearchKeywords").Label("Keywords").OnChange("onSearchTypeChanged"))
+        </td>
+    </tr>
+</table>

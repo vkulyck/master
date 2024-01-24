@@ -1,0 +1,60 @@
+﻿@page
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake
+@using GmWeb.Logic.Enums
+@using GmWeb.Web.RHI.Utility
+@model MaritalData
+@{
+    Layout = null;
+}
+<script>
+    function onChangeMaritalStatus(e) {
+        var radiogroup = $("#MartialStatus").data("kendoRadioGroup");
+        radiogroup.wrapper.removeClass("invalidradiogroup");
+        $('#marriedOrLiv').kExcludeAndHide();
+        var currentValue = radiogroup.value();
+        if (currentValue == @((int)MartialStatus.Married) || currentValue == @((int)MartialStatus.LivingPartner)){
+            $('#marriedOrLiv').kIncludeAndShowInBlock();
+        };
+     };
+</script>
+
+<div class="gray-bg">
+    <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is your current marital status or living arrangement?</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().RadioGroupFor(m => m.MartialStatus)
+            .HandleUpdates("onChangeMaritalStatus")
+            .HtmlAttributes(new { required = "required"})
+            .Layout("horizontal")
+            .BindToEnum<MartialStatus>()
+        )
+      </span>
+      <div class="validator-msg"><span data-for="MartialStatus" class="k-invalid-msg"></span></div>      
+      <br />
+      <div id="marriedOrLiv" style="display:none">
+          <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">If you are married or living with a partner, how long have you and your spouse/partner been living together?</h4>
+            <span class="k-form-field-wrap">
+                @(Html.Kendo().NumericTextBox<int>()
+                    .Name("Years")
+                    .Spinners(false)
+                    .Placeholder("Years")
+                    .Format("#")
+                    .Min(0)
+                    .Max(80)
+                    .HtmlAttributes(new { required = "required" })
+                )
+             </span>
+             <div class="validator-msg"><span data-for="Years" class="k-invalid-msg"></span></div>      
+             <span class="k-form-field-wrap">
+                @(Html.Kendo().NumericTextBox<int>()
+                    .Name("Month")
+                    .Spinners(false)
+                    .Placeholder("Month")
+                    .Format("#")
+                    .Min(0)
+                    .Max(12)
+                    .HtmlAttributes(new { required = "required" })
+                )
+          </span>
+          <div class="validator-msg"><span data-for="Month" class="k-invalid-msg"></span></div>      
+      </div>
+</div>

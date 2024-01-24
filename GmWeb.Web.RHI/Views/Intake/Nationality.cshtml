@@ -1,0 +1,101 @@
+﻿@page
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake
+@using GmWeb.Logic.Enums
+@using GmWeb.Web.RHI.Utility
+@model NationalityData
+@{
+    Layout = null;
+}
+
+<script>
+    function HandleNationalityUpdates() {
+        var ctrl = $("#Country").data("kendoDropDownList");
+        var countryID = ctrl.value();
+        var countryName = ctrl.dataItem().Value;
+
+        $('#ageUSACtrl').kExcludeAndHide()
+        $('#yearsUSACtrl').kExcludeAndHide();
+        $('#stateCtrlInput').kExcludeAndHide();
+        $('#stateCtrlDropdown').kExcludeAndHide();
+
+        if (countryID == @((int)CountryCode.United_States_of_America)) {
+            $('#stateCtrlDropdown').kIncludeAndShowInBlock();
+        }
+        else {
+         
+            $('#ageUSACtrl').kIncludeAndShowInBlock();
+            $('#yearsUSACtrl').kIncludeAndShowInBlock();
+            $('#stateCtrlInput').kIncludeAndShowInBlock();
+        }
+    }
+</script>
+
+<div class="gray-bg">
+    <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is the country, state and city/town of your birthplace?</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.Country)
+                .HtmlAttributes(new { required = "required" })
+                .OptionLabel("Country")
+                .HandleUpdates("HandleNationalityUpdates")
+                .Height(310)
+                .AutoWidth(true)
+                .BindToAscendingEnum<CountryCode>()
+             )
+            </span>
+            <div class="validator-msg"><span data-for="Country" class="k-invalid-msg"></span></div>
+         <div id="stateCtrlInput" style="display:none">
+                 @(Html.Kendo().TextBoxFor(m => m.NationalState)
+                .Placeholder("State")
+                .HtmlAttributes(new { required = "required" })
+                )
+                <div class="validator-msg"><span data-for="NationalState" class="k-invalid-msg"></span></div>
+         </div>
+        <div id="stateCtrlDropdown" style="display:none">
+                    @(Html.Kendo().DropDownListFor(m => m.USState)
+                    .HtmlAttributes(new { required = "required" })
+                    .OptionLabel("State")
+                    .Height(310)
+                    .AutoWidth(true)
+                    .BindToEnum<StateFipsCode>()
+                  )
+                <div class="validator-msg"><span data-for="USState" class="k-invalid-msg"></span></div>
+        </div>
+        <span class="k-form-field-wrap">
+         @(Html.Kendo().TextBoxFor(m => m.Town)
+            .Placeholder("City/Town")
+            .HtmlAttributes(new { required = "required" })
+            )
+       </span>
+       <div class="validator-msg"><span data-for="Town" class="k-invalid-msg"></span></div>
+       <br />
+       <div id="yearsUSACtrl" style="display:none">
+           <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">If you were born outside of the U.S. how many years have you lived in the U.S.?</h4>
+            <span class="k-form-field-wrap">
+                @(Html.Kendo().NumericTextBox<int>()
+                    .Name("YearsInUS")
+                    .Spinners(false)
+                    .Format("#")
+                    .Min(0)
+                    .Max(120)
+                    .HtmlAttributes(new { required = "required" })
+                )
+            </span>
+            <div class="validator-msg"><span data-for="YearsInUS" class="k-invalid-msg"></span></div>
+        </div>
+        <br />
+        <div id="ageUSACtrl" style="display:none">
+            <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">At what age did you come to the U.S.?</h4>
+            <span class="k-form-field-wrap">
+                @(Html.Kendo().NumericTextBox<int>()
+                    .Name("AgeInUS")
+                    .Spinners(false)
+                    .Format("#")
+                    .Min(0)
+                    .Max(120)
+                    .HtmlAttributes(new { required = "required" })
+                )
+            </span>
+            <div class="validator-msg"><span data-for="AgeInUS" class="k-invalid-msg"></span></div>
+        </div>
+        <br />
+</div>

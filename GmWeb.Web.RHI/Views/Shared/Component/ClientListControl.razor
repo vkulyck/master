@@ -1,0 +1,119 @@
+﻿@using GmWeb.Logic.Utility.Extensions.Enums
+@using GmWeb.Logic.Utility.Extensions.Mapping
+@using System.Collections
+@using System.ComponentModel.DataAnnotations
+@using System.Text.RegularExpressions
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.Extensions.Hosting
+@using Microsoft.JSInterop
+@using GmWeb.Logic.Data.Context.Carma
+@using GmWeb.Logic.Data.Models.Carma
+@using UserModel = GmWeb.Web.Common.Models.Carma.UserDTO
+@using MappingFactory = GmWeb.Logic.Utility.Mapping.EntityMappingFactory
+
+@namespace GmWeb.Web.RHI.Views.Shared.Component
+@inject IWebHostEnvironment Env
+@inject CarmaContext CarmaContext
+@inject IJSRuntime JsRuntime
+@inject UserManager<GmIdentity> Manager
+@inject IHttpContextAccessor ContextAccessor
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<div id="@ControlID-Container">
+    <TelerikRootComponent>
+    <TelerikGrid Data=@this.Clients
+             
+             Height="480px" RowHeight="@GridRowHeight" PageSize="@GridPageSize"
+             Sortable="true" FilterMode="@GridFilterMode.FilterMenu"
+             ScrollMode="@GridScrollMode.Virtual"
+    >
+    <GridColumns>
+        <GridColumn Field="@(nameof(UserModel.ProfilePhotoUrl))" Title="Photo">
+            <Template>
+                @{
+                    var user = context as UserModel;
+                    var url = Regex.Replace(user.ProfilePhotoUrl, @"^~", string.Empty);
+                    <img class="rounded" src="@(url)" alt="Client Photo" height="@ClientPhotoHeight" />
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Field="FullName" Title="Name" />
+        <GridColumn Field="@(nameof(UserModel.LookupID))" Title="Profile Page">
+            <Template>
+                @{
+                    var user = context as UserModel;
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <a class="link-primary" href="@NavigationManager.ToAbsoluteUri($"/Profile/View/{user.LookupID}")">
+                                <i class="fa fa-address-card"></i>
+                                <span class="text-primary">View</span>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="link-primary" href="@NavigationManager.ToAbsoluteUri($"/Profile/Edit/{user.LookupID}")">
+                                <i class="fa fa-edit"></i>
+                                <span class="text-primary">Edit</span>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="link-primary" href="@NavigationManager.ToAbsoluteUri($"/Profile/Delete/{user.LookupID}")">
+                                <i class="fa fa-trash"></i>
+                                <span class="text-danger">Delete</span>
+                            </a>
+                        </li>
+                    </ul>
+                }
+            </Template>
+        </GridColumn>
+    </GridColumns>
+</TelerikGrid>
+</TelerikRootComponent>
+</div>
+@code {
+    [Parameter]
+    public string ControlID { get; set; }
+
+    public const int GridPageSize = 20;
+    public const int GridRowHeight = 60;
+    public const int ClientPhotoHeight = (int)(GridRowHeight * 0.8D);
+
+    CarmaCache Cache { get; set; }
+    private IReadOnlyList<UserModel> Clients { get; set; }
+    protected HttpContext HttpContext => this.ContextAccessor.HttpContext;
+    protected MappingFactory Mapper => MappingFactory.Instance;
+
+    protected async Task<GmIdentity> GetIdentityAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var principal = authState.User;
+        var identity = await this.Manager.GetUserAsync(principal);
+        return identity;
+    }
+
+    protected async Task<User> GetCarmaUserAsync(int? AgencyID = null)
+    {
+        var identity = await this.GetIdentityAsync();
+        var users = this.Cache.DataContext.Users
+            .Include(x => x.ChildConfigs)
+        ;
+        var carmaUser = await users.SingleOrDefaultAsync(x => x.AccountID == identity .Id);
+        if (AgencyID.HasValue && carmaUser.AgencyID != AgencyID)
+            throw new ArgumentException($"Invalid AgencyID value of {AgencyID} supplied for UserID {carmaUser.UserID}.");
+        return carmaUser;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.Cache = new CarmaCache(this.CarmaContext);
+        var viewer = await this.GetCarmaUserAsync();
+        var clients = this.Cache.Users.GetAgencyClients(viewer);
+        var mapped = this.Mapper.Map<UserModel>(clients).ToList();
+        this.Clients = mapped;
+    }
+}

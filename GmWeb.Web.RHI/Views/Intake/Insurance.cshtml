@@ -1,0 +1,167 @@
+﻿@page
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake
+@using GmWeb.Logic.Enums
+@using GmWeb.Web.RHI.Utility
+@model InsuranceData
+@{
+    Layout = null;
+}
+
+<script>
+    function onChangeMedIns(e) {
+        var radioGroup = $("#MedicalInsurance").data("kendoRadioGroup");
+        var currentValue = radioGroup.value();
+        radioGroup.wrapper.removeClass("invalidradiogroup");
+        $('#medOtherTextCtrl').kExcludeAndHide();
+        $('#SNumPType').kExcludeAndHide();
+        $('#ProdiverData').kExcludeAndHide();
+        $('#EmpName').kExcludeAndHide();
+        $('#PlanType').kExcludeAndHide();
+        if (currentValue == @((int)Insurance.Other)){
+            $('#medOtherTextCtrl').kIncludeAndShowInBlock('padding-left: 20px;padding-top: 20px;');
+        }
+        else if (currentValue == @((int)Insurance.EmployerInsurance)){
+            $('#ProdiverData').kIncludeAndShowInBlock('padding-left: 20px;padding-top: 20px;');
+            $('#PrimaryHolderContainer *').removeAttr('required');
+            $('#EmpName').kIncludeAndShowInBlock();
+        }
+        else if (currentValue == @((int)Insurance.PrivateInsurance)){
+            $('#ProdiverData').kIncludeAndShowInBlock('padding-left: 20px;padding-top: 20px;');
+            $('#PrimaryHolderContainer *').removeAttr('required');
+        }
+        else if (currentValue == @((int)Insurance.MilitaryInsurance)){
+            $('#SNumPType').kIncludeAndShowInBlock();
+            $('#PlanType *').removeAttr('required');
+        }
+        else if (currentValue == @((int)Insurance.Medical) || currentValue == @((int)Insurance.Medicare)){
+            $('#SNumPType').kIncludeAndShowInBlock();
+            $('#PlanType').kIncludeAndShowInBlock();
+            $('#MedicalPlan').data("kendoDropDownList").dataSource.read(IncludeForgeryTokens(getTypeID));
+        }
+    }
+
+    function getTypeID() {
+        return $("#MedicalInsurance").data("kendoRadioGroup").value();
+    }
+
+    function onChangePrimaryHolder(e){
+        var checkboxgroup = $("#PrimaryHolder").data("kendoCheckBoxGroup");
+        $('#RelToHoldDiv').kExcludeAndHide();
+        if (checkboxgroup.value().length == 0){ //means not checked
+            $('#RelToHoldDiv').kIncludeAndShowInBlock();
+        }
+    }
+
+</script>
+
+<div class="gray-bg wrap">
+    <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">How is your medical care paid for?</h4>
+        <span class="k-form-field-wrap align-bottom" style="padding-top: 20px">
+            @(Html.Kendo().RadioGroupFor(m => m.MedicalInsurance)
+            .HandleUpdates("onChangeMedIns")
+            .HtmlAttributes(new { required = "required"})
+            .Layout("vertical")
+            .BindToEnum<Insurance>()
+        )
+        </span>
+        <div class="validator-msg"><span data-for="MedicalInsurance" class="k-invalid-msg"></span></div>
+
+            <div id="ProdiverData" style="display: none">
+                <div id="EmpName" style="display:none">
+                    <label for="EmployerName" class="k-form-label">Employer name:</label>
+                    @(Html.Kendo().TextBoxFor(m => m.EmployerName)
+                    .Placeholder("")
+                    .HtmlAttributes(new { required = "required" })
+                    )
+                    <div class="validator-msg"><span data-for="EmployerName" class="k-invalid-msg"></span></div>
+                </div>
+
+                <div>  
+                <label for="InsuranceProvider" class="k-form-label">Insurance provider name:</label>
+                    @(Html.Kendo().TextBoxFor(m => m.InsuranceProvider)
+                    .Placeholder("")
+                    .HtmlAttributes(new { required = "required" })  
+                    )
+                    <div class="validator-msg"><span data-for="InsuranceProvider" class="k-invalid-msg"></span></div>
+                </div>
+                <div>
+                <label for="GroupNumber" class="k-form-label">Group number:</label>
+                    @(Html.Kendo().TextBoxFor(m => m.GroupNumber)
+                    .Placeholder("")
+                    .HtmlAttributes(new { required = "required" })
+                    )
+                    <div class="validator-msg"><span data-for="GroupNumber" class="k-invalid-msg"></span></div>
+                </div>
+                <div>
+                <label for="SubscriberNumber" class="k-form-label">Subscriber number:</label>
+                    @(Html.Kendo().TextBoxFor(m => m.SubscriberNumber)
+                    .Placeholder("")
+                    .HtmlAttributes(new { required = "required" })
+                    )
+                    <div class="validator-msg"><span data-for="SubscriberNumber" class="k-invalid-msg"></span></div>
+                </div>
+                <div>
+                <label for="PrimaryHolder" class="k-form-label">Primary holder name:</label>
+                    @(Html.Kendo().MaskedTextBoxFor(m => m.PrimaryHolder)
+                    .ClearPromptChar(true)
+                    .PromptChar(" ")
+                    .Mask("???????????????????????????")
+                    //.Rules(r => r.Add('e',"[a-zA-Z]"))
+                    .HtmlAttributes(new { required = "required" })
+                    )
+                    <div class="validator-msg"><span data-for="PrimaryHolder" class="k-invalid-msg"></span></div>
+
+                </div>
+                <div id="RelToHoldDiv" style="display:inline-block" >
+                    <label for="HolderRelation" class="k-form-label">Relation to holder:</label>
+                        @(Html.Kendo().TextBoxFor(m => m.HolderRelation)
+                        .Placeholder("")
+                        .HtmlAttributes(new { required = "required" })
+                        )
+                        <div class="validator-msg"><span data-for="HolderRelation" class="k-invalid-msg"></span></div>
+                </div>
+                <div id="PrimaryHolderContainer" style="display:inline-block">
+                    @(Html.Kendo().CheckBoxGroup()
+                        .Name("PrimaryHolder")
+                        .HandleUpdates("onChangePrimaryHolder")
+                        .Items(i =>
+                        {
+                            i.Add().Label("I am the primary holder.").Value("1");
+                        })
+                    )
+                </div>
+            </div>
+
+            <div id="SNumPType" style="display:none">
+                <label for="MedicalNumber" class="k-form-label">Subscriber number:</label>
+                    @(Html.Kendo().TextBoxFor(m => m.MedicalNumber)
+                    .Placeholder("")
+                    .HtmlAttributes(new { required = "required" })
+                    )
+                <div class="validator-msg"><span data-for="MedicalNumber" class="k-invalid-msg"></span></div>
+
+                    <div id="PlanType" style="display:none">
+                        <label for="PlanType" class="k-form-label">Plan type:</label>
+                            @(Html.Kendo().DropDownListFor(m => m.MedicalPlan)
+                                .HtmlAttributes(new { required = "required", style = "width:auto" })
+                                .AutoWidth(true)
+                                .OptionLabel("...")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .Height(310)
+                                .DataSource(source => source.ReadAction("GetPlanTypeList", "Intake","getTypeID"))
+
+                             )
+                            <div class="validator-msg"><span data-for="MedicalPlan" class="k-invalid-msg"></span></div>
+                    </div>
+            </div>
+
+        <div id="medOtherTextCtrl" style="display:none">
+                @(Html.Kendo().TextBoxFor(m => m.OtherMedicalCare)
+                .Placeholder("Please specify")
+                .HtmlAttributes(new { required = "required" })
+                )
+                <div class="validator-msg" ><span data-for="OtherMedicalCare" class="k-invalid-msg"></span></div>
+          </div>
+        <br />
+</div>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCalc.Standard", "NCalc\NCalc.Standard.csproj", "{CFCD70B7-4201-4367-A179-DB5D42FB385D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NCalc.Framework", "NCalc\NCalc.Framework.csproj", "{46165080-6E2F-41DF-AB07-04C568C5723F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFCD70B7-4201-4367-A179-DB5D42FB385D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFCD70B7-4201-4367-A179-DB5D42FB385D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFCD70B7-4201-4367-A179-DB5D42FB385D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFCD70B7-4201-4367-A179-DB5D42FB385D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46165080-6E2F-41DF-AB07-04C568C5723F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46165080-6E2F-41DF-AB07-04C568C5723F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46165080-6E2F-41DF-AB07-04C568C5723F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46165080-6E2F-41DF-AB07-04C568C5723F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {27068E02-1682-44D7-819A-74759A261167}
+	EndGlobalSection
+EndGlobal

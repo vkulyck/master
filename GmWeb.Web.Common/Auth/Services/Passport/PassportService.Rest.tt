@@ -1,0 +1,16 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ include file="$(SolutionDir)GmWeb.Common\TextTransforms\Web\IRestAdapter.t4" #>
+<#@ output extension=".generated.cs" #>
+using System.Net.Http;
+using HttpMethod = System.Net.Http.HttpMethod;
+using StatusCode = System.Net.HttpStatusCode;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using GmWeb.Logic.Utility.Extensions.Http;
+using IRestAdapter = GmWeb.Logic.Interfaces.IRestAdapter;
+
+namespace GmWeb.Web.Common.Auth.Services.Passport;
+
+<#
+ImplementRestAdapter(AdapterDeclaration: "public abstract partial class PassportService");
+#>

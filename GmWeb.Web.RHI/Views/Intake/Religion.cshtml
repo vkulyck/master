@@ -1,0 +1,23 @@
+﻿@page
+@using GmWeb.Logic.Data.Models.Carma.ExtendedData.Intake
+@using GmWeb.Logic.Enums
+@using GmWeb.Web.RHI.Utility
+@model ReligionData
+@{
+    Layout = null;
+}
+
+<div class="gray-bg">
+    <h4 style="display: inline-block; padding-right: 20px;padding-top: 20px;">What is your present religion, if any?</h4>
+        <span class="k-form-field-wrap">
+            @(Html.Kendo().DropDownListFor(m => m.Religion)
+                .HtmlAttributes(new { required = "required", style = "width:auto" })
+                .AutoWidth(true)
+                .OptionLabel("...")
+                .Height(310)
+                .BindToEnum<Religion>()
+             )
+      </span>
+      <div class="validator-msg"><span data-for="Religion" class="k-invalid-msg"></span></div>
+      <br />
+</div>

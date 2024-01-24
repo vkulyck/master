@@ -1,0 +1,3 @@
+appsettings.Solution.Local.json
+!Datasets/**
+!.gitignore

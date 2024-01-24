@@ -1,0 +1,68 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GmWeb.Web.RHI</title>
+    <base href="~/" />
+    <link href="~/lib/kendo-ui/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="~/lib/kendo-ui/styles/kendo.uniform.min.css" rel="stylesheet">
+    <link href="~/css/jquery.ui/jquery-ui.css" rel="stylesheet">
+    <link href="~/css/jquery.ui/jquery-ui.structure.css" rel="stylesheet">
+    <link href="~/css/jquery.ui/jquery-ui.theme.css" rel="stylesheet">
+    <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/animate/animate.css" rel="stylesheet">
+    <link href="~/css/inspinia/inspinia.css" rel="stylesheet">
+    <link href="~/css/font-awesome/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/gm/inspinia.overrides.css" rel="stylesheet">
+    <link href="~/css/gm/textarea.autosize.css" rel="stylesheet">
+    <link href="~/css/gm/pwstrength.overrides.css" rel="stylesheet">
+    <link href="~/css/gm/kendo.validation.overrides.css" rel="stylesheet">
+    <link href="_content/Telerik.UI.for.Blazor/css/kendo-theme-bootstrap/all.css" rel="stylesheet" />
+    <link href="GmWeb.Web.RHI.styles.css" rel="stylesheet">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="~/lib/kendo-ui/js/kendo.all.min.js"></script>
+    <script src="~/lib/kendo-ui/js/kendo.aspnetmvc.min.js"></script>
+    <script src="~/lib/kendo-ui/js/kendo.timezones.min.js"></script>
+    <script src="_content/Telerik.UI.for.Blazor/js/telerik-blazor.js" defer></script>
+    <script src="~/Views/Shared/Component/BitVectorControl.razor.js"></script>
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<body>
+    <div id="wrapper">
+        @await Html.PartialAsync("_Navigation")
+        <div id="page-wrapper" class="gray-bg">
+            @await Html.PartialAsync("_TopNavbar")
+            @RenderBody()
+            @await Html.PartialAsync("_Footer")
+        </div>
+    </div>
+
+    <script src="~/lib/jquery.ui/jquery-ui.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/popper-umd/popper.js"></script>
+    <script src="~/lib/metisMenu/metisMenu.js"></script>
+    <script src="~/lib/pace/pace-1.0.2.js"></script>
+    <script src="~/lib/jquery.slimscroll/jquery.slimscroll.js"></script>
+    <script src="~/lib/modernizr/modernizr.js"></script>
+    <script src="~/lib/jSignature/jSignature.noconflict.js"></script>
+    <script src="~/lib/jquery.sparkline/jquery.sparkline.js"></script>
+    <script src="~/lib/moment/moment.js"></script>
+    <script src="~/lib/jquery.pwstrength.bootstrap/pwstrength-bootstrap.js"></script>
+    <script src="~/lib/jquery.pwstrength.bootstrap/zxcvbn.js"></script>
+    <script src="~/lib/kendo-ui/js/jszip.min.js"></script>
+    <script src="~/lib/inspinia/inspinia.js"></script>
+    <script src="~/js/gm/load.handlers.js"></script>
+    <script src="~/js/gm/textarea.autosize.js"></script>
+    <script src="~/js/gm/utility.js"></script>
+    <script src="~/lib/ajax-dates/ajax-dates.js"></script>
+    @await Html.PartialAsync("_Scripts")
+    <script src="_framework/blazor.server.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        LoadHandlers();
+    </script>
+</body>
+</html>

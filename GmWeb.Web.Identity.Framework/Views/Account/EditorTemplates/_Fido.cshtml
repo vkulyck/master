@@ -1,0 +1,32 @@
+﻿@using GmWeb.Web.Identity.Models
+@using GmWeb.Web.Identity.Models.ProviderConfiguration
+@model FidoConfigurationViewModel
+
+@if (Model.ManagementTask == ManagementTask.Reset)
+{
+    <div class="alert-warning">
+        Are you sure you want to reset your @(Model.InformationType.GetDisplayName()) configuration?
+    </div>
+}
+else if (Model.ManagementTask == ManagementTask.Update)
+{
+    <div class="container">
+        <div class="row">
+            <h2>Press the button on your Yubikey to pair with your account.</h2>
+        </div>
+        <div class="row">
+            @Html.GmRazor().FormItem(m => m.Token)
+        </div>
+    </div>
+}
+else if (Model.ManagementTask == ManagementTask.Verify)
+{
+    <div class="container">
+        <div class="row">
+            <h2>Press the button on your Yubikey to log into your account.</h2>
+        </div>
+        <div class="row">
+            @Html.GmRazor().FormItem(m => m.Token)
+        </div>
+    </div>
+}

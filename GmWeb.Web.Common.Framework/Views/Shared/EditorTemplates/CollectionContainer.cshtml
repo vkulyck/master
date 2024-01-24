@@ -1,0 +1,50 @@
+﻿@using System.Collections.Generic
+@using GmWeb.Web.Common.Models.Shared
+@using GmWeb.Web.Common.Utility
+@model IEnumerable<IEditableViewModel>
+@{
+    var contentStyle = "";
+    var toggleIconDirection = "up";
+    if (ViewBag.StartCollapsed)
+    {
+        contentStyle = "display: none;";
+        toggleIconDirection = "down";
+    }
+    ViewBag.CollectionEditorGuid = Html.GenerateGuid();
+}
+
+<script defer="defer">
+    $(function () {
+        console.log('binding collection "@(ViewBag.CollectionName)" to editor with guid "@ViewBag.CollectionEditorGuid"');
+        var binder = function (parentGuid, collectionName, handler) {
+            FlowContext.bindToCollection(parentGuid, collectionName, handler);
+        };
+        BindCollectionEditor('@ViewBag.CollectionEditorGuid', '@ViewBag.ParentGuid', '@ViewBag.CollectionName', binder);
+    });
+</script>
+<div id="@ViewBag.CollectionEditorGuid" class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5>@ViewBag.CollectionTitle</h5>
+        <div class="ibox-tools">
+            <a class="add-link" onclick="FlowContext.addCollectionItem('@ViewBag.ParentGuid', '@ViewBag.CollectionName', '@ViewBag.ItemTypeName')">
+                <i class="fa fa-plus"></i>
+            </a>
+            <a class="clear-link" onclick="FlowContext.clearCollection('@ViewBag.ParentGuid', '@ViewBag.CollectionName')">
+                <i class="fa fa-refresh"></i>
+            </a>
+            <a class="collapse-link">
+                <i class="fa fa-chevron-@(toggleIconDirection)"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content view-model-collection-editor" style="@contentStyle" parent-guid="@ViewBag.ParentGuid" parent-collection-name="@ViewBag.CollectionName">
+        <table style="min-width: 400px;" class="table">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @(Html.CollectionItemEditorFor(item, new { IsCollapsible = ViewBag.AreItemsCollapsible, StartCollapsed = ViewBag.StartItemsCollapsed }))
+                </tr>
+            }
+        </table>
+    </div>
+</div>

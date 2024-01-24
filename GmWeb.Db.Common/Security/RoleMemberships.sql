@@ -1,0 +1,22 @@
+﻿ALTER ROLE [db_ddladmin] ADD MEMBER [IIS APPPOOL\.NET v4.5];
+
+
+GO
+ALTER ROLE [db_datareader] ADD MEMBER [IIS APPPOOL\.NET v4.5];
+
+
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [IIS APPPOOL\.NET v4.5];
+
+
+GO
+ALTER ROLE [db_ddladmin] ADD MEMBER [IIS APPPOOL\API];
+
+
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [IIS APPPOOL\API];
+
+
+GO
+ALTER ROLE [db_datareader] ADD MEMBER [IIS APPPOOL\API];
+

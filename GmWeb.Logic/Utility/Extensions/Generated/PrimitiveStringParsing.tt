@@ -1,0 +1,144 @@
+﻿<#@ template language="C#" debug="false" hostspecific="true"#>
+<#@ include file="EF6.Utility.CS.ttinclude"#>
+<#@ assembly name="System.Data.Entity.Design" #>
+<#@ import namespace="System.Data.Entity.Design.PluralizationServices" #>
+<#@ import namespace="System.IO" #>
+<#@ output extension=".generated.cs" #>
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using System.Globalization;
+<#
+
+    var legacyTypes = new List<string> { "bool",   "char","sbyte","byte","short","ushort","int",  "uint",  "long", "ulong", "float", "double","decimal"};
+    var systemTypes = new List<string> { "Boolean","Char","SByte","Byte","Int16","UInt16","Int32","UInt32","Int64","UInt64","Single","Double","Decimal"};
+    var systemNumericTypes = new List<string> { "SByte","Byte","Int16","UInt16","Int32","UInt32","Int64","UInt64","Single","Double","Decimal"};
+#>
+
+namespace GmWeb.Logic.Utility.Extensions.Dynamic
+{
+    public static partial class DynamicValueExtensions
+    {
+        public static Expression<Func<object,object>> NumericStringConverterExpression(this Type type, object defaultValue = null)
+        {
+            var code = Type.GetTypeCode(type);
+            return NumericStringConverterExpression(code, defaultValue);
+        }
+        public static Expression<Func<object, object>> NumericStringConverterExpression(this TypeCode code, object defaultValue = null)
+        {
+            switch(code)
+            {
+<#
+        foreach (var typeName in systemTypes)
+        {
+	        #>
+            
+			case TypeCode.<#= typeName #>: return (Object x) => 
+                    x == null ? defaultValue
+                    : x.ToString() == "NULL" ? defaultValue
+                    : System.<#= typeName #>.Parse(x.ToString())
+                ;
+            
+            <#
+
+        }
+#>
+            }
+            //throw new Exception($"No conversion expression could be generated for type code '{code}'.");
+            //return null;
+            return (object x) => x;
+        }
+
+        public static T ConvertValue<T>(string value)
+        {
+            var result = ConvertValue(typeof(T), value);
+            return (T)result;
+        }
+
+		public static object ConvertValue(this Type type, string value)
+		{
+            if(type.IsAssignableFrom(typeof(string)))
+                return value;
+<#
+        foreach (var typeName in legacyTypes)
+        {
+            var varName = typeName + "_Value";
+	        #>
+
+			else if(type.IsAssignableFrom(typeof(<#= typeName #>))) {
+				if(<#= typeName #>.TryParse(value, out <#= typeName #> <#= varName #>)) {
+                    return <#= varName #>;
+                }
+			}
+            <#
+        }
+#>
+
+            return null;
+		}
+
+        public static bool TryParse<T>(this string value, out T result) where T : struct
+            => value.TryParse<T>(NumberStyles.None, CultureInfo.InvariantCulture, out result);
+        public static bool TryParse<T>(this string value, NumberStyles style, IFormatProvider format, out T result) where T : struct
+        {
+            switch(Type.GetTypeCode(typeof(T)))
+            {
+                case TypeCode.Boolean:
+                    if(value == "0")
+                    {
+                        result = (T)(object)false;
+                        return true;
+                    }
+                    else if(value == "1")
+                    {
+                        result = (T)(object)true; ;
+                        return true;
+                    }
+                    else if(Boolean.TryParse(value, out Boolean Boolean_result))
+                    {
+                        result = (Boolean_result as T?).Value;
+                        return true;
+                    }
+                    break;
+<#
+        foreach (var typeName in systemNumericTypes)
+        {
+            var varName = typeName + "_Value";
+	        #>
+
+			    case TypeCode.<#= typeName #>:
+                    if (<#= typeName #>.TryParse(value, style, format, out <#= typeName #> <#= typeName #>_result))
+                    {
+                        result = (<#= typeName #>_result as T?).Value;
+                        return true;
+                    }
+                    break;
+
+            <#
+        }
+#>
+
+            }
+            result = default(T);
+            return false;
+        }
+    }
+}
+
+<#+
+
+
+public static void ArgumentNotNull<T>(T arg, string name) where T : class
+{
+    if (arg == null)
+    {
+        throw new ArgumentNullException(name);
+    }
+}
+
+#>

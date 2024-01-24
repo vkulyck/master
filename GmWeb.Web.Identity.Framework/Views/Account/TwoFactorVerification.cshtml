@@ -1,0 +1,31 @@
+﻿@using GmWeb.Common
+@using GmWeb.Web.Identity.Models
+@model TwoFactorVerificationViewModel
+@{
+    Layout = this.SimplifiedLayout();
+    ViewBag.Title = $"Verify with 2FA Provider";
+    ViewBag.Description = $"Verify your provider token with the selected 2FA provider";
+}
+
+@using (var form = Html.GmRazor().BeginForm(opts =>
+{
+    opts.SubmitLabel = $"Verify";
+    opts.GenerateItemLabels = false;
+    opts.GenerateValidationSummary = false;
+    opts.RouteQuery();
+}))
+{
+    @Html.GmRazor().BrandedLogo()
+    @Html.HiddenFor(m => m.Provider)
+    @Html.HiddenFor(m => m.RememberMe)
+    @Html.GmRazor().FormItem(m => m.Code)
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <div class="checkbox">
+                @Html.CheckBoxFor(m => m.RememberBrowser)
+                @Html.LabelFor(m => m.RememberBrowser)
+            </div>
+        </div>
+    </div>
+}
+@Html.GmRazor().BrandedFooter()

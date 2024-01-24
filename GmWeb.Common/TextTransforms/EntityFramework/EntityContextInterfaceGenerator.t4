@@ -1,0 +1,50 @@
+﻿<#+
+
+public void GenerateContextInterface(string ns, string baseName, IEnumerable<string> includes, IEnumerable<string> dbSets, IEnumerable<string> dbQueries)
+{
+    string contextName = baseName + "Context";
+    string ifaceName = "I" + baseName + "Context";
+    ScriptContext.FileMgr.StartNewFile(ifaceName + ".generated.cs");
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+<#+
+    foreach(var include in includes)
+    {
+        #>using <#= include #>;
+<#+
+    }
+#>
+namespace <#= ns #>
+{
+    public partial class <#= contextName #> : <#= ifaceName #> { }
+
+    public interface <#= ifaceName #> : IBaseDataContext<<#= ifaceName #>>
+    {
+
+<#+
+    foreach (var dbSet in dbSets)
+    {
+	    var collection = ScriptContext.Pluralizer.Pluralize(dbSet);
+#>
+        DbSet<<#= dbSet #>> <#= collection #> { get; }
+<#+
+    }
+
+    foreach (var dbQuery in dbQueries)
+    {
+	    var collection = ScriptContext.Pluralizer.Pluralize(dbQuery);
+#>
+        DbQuery<<#= dbQuery #>> <#= collection #> { get; }
+<#+
+    }
+#>
+    }
+
+}
+<#+
+}
+#>

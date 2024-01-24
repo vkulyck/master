@@ -1,0 +1,30 @@
+<Playlist Version="2.0">
+  <Rule Name="Includes" Match="Any">
+    <Rule Match="All">
+      <Property Name="Solution" />
+      <Rule Match="Any">
+        <Rule Match="All">
+          <Property Name="Project" Value="GmWeb.Tests.Api" />
+          <Rule Match="Any">
+            <Rule Match="All">
+              <Property Name="Namespace" Value="GmWeb.Tests.Api.Tests" />
+              <Rule Match="Any">
+                <Rule Match="All">
+                  <Property Name="Class" Value="AuthControllerTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="GmWeb.Tests.Api.Tests.AuthControllerTests.ValidateTokenAuth" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="GmWeb.Tests.Api.Tests.AuthControllerTests.ValidateTokenAuth" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+              </Rule>
+            </Rule>
+          </Rule>
+        </Rule>
+      </Rule>
+    </Rule>
+  </Rule>
+</Playlist>

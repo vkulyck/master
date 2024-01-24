@@ -1,0 +1,30 @@
+﻿.view-model-collection-editor td,
+.view-model-collection-editor tr,
+.view-model-collection-editor .ibox-content,
+.view-model-collection-editor .table
+{
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.view-model-collection-editor .ibox-title {
+    min-height: 30px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.view-model-collection-editor table > tbody > tr:first-child > td {
+    border-top-width: 0px;
+}

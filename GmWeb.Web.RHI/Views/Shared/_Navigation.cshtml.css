@@ -1,0 +1,37 @@
+﻿nav ul.nav > li > a {
+    display: block;
+}
+
+nav ul.nav li.nav-header {
+    height: 155px;
+    padding: 0px;
+}
+
+nav ul.nav li.nav-header div.nav-header-title {
+    width: 100%;
+}
+
+nav ul.nav li.nav-header div.nav-header-title {
+    height: fit-content;
+    margin-top: 5px;
+}
+
+nav ul.nav li.nav-header div.nav-header-title span {
+    display: table;
+    margin: 0 auto;
+    font-size: 16px;
+    color: white;
+    font-weight: 600;
+}
+
+nav ul.nav li.nav-header div.nav-header-logo {
+    height: fit-content;
+    margin-top: 10%;
+}
+
+nav ul.nav li.nav-header div.nav-header-logo img {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border-radius: 10px;
+}

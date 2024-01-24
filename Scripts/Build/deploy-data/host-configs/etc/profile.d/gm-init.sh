@@ -1,0 +1,10 @@
+#!/bin/bash
+export GMCMD=/srv/gmcmd
+export GMCMD_MODULE_ROOT=$GMCMD
+export GMCMD_DATA_ROOT=/srv/data
+export GMCMD_SCRIPT_ROOT=/srv/scripts
+export PATH=$PATH:$GMCMD_SCRIPT_ROOT
+
+# sudo mkdir -p $GMCMD_MODULE_ROOT $GMCMD_DATA_ROOT $GMCMD_SCRIPT_ROOT
+# sudo chown root:webdev $GMCMD_MODULE_ROOT $GMCMD_DATA_ROOT $GMCMD_SCRIPT_ROOT
+# sudo chmod 775 $GMCMD_MODULE_ROOT $GMCMD_DATA_ROOT $GMCMD_SCRIPT_ROOT
